@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Go4Lunch</string>
+    <string name="menu_map">Vue Carte</string>
+    <string name="menu_list">Vue Liste</string>
+    <string name="menu_workmates">Collègues</string>
+
+</resources>
