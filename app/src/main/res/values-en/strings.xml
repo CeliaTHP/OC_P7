@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Go4Lunch</string>
-    <string name="menu_map">Vue Carte</string>
-    <string name="menu_list">Vue Liste</string>
-    <string name="menu_workmates">Collègues</string>
+    <string name="menu_map">Map View</string>
+    <string name="menu_list">List View</string>
+    <string name="menu_workmates">Workmates</string>
+    <string name="toolbar_menu">Menu</string>
+    <string name="toolbar_search">Search</string>
 
 </resources>
