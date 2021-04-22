@@ -1,4 +1,4 @@
-package com.example.oc_p7.ui.list;
+package com.openclassrooms.oc_p7.ui.list;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

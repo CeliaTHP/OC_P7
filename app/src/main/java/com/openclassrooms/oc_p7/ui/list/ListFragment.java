@@ -1,4 +1,4 @@
-package com.example.oc_p7.ui.map;
+package com.openclassrooms.oc_p7.ui.list;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,19 +12,19 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.oc_p7.R;
+import com.openclassrooms.oc_p7.R;
 
-public class MapFragment extends Fragment {
+public class ListFragment extends Fragment {
 
-    private MapViewModel mapViewModel;
+    private ListViewModel listViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        mapViewModel =
-                new ViewModelProvider(this).get(MapViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_map, container, false);
-        final TextView textView = root.findViewById(R.id.text_map);
-        mapViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+        listViewModel =
+                new ViewModelProvider(this).get(ListViewModel.class);
+        View root = inflater.inflate(R.layout.fragment_list, container, false);
+        final TextView textView = root.findViewById(R.id.text_list);
+        listViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);

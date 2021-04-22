@@ -1,4 +1,4 @@
-package com.example.oc_p7;
+package com.openclassrooms.oc_p7;
 
 import org.junit.Test;
 

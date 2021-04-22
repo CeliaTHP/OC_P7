@@ -1,4 +1,4 @@
-package com.example.oc_p7.ui.list;
+package com.openclassrooms.oc_p7.ui.workmates;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,19 +12,19 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.oc_p7.R;
+import com.openclassrooms.oc_p7.R;
 
-public class ListFragment extends Fragment {
+public class WorkmatesFragment extends Fragment {
 
-    private ListViewModel listViewModel;
+    private WorkmatesViewModel workmatesViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        listViewModel =
-                new ViewModelProvider(this).get(ListViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_list, container, false);
-        final TextView textView = root.findViewById(R.id.text_list);
-        listViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+        workmatesViewModel =
+                new ViewModelProvider(this).get(WorkmatesViewModel.class);
+        View root = inflater.inflate(R.layout.fragment_workmates, container, false);
+        final TextView textView = root.findViewById(R.id.text_workmates);
+        workmatesViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);
