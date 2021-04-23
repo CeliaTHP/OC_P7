@@ -4,26 +4,47 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/grey"
     tools:context=".view.LoginActivity">
 
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/loginGoogleButton"
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="LOGIN WITH GOOGLE"
+        android:src="@drawable/ic_food_logo"
         app:layout_constraintBottom_toTopOf="@id/loginFacebookButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/white" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/loginFacebookButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="LOGIN WITH FACEBOOK"
+        android:layout_width="300dp"
+        android:layout_height="60sp"
+        android:backgroundTint="@color/blue_facebook"
+        android:drawableLeft="@drawable/ic_facebook_logo"
+        android:drawablePadding="50dp"
+        android:drawableTint="@color/white"
+        android:text="@string/login_facebook"
+        android:textAllCaps="false"
+        android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/loginGoogleButton"
+        android:layout_width="300dp"
+        android:layout_height="60sp"
+        android:layout_marginTop="20dp"
+        android:drawableLeft="@drawable/ic_google"
+        android:drawableTint="@color/white"
+        android:text="@string/login_google"
+        android:textAllCaps="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/loginFacebookButton" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

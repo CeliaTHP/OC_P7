@@ -5,4 +5,7 @@
     <string name="menu_workmates">Collègues</string>
     <string name="toolbar_menu">Menu</string>
     <string name="toolbar_search">Rechercher</string>
+    <string name="login_facebook">Connexion avec Facebook</string>
+    <string name="login_google">Connexion avec Google</string>
+
 </resources>

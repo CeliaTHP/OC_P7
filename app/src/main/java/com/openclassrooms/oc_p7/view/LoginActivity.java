@@ -20,21 +20,26 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.databinding.*;
 import com.openclassrooms.oc_p7.view_model.LoginViewModel;
 
+import javax.security.auth.callback.Callback;
+
 public class LoginActivity extends AppCompatActivity {
 
+    private static final String TAG = "LoginActivity";
     private static final int RC_SIGN_IN = 42;
 
     private ActivityLoginBinding activityLoginBinding;
-    private GoogleSignInClient googleSignInClient;
-    private FirebaseAuth auth;
     private LoginViewModel loginViewModel;
-    private static final String TAG = "LoginActivity";
+
+    private FirebaseAuth auth;
+
+    private GoogleSignInClient googleSignInClient;
+    private Callback callBackManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,14 +62,24 @@ public class LoginActivity extends AppCompatActivity {
         activityLoginBinding.loginGoogleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                signIn();
+                signInWithGoogle();
+            }
+        });
+        activityLoginBinding.loginFacebookButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                signInWithFacebook();
             }
         });
     }
 
-    private void signIn() {
-        Intent signInIntent = googleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, RC_SIGN_IN);
+    private void signInWithGoogle() {
+        Intent signInWithGoogleIntent = googleSignInClient.getSignInIntent();
+        startActivityForResult(signInWithGoogleIntent, RC_SIGN_IN);
+    }
+
+    private void signInWithFacebook() {
+
     }
 
     private void initLoginViewModel() {
