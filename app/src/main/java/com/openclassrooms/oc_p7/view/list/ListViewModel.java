@@ -1,16 +1,16 @@
-package com.openclassrooms.oc_p7.ui.map;
+package com.openclassrooms.oc_p7.view.list;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class MapViewModel extends ViewModel {
+public class ListViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
 
-    public MapViewModel() {
+    public ListViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is map fragment");
+        mText.setValue("This is list fragment");
     }
 
     public LiveData<String> getText() {

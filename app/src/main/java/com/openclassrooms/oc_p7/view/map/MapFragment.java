@@ -1,4 +1,4 @@
-package com.openclassrooms.oc_p7.ui.workmates;
+package com.openclassrooms.oc_p7.view.map;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,17 +14,17 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.openclassrooms.oc_p7.R;
 
-public class WorkmatesFragment extends Fragment {
+public class MapFragment extends Fragment {
 
-    private WorkmatesViewModel workmatesViewModel;
+    private MapViewModel mapViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        workmatesViewModel =
-                new ViewModelProvider(this).get(WorkmatesViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_workmates, container, false);
-        final TextView textView = root.findViewById(R.id.text_workmates);
-        workmatesViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+        mapViewModel =
+                new ViewModelProvider(this).get(MapViewModel.class);
+        View root = inflater.inflate(R.layout.fragment_map, container, false);
+        final TextView textView = root.findViewById(R.id.text_map);
+        mapViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);
