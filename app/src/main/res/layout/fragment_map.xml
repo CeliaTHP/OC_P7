@@ -19,4 +19,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:layout_width="80dp"
+        android:id="@+id/testButton"
+        android:layout_height="60dp"
+        android:backgroundTint="@color/dark_orange"
+        app:cornerRadius="5dp"
+        android:text="TEST"
+        app:layout_constraintTop_toBottomOf="@id/text_map"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -16,11 +16,14 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.OAuthProvider;
 import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.databinding.*;
 import com.openclassrooms.oc_p7.view_model.LoginViewModel;
@@ -35,10 +38,12 @@ public class LoginActivity extends AppCompatActivity {
     private ActivityLoginBinding activityLoginBinding;
     private LoginViewModel loginViewModel;
 
-    private FirebaseAuth auth;
+    public static FirebaseAuth auth;
 
     private GoogleSignInClient googleSignInClient;
     private Callback callBackManager;
+
+    private OAuthProvider.Builder provider;
 
 
     @Override
@@ -71,20 +76,33 @@ public class LoginActivity extends AppCompatActivity {
                 signInWithFacebook();
             }
         });
-    }
-
-    private void signInWithGoogle() {
-        Intent signInWithGoogleIntent = googleSignInClient.getSignInIntent();
-        startActivityForResult(signInWithGoogleIntent, RC_SIGN_IN);
-    }
-
-    private void signInWithFacebook() {
-
+        activityLoginBinding.loginTwitterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                signInWithTwitter();
+            }
+        });
     }
 
     private void initLoginViewModel() {
         loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
     }
+
+
+    private void signInWithGoogle() {
+        Intent getGoogleAccount = googleSignInClient.getSignInIntent();
+        startActivityForResult(getGoogleAccount, RC_SIGN_IN);
+    }
+
+    private void signInWithFacebook() {
+       // getFacebookAccount();
+    }
+
+    private void signInWithTwitter() {
+        provider = OAuthProvider.newBuilder("twitter.com");
+        getTwitterAccount();
+    }
+
 
     private void initGoogleClient() {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -95,6 +113,7 @@ public class LoginActivity extends AppCompatActivity {
         googleSignInClient = GoogleSignIn.getClient(this, gso);
 
     }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -121,6 +140,75 @@ public class LoginActivity extends AppCompatActivity {
 
         }
     }
+/*
+    private void getFacebookAccount() {
+        // Initialize Facebook Login button
+        callBackManager = CallbackManager.Factory.create();
+        LoginButton loginButton = findViewById(R.id.button_sign_in);
+        loginButton.setReadPermissions("email", "public_profile");
+        loginButton.registerCallback(callBackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                Log.d(TAG, "facebook:onSuccess:" + loginResult);
+                handleFacebookAccessToken(loginResult.getAccessToken());
+            }
+
+            @Override
+            public void onCancel() {
+                Log.d(TAG, "facebook:onCancel");
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                Log.d(TAG, "facebook:onError", error);
+            }
+        });
+// ...
+        @Override
+        protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+            super.onActivityResult(requestCode, resultCode, data);
+
+            // Pass the activity result back to the Facebook SDK
+            callBackManager.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+
+ */
+    private void getTwitterAccount() {
+        Task<AuthResult> pendingResultTask = auth.getPendingAuthResult();
+        if (pendingResultTask != null) {
+            // There's something already here! Finish the sign-in for your user.
+            pendingResultTask
+                    .addOnSuccessListener(
+                            new OnSuccessListener<AuthResult>() {
+                                @Override
+                                public void onSuccess(AuthResult authResult) {
+                                    Log.d(TAG, "Twitter auth success");
+                                    // User is signed in.
+                                    // IdP data available in
+                                    // authResult.getAdditionalUserInfo().getProfile().
+                                    // The OAuth access token can also be retrieved:
+                                    // authResult.getCredential().getAccessToken().
+                                    // The OAuth secret can be retrieved by calling:
+                                    // authResult.getCredential().getSecret().
+                                }
+                            })
+                    .addOnFailureListener(
+                            new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    // Handle failure.
+                                    Log.d(TAG, "Twitter auth failure");
+                                }
+                            });
+        } else {
+            // There's no pending result so you need to start the sign-in flow.
+            // See below.
+            firebaseAuthWithTwitter();
+        }
+    }
+
 
     private void firebaseAuthWithGoogle(String idToken) {
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
@@ -141,43 +229,34 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
-    /*
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_SIGN_IN) {
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            try {
-                GoogleSignInAccount googleSignInAccount = task.getResult(ApiException.class);
-                if (googleSignInAccount != null) {
-                    // Google Sign In successful
-                    Log.d(TAG, "User Logged : " + googleSignInAccount.getEmail());
-                    firebaseAuthWithGoogle(googleSignInAccount.getIdToken());
+    private void firebaseAuthWithTwitter() {
+        auth
+                .startActivityForSignInWithProvider(/* activity= */ this, provider.build())
+                .addOnSuccessListener(
+                        new OnSuccessListener<AuthResult>() {
+                            @Override
+                            public void onSuccess(AuthResult authResult) {
+                                Log.d(TAG, "Twitter Sign in success " + authResult.getAdditionalUserInfo().getUsername());
+                                Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
+                                startActivity(intent);
 
-                    getGoogleAuthCredential(googleSignInAccount);
-                }
-                else{
-                    // Google Sign In failed
-
-                    Log.d(TAG, "Log in Failed");
-                }
-            } catch (ApiException e) {
-                Log.e(TAG, e.getLocalizedMessage());
-            }
-        }
-    }
-
-     */
-
-    private void getGoogleAuthCredential(GoogleSignInAccount googleSignInAccount) {
-        String googleTokenId = googleSignInAccount.getId();
-        AuthCredential googleAuthCredential = GoogleAuthProvider.getCredential(googleTokenId, null);
-        signInWithGoogleAuthCredential(googleAuthCredential);
-    }
-
-    private void signInWithGoogleAuthCredential(AuthCredential googleAuthCredential) {
-        loginViewModel.signInWithGoogle(googleAuthCredential);
-        //obser UserLivedata:  loginViewModel.authenticatedUserLiveData.observe
+                                // User is signed in.
+                                // IdP data available in
+                                // authResult.getAdditionalUserInfo().getProfile().
+                                // The OAuth access token can also be retrieved:
+                                // authResult.getCredential().getAccessToken().
+                                // The OAuth secret can be retrieved by calling:
+                                // authResult.getCredential().getSecret().
+                            }
+                        })
+                .addOnFailureListener(
+                        new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                // Handle failure.
+                                Log.d(TAG, "Twitter Sign in failure " + e.getMessage());
+                            }
+                        });
     }
 
 

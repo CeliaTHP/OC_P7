@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
 
-    private FirebaseAuth auth;
+    public static FirebaseAuth auth;
 
 
     @Override

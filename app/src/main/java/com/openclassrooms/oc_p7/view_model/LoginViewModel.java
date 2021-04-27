@@ -1,6 +1,7 @@
 package com.openclassrooms.oc_p7.view_model;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -8,6 +9,7 @@ import androidx.lifecycle.LiveData;
 
 import com.google.firebase.auth.AuthCredential;
 import com.openclassrooms.oc_p7.model.User;
+import com.openclassrooms.oc_p7.view.LoginActivity;
 
 public class LoginViewModel extends AndroidViewModel {
 
@@ -20,9 +22,13 @@ public class LoginViewModel extends AndroidViewModel {
         super(application);
     }
 
-    public void signInWithGoogle(AuthCredential googleAuthCredential) {
-        //Firebase Sign With Google
+    public Boolean isUserConnected() {
+        return LoginActivity.auth != null;
     }
+    public String getUserDisplayName() {
+        return LoginActivity.auth.getCurrentUser().getDisplayName();
+    }
+
 
 
 }
