@@ -21,15 +21,26 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.button.MaterialButton
-        android:layout_width="80dp"
         android:id="@+id/testButton"
+        android:layout_width="80dp"
         android:layout_height="60dp"
         android:backgroundTint="@color/dark_orange"
-        app:cornerRadius="5dp"
         android:text="TEST"
-        app:layout_constraintTop_toBottomOf="@id/text_map"
+        app:cornerRadius="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_map" />
 
-        />
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/signOutButton"
+        android:layout_width="80dp"
+        android:layout_height="60dp"
+        android:backgroundTint="@color/purple_200"
+        android:text="SIGN OUT"
+        app:cornerRadius="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/testButton" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,5 +1,6 @@
 package com.openclassrooms.oc_p7.view.map;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.databinding.FragmentMapBinding;
 import com.openclassrooms.oc_p7.view.LoginActivity;
@@ -41,10 +43,20 @@ public class MapFragment extends Fragment {
         fragmentMapBinding.testButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(loginViewModel.isUserConnected())
-                Log.d(TAG, loginViewModel.getUserDisplayName());
+                if (loginViewModel.isUserConnected())
+                    Log.d(TAG, loginViewModel.getUserDisplayName());
                 else
                     Log.d(TAG, "User not connected");
+            }
+        });
+
+        fragmentMapBinding.signOutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
+               startActivity(intent);
+
             }
         });
 

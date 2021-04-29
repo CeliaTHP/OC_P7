@@ -10,6 +10,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -21,19 +27,20 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.OAuthProvider;
 import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.databinding.*;
 import com.openclassrooms.oc_p7.view_model.LoginViewModel;
 
-import javax.security.auth.callback.Callback;
-
 public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "LoginActivity";
-    private static final int RC_SIGN_IN = 42;
+    private static final int RC_GOOGLE_SIGN_IN = 1;
+
 
     private ActivityLoginBinding activityLoginBinding;
     private LoginViewModel loginViewModel;
@@ -41,10 +48,9 @@ public class LoginActivity extends AppCompatActivity {
     public static FirebaseAuth auth;
 
     private GoogleSignInClient googleSignInClient;
-    private Callback callBackManager;
+    private CallbackManager callbackManager;
 
     private OAuthProvider.Builder provider;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,14 +58,11 @@ public class LoginActivity extends AppCompatActivity {
         activityLoginBinding = ActivityLoginBinding.inflate(LayoutInflater.from(this), null, false);
         setContentView(activityLoginBinding.getRoot());
 
-        auth = FirebaseAuth.getInstance();
-
+        verifyAuth();
         initLoginButton();
         initLoginViewModel();
         initGoogleClient();
 
-
-        //loginListener();
     }
 
 
@@ -88,21 +91,19 @@ public class LoginActivity extends AppCompatActivity {
         loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
     }
 
-
     private void signInWithGoogle() {
         Intent getGoogleAccount = googleSignInClient.getSignInIntent();
-        startActivityForResult(getGoogleAccount, RC_SIGN_IN);
+        startActivityForResult(getGoogleAccount, RC_GOOGLE_SIGN_IN);
     }
 
     private void signInWithFacebook() {
-       // getFacebookAccount();
+        getFacebookAccount();
     }
 
     private void signInWithTwitter() {
         provider = OAuthProvider.newBuilder("twitter.com");
         getTwitterAccount();
     }
-
 
     private void initGoogleClient() {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -114,13 +115,12 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        if (requestCode == RC_SIGN_IN) {
+        if (requestCode == RC_GOOGLE_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             Exception exception = task.getException();
             if (task.isSuccessful()) {
@@ -138,19 +138,24 @@ public class LoginActivity extends AppCompatActivity {
                 Log.d(TAG, exception.toString());
             }
 
+        } else {
+            if (callbackManager != null)
+                callbackManager.onActivityResult(requestCode, resultCode, data);
+
         }
     }
-/*
+
+
     private void getFacebookAccount() {
         // Initialize Facebook Login button
-        callBackManager = CallbackManager.Factory.create();
-        LoginButton loginButton = findViewById(R.id.button_sign_in);
-        loginButton.setReadPermissions("email", "public_profile");
-        loginButton.registerCallback(callBackManager, new FacebookCallback<LoginResult>() {
+        callbackManager = CallbackManager.Factory.create();
+        LoginButton loginButton = activityLoginBinding.loginFacebookButton;
+        loginButton.setPermissions("email", "public_profile");
+        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 Log.d(TAG, "facebook:onSuccess:" + loginResult);
-                handleFacebookAccessToken(loginResult.getAccessToken());
+                firebaseAuthWithFacebook(loginResult.getAccessToken());
             }
 
             @Override
@@ -163,18 +168,31 @@ public class LoginActivity extends AppCompatActivity {
                 Log.d(TAG, "facebook:onError", error);
             }
         });
-// ...
-        @Override
-        protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-            super.onActivityResult(requestCode, resultCode, data);
+    }
 
-            // Pass the activity result back to the Facebook SDK
-            callBackManager.onActivityResult(requestCode, resultCode, data);
-        }
+    private void firebaseAuthWithFacebook(AccessToken token) {
+        Log.d(TAG, "handleFacebookAccessToken:" + token);
+
+        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+        auth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "signInWithCredential:success");
+                            FirebaseUser user = auth.getCurrentUser();
+                            goToDashboard();
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "signInWithCredential:failure", task.getException());
+
+                        }
+                    }
+                });
     }
 
 
- */
     private void getTwitterAccount() {
         Task<AuthResult> pendingResultTask = auth.getPendingAuthResult();
         if (pendingResultTask != null) {
@@ -218,8 +236,7 @@ public class LoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
-                            startActivity(intent);
+                            goToDashboard();
                             Log.d(TAG, "signInWithCredential:success");
                         } else {
                             // If sign in fails, display a message to the user.
@@ -237,9 +254,7 @@ public class LoginActivity extends AppCompatActivity {
                             @Override
                             public void onSuccess(AuthResult authResult) {
                                 Log.d(TAG, "Twitter Sign in success " + authResult.getAdditionalUserInfo().getUsername());
-                                Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
-                                startActivity(intent);
-
+                                goToDashboard();
                                 // User is signed in.
                                 // IdP data available in
                                 // authResult.getAdditionalUserInfo().getProfile().
@@ -257,6 +272,25 @@ public class LoginActivity extends AppCompatActivity {
                                 Log.d(TAG, "Twitter Sign in failure " + e.getMessage());
                             }
                         });
+    }
+
+    private void verifyAuth() {
+        //if not authenticated, go to LogInActivity
+        //else go to MainActivity
+        auth = FirebaseAuth.getInstance();
+        FirebaseUser user = auth.getCurrentUser();
+        if (user != null) {
+            goToDashboard();
+            Log.d(TAG, "User Logged : " + user.getDisplayName());
+        } else {
+            Log.d(TAG, "User Not Found");
+
+        }
+    }
+
+    private void goToDashboard() {
+        Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
+        startActivity(intent);
     }
 
 

@@ -9,5 +9,8 @@
     <string name="login_google">Connexion avec Google</string>
     <string name="login_twitter">Connexion avec Twitter</string>
 
+    <string name="facebook_app_id" translatable="false">950434559094038</string>
+    <string name="fb_login_protocol_scheme" translatable="false">fb950434559094038</string>
+
 
 </resources>
