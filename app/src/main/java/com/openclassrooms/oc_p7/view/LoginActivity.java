@@ -14,6 +14,7 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -35,6 +36,9 @@ import com.google.firebase.auth.OAuthProvider;
 import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.databinding.*;
 import com.openclassrooms.oc_p7.view_model.LoginViewModel;
+
+import java.util.Arrays;
+
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -97,6 +101,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void signInWithFacebook() {
+        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "user_friends"));
         getFacebookAccount();
     }
 
@@ -147,6 +152,35 @@ public class LoginActivity extends AppCompatActivity {
 
 
     private void getFacebookAccount() {
+        callbackManager = CallbackManager.Factory.create();
+        LoginManager.getInstance().registerCallback(callbackManager,
+                new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
+                        Log.d(TAG, "SUCCESS : " + loginResult.getAccessToken().getUserId());
+                        firebaseAuthWithFacebook(loginResult.getAccessToken());
+                        goToDashboard();
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        Log.d(TAG, "CANCEL ");
+
+                    }
+
+                    @Override
+                    public void onError(FacebookException error) {
+                        Log.d(TAG, "ERROR : " + error.getMessage());
+
+                    }
+                });
+    }
+
+
+
+/*
+    private void getFacebookAccount() {
+
         // Initialize Facebook Login button
         callbackManager = CallbackManager.Factory.create();
         LoginButton loginButton = activityLoginBinding.loginFacebookButton;
@@ -169,6 +203,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+ */
 
     private void firebaseAuthWithFacebook(AccessToken token) {
         Log.d(TAG, "handleFacebookAccessToken:" + token);
