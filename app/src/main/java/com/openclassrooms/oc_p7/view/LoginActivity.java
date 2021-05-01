@@ -2,6 +2,7 @@ package com.openclassrooms.oc_p7.view;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
@@ -49,12 +50,12 @@ public class LoginActivity extends AppCompatActivity {
     private ActivityLoginBinding activityLoginBinding;
     private LoginViewModel loginViewModel;
 
-    public static FirebaseAuth auth;
+    private static FirebaseAuth auth;
+    private OAuthProvider.Builder provider;
 
     private GoogleSignInClient googleSignInClient;
     private CallbackManager callbackManager;
 
-    private OAuthProvider.Builder provider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,10 +63,11 @@ public class LoginActivity extends AppCompatActivity {
         activityLoginBinding = ActivityLoginBinding.inflate(LayoutInflater.from(this), null, false);
         setContentView(activityLoginBinding.getRoot());
 
-        verifyAuth();
-        initLoginButton();
         initLoginViewModel();
+        loginViewModel.verifyAuth();
+        initLoginButton();
         initGoogleClient();
+        initObservers();
 
     }
 
@@ -133,7 +135,8 @@ public class LoginActivity extends AppCompatActivity {
                     // Google Sign In was successful, authenticate with Firebase
                     GoogleSignInAccount account = task.getResult(ApiException.class);
                     Log.d(TAG, "firebaseAuthWithGoogle:" + account.getId());
-                    firebaseAuthWithGoogle(account.getIdToken());
+                    loginViewModel.firebaseAuthWithGoogle(account.getIdToken());
+                    //firebaseAuthWithGoogle(account.getIdToken());
                 } catch (ApiException e) {
                     // Google Sign In failed, update UI appropriately
                     Log.w(TAG, "Google sign in failed", e);
@@ -205,31 +208,9 @@ public class LoginActivity extends AppCompatActivity {
     }
  */
 
-    private void firebaseAuthWithFacebook(AccessToken token) {
-        Log.d(TAG, "handleFacebookAccessToken:" + token);
-
-        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
-        auth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithCredential:success");
-                            FirebaseUser user = auth.getCurrentUser();
-                            goToDashboard();
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithCredential:failure", task.getException());
-
-                        }
-                    }
-                });
-    }
-
 
     private void getTwitterAccount() {
-        Task<AuthResult> pendingResultTask = auth.getPendingAuthResult();
+        Task<AuthResult> pendingResultTask = loginViewModel.auth.getPendingAuthResult();
         if (pendingResultTask != null) {
             // There's something already here! Finish the sign-in for your user.
             pendingResultTask
@@ -262,34 +243,15 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-
-    private void firebaseAuthWithGoogle(String idToken) {
-        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
-        auth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            goToDashboard();
-                            Log.d(TAG, "signInWithCredential:success");
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithCredential:failure", task.getException());
-                        }
-                    }
-                });
-    }
-
     private void firebaseAuthWithTwitter() {
-        auth
-                .startActivityForSignInWithProvider(/* activity= */ this, provider.build())
+        loginViewModel.auth
+                .startActivityForSignInWithProvider(this, provider.build())
                 .addOnSuccessListener(
                         new OnSuccessListener<AuthResult>() {
                             @Override
                             public void onSuccess(AuthResult authResult) {
                                 Log.d(TAG, "Twitter Sign in success " + authResult.getAdditionalUserInfo().getUsername());
-                                goToDashboard();
+                                loginViewModel.authenticatedUserLiveData.postValue(authResult.getUser());
                                 // User is signed in.
                                 // IdP data available in
                                 // authResult.getAdditionalUserInfo().getProfile().
@@ -309,18 +271,36 @@ public class LoginActivity extends AppCompatActivity {
                         });
     }
 
-    private void verifyAuth() {
-        //if not authenticated, go to LogInActivity
-        //else go to MainActivity
-        auth = FirebaseAuth.getInstance();
-        FirebaseUser user = auth.getCurrentUser();
-        if (user != null) {
-            goToDashboard();
-            Log.d(TAG, "User Logged : " + user.getDisplayName());
-        } else {
-            Log.d(TAG, "User Not Found");
+    private void firebaseAuthWithFacebook(AccessToken token) {
+        Log.d(TAG, "handleFacebookAccessToken:" + token);
 
-        }
+        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+        auth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "signInWithCredential:success");
+                            FirebaseUser user = auth.getCurrentUser();
+                            goToDashboard();
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "signInWithCredential:failure", task.getException());
+
+                        }
+                    }
+                });
+    }
+
+
+    private void initObservers() {
+        loginViewModel.authenticatedUserLiveData.observe(this, new Observer<FirebaseUser>() {
+            @Override
+            public void onChanged(FirebaseUser firebaseUser) {
+                if(firebaseUser != null) goToDashboard();
+            }
+        });
     }
 
     private void goToDashboard() {
