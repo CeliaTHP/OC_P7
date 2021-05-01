@@ -50,9 +50,6 @@ public class LoginActivity extends AppCompatActivity {
     private ActivityLoginBinding activityLoginBinding;
     private LoginViewModel loginViewModel;
 
-    private static FirebaseAuth auth;
-    private OAuthProvider.Builder provider;
-
     private GoogleSignInClient googleSignInClient;
     private CallbackManager callbackManager;
 
@@ -97,19 +94,20 @@ public class LoginActivity extends AppCompatActivity {
         loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
     }
 
+    private void signInWithFacebook() {
+        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "user_friends"));
+        callbackManager = CallbackManager.Factory.create();
+        loginViewModel.getFacebookAccount(callbackManager);
+    }
+
     private void signInWithGoogle() {
         Intent getGoogleAccount = googleSignInClient.getSignInIntent();
         startActivityForResult(getGoogleAccount, RC_GOOGLE_SIGN_IN);
     }
 
-    private void signInWithFacebook() {
-        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "user_friends"));
-        getFacebookAccount();
-    }
 
     private void signInWithTwitter() {
-        provider = OAuthProvider.newBuilder("twitter.com");
-        getTwitterAccount();
+        loginViewModel.getTwitterAccount(this);
     }
 
     private void initGoogleClient() {
@@ -121,6 +119,7 @@ public class LoginActivity extends AppCompatActivity {
         googleSignInClient = GoogleSignIn.getClient(this, gso);
 
     }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -154,31 +153,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    private void getFacebookAccount() {
-        callbackManager = CallbackManager.Factory.create();
-        LoginManager.getInstance().registerCallback(callbackManager,
-                new FacebookCallback<LoginResult>() {
-                    @Override
-                    public void onSuccess(LoginResult loginResult) {
-                        Log.d(TAG, "SUCCESS : " + loginResult.getAccessToken().getUserId());
-                        firebaseAuthWithFacebook(loginResult.getAccessToken());
-                        goToDashboard();
-                    }
-
-                    @Override
-                    public void onCancel() {
-                        Log.d(TAG, "CANCEL ");
-
-                    }
-
-                    @Override
-                    public void onError(FacebookException error) {
-                        Log.d(TAG, "ERROR : " + error.getMessage());
-
-                    }
-                });
-    }
-
 
 
 /*
@@ -208,90 +182,6 @@ public class LoginActivity extends AppCompatActivity {
     }
  */
 
-
-    private void getTwitterAccount() {
-        Task<AuthResult> pendingResultTask = loginViewModel.auth.getPendingAuthResult();
-        if (pendingResultTask != null) {
-            // There's something already here! Finish the sign-in for your user.
-            pendingResultTask
-                    .addOnSuccessListener(
-                            new OnSuccessListener<AuthResult>() {
-                                @Override
-                                public void onSuccess(AuthResult authResult) {
-                                    Log.d(TAG, "Twitter auth success");
-                                    // User is signed in.
-                                    // IdP data available in
-                                    // authResult.getAdditionalUserInfo().getProfile().
-                                    // The OAuth access token can also be retrieved:
-                                    // authResult.getCredential().getAccessToken().
-                                    // The OAuth secret can be retrieved by calling:
-                                    // authResult.getCredential().getSecret().
-                                }
-                            })
-                    .addOnFailureListener(
-                            new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    // Handle failure.
-                                    Log.d(TAG, "Twitter auth failure");
-                                }
-                            });
-        } else {
-            // There's no pending result so you need to start the sign-in flow.
-            // See below.
-            firebaseAuthWithTwitter();
-        }
-    }
-
-    private void firebaseAuthWithTwitter() {
-        loginViewModel.auth
-                .startActivityForSignInWithProvider(this, provider.build())
-                .addOnSuccessListener(
-                        new OnSuccessListener<AuthResult>() {
-                            @Override
-                            public void onSuccess(AuthResult authResult) {
-                                Log.d(TAG, "Twitter Sign in success " + authResult.getAdditionalUserInfo().getUsername());
-                                loginViewModel.authenticatedUserLiveData.postValue(authResult.getUser());
-                                // User is signed in.
-                                // IdP data available in
-                                // authResult.getAdditionalUserInfo().getProfile().
-                                // The OAuth access token can also be retrieved:
-                                // authResult.getCredential().getAccessToken().
-                                // The OAuth secret can be retrieved by calling:
-                                // authResult.getCredential().getSecret().
-                            }
-                        })
-                .addOnFailureListener(
-                        new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                // Handle failure.
-                                Log.d(TAG, "Twitter Sign in failure " + e.getMessage());
-                            }
-                        });
-    }
-
-    private void firebaseAuthWithFacebook(AccessToken token) {
-        Log.d(TAG, "handleFacebookAccessToken:" + token);
-
-        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
-        auth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithCredential:success");
-                            FirebaseUser user = auth.getCurrentUser();
-                            goToDashboard();
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithCredential:failure", task.getException());
-
-                        }
-                    }
-                });
-    }
 
 
     private void initObservers() {
