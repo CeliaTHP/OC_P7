@@ -13,6 +13,8 @@ android {
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
+        buildConfigField "String", "GOOGLE_MAP_API_KEY", "\"AIzaSyAfA5LPuDm4ZaZzcifGry_RhEPLjmSi5N4\""
+
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
@@ -20,6 +22,7 @@ android {
 
     buildTypes {
         release {
+
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
@@ -70,6 +73,11 @@ dependencies {
 
     //multidex
     implementation 'com.android.support:multidex:1.0.3'
+
+    //GooglePlay service Map
+    implementation 'com.google.android.gms:play-services-maps:17.0.1'
+   // implementation 'com.google.android.gms:play-services-location:18.0.0'
+
 
 
 

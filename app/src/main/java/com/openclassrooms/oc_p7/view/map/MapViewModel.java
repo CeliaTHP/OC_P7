@@ -16,4 +16,8 @@ public class MapViewModel extends ViewModel {
     public LiveData<String> getText() {
         return mText;
     }
+
+    public void initMap() {
+
+    }
 }
