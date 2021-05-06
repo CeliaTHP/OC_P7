@@ -6,12 +6,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -28,7 +26,7 @@ import com.openclassrooms.oc_p7.databinding.FragmentMapBinding;
 import com.openclassrooms.oc_p7.view.LoginActivity;
 import com.openclassrooms.oc_p7.view_model.LoginViewModel;
 
-public class MapFragment extends Fragment {
+public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private static final String TAG = "MapFragment";
 
@@ -37,7 +35,6 @@ public class MapFragment extends Fragment {
 
     private LoginViewModel loginViewModel;
 
-    private GoogleMap map;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -48,28 +45,38 @@ public class MapFragment extends Fragment {
         loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
 
         initListeners();
-        initMap();
 
+
+        //initMap();
+        SupportMapFragment supportMapFragment = (SupportMapFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.google_map);
+
+
+        supportMapFragment.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(@NonNull GoogleMap googleMap) {
+                LatLng paris = new LatLng(48.86306560056864, 2.2962409807179216);
+                googleMap.addMarker(new MarkerOptions().position(paris).title("Sydney"));
+                googleMap.moveCamera(CameraUpdateFactory.newLatLng(paris));
+                googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                    @Override
+                    public void onMapClick(@NonNull LatLng latLng) {
+                        MarkerOptions markerOptions = new MarkerOptions();
+                        markerOptions.position(latLng);
+                        markerOptions.title(latLng.latitude + " : " + latLng.longitude);
+                        googleMap.clear();
+                        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+                        googleMap.addMarker(markerOptions);
+
+
+                    }
+                });
+            }
+        });
 
 
         return fragmentMapBinding.getRoot();
     }
 
-
-    public void initMap() {
-        SupportMapFragment supportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.google_map);
-        supportMapFragment.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(@NonNull GoogleMap googleMap) {
-                map = googleMap;
-                LatLng paris = new LatLng(48.858515289155264, 2.294518477936041);
-                map.addMarker(new MarkerOptions().position(paris).title("Pariiiiis"));
-                map.moveCamera(CameraUpdateFactory.newLatLng(paris));
-                Log.d(TAG, "Map Ready");
-            }
-        });
-
-    }
 
     public void initListeners() {
         fragmentMapBinding.testButton.setOnClickListener(new View.OnClickListener() {
@@ -101,5 +108,10 @@ public class MapFragment extends Fragment {
             }
         });
 
+    }
+
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+        Log.d(TAG, "MAP READY");
     }
 }

@@ -1,14 +1,14 @@
 package com.openclassrooms.oc_p7.view;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.facebook.CallbackManager;
 import com.facebook.login.LoginManager;
@@ -20,7 +20,7 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
 import com.openclassrooms.oc_p7.R;
-import com.openclassrooms.oc_p7.databinding.*;
+import com.openclassrooms.oc_p7.databinding.ActivityLoginBinding;
 import com.openclassrooms.oc_p7.view_model.LoginViewModel;
 
 import java.util.Arrays;
@@ -50,6 +50,7 @@ public class LoginActivity extends AppCompatActivity {
         initListeners();
         initGoogleClient();
         initObservers();
+
 
     }
 
