@@ -1,18 +1,12 @@
 package com.openclassrooms.oc_p7.view.map;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-
 public class MapViewModel extends ViewModel {
+
+    private static final String TAG = "MapViewModel";
 
     private MutableLiveData<String> mText;
 
@@ -25,13 +19,15 @@ public class MapViewModel extends ViewModel {
         return mText;
     }
 
-    public void initMap(SupportMapFragment supportMapFragment) {
+
+
+        /*
+    public void initMap(MapView map) {
         //initMap();
-
-
-        supportMapFragment.getMapAsync(new OnMapReadyCallback() {
+        map.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(@NonNull GoogleMap googleMap) {
+                Log.d(TAG, "Map ready");
                 LatLng paris = new LatLng(48.86306560056864, 2.2962409807179216);
                 googleMap.addMarker(new MarkerOptions().position(paris).title("Sydney"));
                 googleMap.moveCamera(CameraUpdateFactory.newLatLng(paris));
@@ -52,4 +48,6 @@ public class MapViewModel extends ViewModel {
         });
     }
 
+
+         */
 }

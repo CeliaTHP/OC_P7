@@ -6,9 +6,9 @@
     android:layout_height="match_parent"
     tools:context=".view.map.MapFragment">
 
-    <fragment
+    <com.google.android.gms.maps.MapView
         android:id="@+id/google_map"
-        class="com.google.android.gms.maps.SupportMapFragment"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintStart_toStartOf="parent"
