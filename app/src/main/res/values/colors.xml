@@ -2,6 +2,7 @@
 <resources>
     <color name="main_orange">#FF5722</color>
     <color name="dark_orange">#C41B00</color>
+    <color name="yellow">#f7e320</color>
     <color name="blue_facebook">#507CC0</color>
     <color name="blue_twitter">#55ACEE</color>
     <color name="red_google">#DF4930</color>

@@ -1,11 +1,11 @@
 package com.openclassrooms.oc_p7.view;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -25,6 +25,12 @@ public class MainActivity extends AppCompatActivity {
 
         verifyAuth();
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        verifyAuth();
     }
 
     private void verifyAuth() {

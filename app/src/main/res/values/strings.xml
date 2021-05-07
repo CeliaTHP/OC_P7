@@ -13,4 +13,13 @@
     <string name="fb_login_protocol_scheme" translatable="false">fb950434559094038</string>
 
 
+    <string name="side_menu_lunch">Mon repas</string>
+    <string name="side_menu_settings">Paramètres</string>
+    <string name="side_menu_login">Connexion</string>
+    <string name="side_menu_logout">Déconnexion</string>
+
+    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
+
+
 </resources>

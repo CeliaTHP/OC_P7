@@ -9,4 +9,10 @@
     <string name="login_facebook">Sign in with Facebook</string>
     <string name="login_google">Sign in with Google</string>
     <string name="login_twitter">Sign in with Twitter</string>
+
+    <string name="side_menu_lunch">My lunch</string>
+    <string name="side_menu_settings">Settings</string>
+    <string name="side_menu_login">Log in</string>
+    <string name="side_menu_logout">Log out</string>
+
 </resources>
