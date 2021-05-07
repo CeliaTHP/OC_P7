@@ -67,7 +67,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     public void initPlaces() {
-        Places.initialize(getContext(), String.valueOf(R.string.map_key));
+        Places.initialize(getContext(), String.valueOf(R.string.google_api_key));
         PlacesClient placesClient = Places.createClient(getContext());
     }
 
@@ -155,7 +155,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(@NonNull GoogleMap googleMap) {
         Log.d(TAG, "MAP READY");
         LatLng paris = new LatLng(48.86306560056864, 2.2962409807179216);
-        googleMap.addMarker(new MarkerOptions().position(paris).title("Sydney"));
+        googleMap.addMarker(new MarkerOptions().position(paris).title("Paris"));
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(paris));
         googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
@@ -169,6 +169,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
             }
         });
+    }
+
+    private void initLocation() {
+        // ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.RE)
+
     }
 
 }

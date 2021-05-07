@@ -13,8 +13,7 @@ android {
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
-        buildConfigField "String", "GOOGLE_MAP_API_KEY", "\"AIzaSyAfA5LPuDm4ZaZzcifGry_RhEPLjmSi5N4\""
-
+        resValue "string", "GOOGLE_MAP_API_KEY", "\"AIzaSyAfA5LPuDm4ZaZzcifGry_RhEPLjmSi5N4\""
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
@@ -79,9 +78,6 @@ dependencies {
 
     //Google Places
     implementation 'com.google.android.libraries.places:places:2.4.0'
-
-
-
 
 
 }
