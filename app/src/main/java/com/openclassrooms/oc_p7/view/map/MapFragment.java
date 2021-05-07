@@ -44,9 +44,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 new ViewModelProvider(this).get(MapViewModel.class);
         loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
 
+
+        return fragmentMapBinding.getRoot();
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         initListeners();
+        initMap();
 
+    }
 
+    public void initMap() {
         //initMap();
         SupportMapFragment supportMapFragment = (SupportMapFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.google_map);
 
@@ -72,11 +82,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 });
             }
         });
-
-
-        return fragmentMapBinding.getRoot();
     }
-
 
     public void initListeners() {
         fragmentMapBinding.testButton.setOnClickListener(new View.OnClickListener() {

@@ -49,7 +49,6 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
         return true;
 
     }
-
     @Override
     public void onBackPressed() {
         super.onBackPressed();

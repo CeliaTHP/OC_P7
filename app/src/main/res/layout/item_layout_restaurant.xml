@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp">
+
+    <TextView
+        android:id="@+id/item_restaurant_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nom du Restaurant"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/item_restaurant_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Chinois - 99 Random adresse"
+        android:textColor="@color/black"
+        android:textSize="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/item_restaurant_name" />
+
+    <TextView
+        android:id="@+id/item_restaurant_hours"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Open until 8 pm"
+        android:textColor="@color/black"
+        android:textSize="14dp"
+        android:textStyle="italic"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/item_restaurant_address" />
+
+    <TextView
+        android:id="@+id/item_restaurant_distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="300m"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toStartOf="@id/item_restaurant_pic"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/item_restaurant_attendees"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="(12)"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="@id/item_restaurant_rate1"
+        app:layout_constraintEnd_toStartOf="@id/item_restaurant_pic"
+        app:layout_constraintTop_toTopOf="@id/item_restaurant_distance" />
+
+    <ImageView
+        android:id="@+id/item_restaurant_people"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_people"
+        app:layout_constraintBottom_toBottomOf="@id/item_restaurant_attendees"
+        app:layout_constraintEnd_toStartOf="@id/item_restaurant_attendees"
+        app:layout_constraintTop_toTopOf="@id/item_restaurant_attendees"
+        app:tint="@color/black" />
+
+    <ImageView
+        android:id="@+id/item_restaurant_pic"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@drawable/ic_cutlery"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/black" />
+
+    <ImageView
+        android:id="@+id/item_restaurant_rate1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_star"
+        app:layout_constraintBottom_toBottomOf="@id/item_restaurant_pic"
+        app:layout_constraintEnd_toStartOf="@id/item_restaurant_pic"
+        app:tint="@color/yellow" />
+
+    <ImageView
+        android:id="@+id/item_restaurant_rate2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_star"
+        app:layout_constraintBottom_toBottomOf="@id/item_restaurant_pic"
+        app:layout_constraintEnd_toStartOf="@id/item_restaurant_pic"
+        app:tint="@color/yellow" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
