@@ -5,11 +5,13 @@ public class User {
     private String name;
     private String surname;
     private String email;
+    private String lunch;
 
-    public User(String name, String surname, String email) {
+    public User(String name, String surname, String email, String lunch) {
         this.name = name;
         this.surname = surname;
         this.email = email;
+        this.lunch = lunch;
 
     }
 
@@ -35,5 +37,13 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getLunch() {
+        return lunch;
+    }
+
+    public void setLunch(String lunch) {
+        this.lunch = lunch;
     }
 }
