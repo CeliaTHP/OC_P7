@@ -24,7 +24,9 @@ import com.google.android.libraries.places.api.model.PlaceLikelihood;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
+import com.openclassrooms.oc_p7.model.Restaurant;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -35,11 +37,8 @@ public class MapViewModel extends ViewModel {
     private MutableLiveData<String> mText;
 
 
-    public MutableLiveData<GoogleMap> mapLiveData = new MutableLiveData<>();
-
-    private GoogleMap map;
-
     public MutableLiveData<Location> currentLocation = new MutableLiveData<>();
+    public MutableLiveData<GoogleMap> mapLiveData = new MutableLiveData<>();
 
 
     public MapViewModel() {
@@ -54,80 +53,49 @@ public class MapViewModel extends ViewModel {
 
     public void initPlaces(GoogleMap googleMap, Context context) {
 
+        List<Restaurant> restaurants = Collections.emptyList();
+
         Places.initialize(context, "AIzaSyAfA5LPuDm4ZaZzcifGry_RhEPLjmSi5N4");
         PlacesClient placesClient = Places.createClient(context);
 
         // Use fields to define the data types to return.
-        List<Place.Field> placeField = Collections.singletonList(Place.Field.LAT_LNG);
+        List<Place.Field> placeFields = Arrays.asList(Place.Field.LAT_LNG, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.RATING);
 
-        List<Place.Field> placeFieldsNames = Collections.singletonList(Place.Field.LAT_LNG);
-
-        FindCurrentPlaceRequest request = FindCurrentPlaceRequest.newInstance(placeFieldsNames);
+        FindCurrentPlaceRequest request = FindCurrentPlaceRequest.newInstance(placeFields);
 
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
             Task<FindCurrentPlaceResponse> placeResponse = placesClient.findCurrentPlace(request);
             placeResponse.addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
-                    FindCurrentPlaceResponse response = task.getResult();
-                    for (PlaceLikelihood placeLikelihood : response.getPlaceLikelihoods()) {
+                    FindCurrentPlaceResponse responseLatLng = task.getResult();
+                    for (PlaceLikelihood placeLikelihood : responseLatLng.getPlaceLikelihoods()) {
 
                         Log.d(TAG, placeLikelihood.toString());
-
                         googleMap.addMarker(new MarkerOptions().position(placeLikelihood.getPlace().getLatLng()).title(placeLikelihood.getPlace().getName()));
-                        googleMap.moveCamera(CameraUpdateFactory.newLatLng(placeLikelihood.getPlace().getLatLng()));
-                        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(placeLikelihood.getPlace().getLatLng(), 15));
 
                     }
-                    LatLng currentLatLng = new LatLng(currentLocation.getValue().getLatitude(), currentLocation.getValue().getLongitude());
-                    googleMap.addMarker(new MarkerOptions().position(currentLatLng).title("YOU").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-                    // getCurrentPlace();
+                        //AFTER GETTING ALL PLACES ADD USER POSITION
+                        LatLng currentLatLng = new LatLng(currentLocation.getValue().getLatitude(), currentLocation.getValue().getLongitude());
+                        googleMap.addMarker(new MarkerOptions().position(currentLatLng).title("YOU").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                        googleMap.moveCamera(CameraUpdateFactory.newLatLng(currentLatLng));
+                        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15));
 
-                } else {
-                    Exception exception = task.getException();
-                    if (exception instanceof ApiException) {
-                        ApiException apiException = (ApiException) exception;
-                        Log.d(TAG, "PLACE NOT FOUND : " + apiException.getMessage());
+                    } else{
+                        Exception exception = task.getException();
+                        if (exception instanceof ApiException) {
+                            ApiException apiException = (ApiException) exception;
+                            Log.d(TAG, "PLACE NOT FOUND : " + apiException.getMessage());
+                        }
                     }
-                }
 
-            });
-        } else {
-            //ask permissions
-        }
-    }
-
-
-
-
-        /*
-    public void initMap(MapView map) {
-        //initMap();
-        map.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(@NonNull GoogleMap googleMap) {
-                Log.d(TAG, "Map ready");
-                LatLng paris = new LatLng(48.86306560056864, 2.2962409807179216);
-                googleMap.addMarker(new MarkerOptions().position(paris).title("Sydney"));
-                googleMap.moveCamera(CameraUpdateFactory.newLatLng(paris));
-                googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-                    @Override
-                    public void onMapClick(@NonNull LatLng latLng) {
-                        MarkerOptions markerOptions = new MarkerOptions();
-                        markerOptions.position(latLng);
-                        markerOptions.title(latLng.latitude + " : " + latLng.longitude);
-                        googleMap.clear();
-                        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
-                        googleMap.addMarker(markerOptions);
-
-
-                    }
                 });
+            } else{
+                //ask permissions
             }
-        });
+        }
+
+
+
     }
-
-
-         */
-}
 
