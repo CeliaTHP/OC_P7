@@ -18,43 +18,34 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.model.PlaceLikelihood;
-import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
-import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
-import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.openclassrooms.oc_p7.databinding.FragmentMapBinding;
 import com.openclassrooms.oc_p7.view.LoginActivity;
 import com.openclassrooms.oc_p7.view_model.LoginViewModel;
 
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private static final String TAG = "MapFragment";
 
+
     private MapViewModel mapViewModel;
     private FragmentMapBinding fragmentMapBinding;
     private MapView mapView;
+    private FusedLocationProviderClient fusedLocationProviderClient;
     private GoogleMap map;
 
 
     private LoginViewModel loginViewModel;
-    private FusedLocationProviderClient fusedLocationProviderClient;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -67,7 +58,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         mapView = fragmentMapBinding.googleMap;
         initMap(savedInstanceState);
-
 
         return fragmentMapBinding.getRoot();
     }
@@ -83,55 +73,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     }
 
-    public void initPlaces(GoogleMap googleMap) {
-
-        getCurrentPlace();
-        Places.initialize(getContext(), "AIzaSyAfA5LPuDm4ZaZzcifGry_RhEPLjmSi5N4");
-        PlacesClient placesClient = Places.createClient(getContext());
-
-        // Use fields to define the data types to return.
-        List<Place.Field> placeFieldsNames = Collections.singletonList(Place.Field.LAT_LNG);
-
-        FindCurrentPlaceRequest request = FindCurrentPlaceRequest.newInstance(placeFieldsNames);
-
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-
-            Task<FindCurrentPlaceResponse> placeResponse = placesClient.findCurrentPlace(request);
-            placeResponse.addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    FindCurrentPlaceResponse response = task.getResult();
-                    for (PlaceLikelihood placeLikelihood : response.getPlaceLikelihoods()) {
-
-                        Log.d(TAG, placeLikelihood.toString());
-
-                        googleMap.addMarker(new MarkerOptions().position(placeLikelihood.getPlace().getLatLng()).title(placeLikelihood.getPlace().getName()));
-                        googleMap.moveCamera(CameraUpdateFactory.newLatLng(placeLikelihood.getPlace().getLatLng()));
-                        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(placeLikelihood.getPlace().getLatLng(), 15));
-
-                    }
-                } else {
-                    Exception exception = task.getException();
-                    if (exception instanceof ApiException) {
-                        ApiException apiException = (ApiException) exception;
-                        Log.d(TAG, "PLACE NOT FOUND : " + apiException.getMessage());
-                    }
-                }
-
-            });
-        } else {
-            //ask permissions
-        }
-    }
-
-    private void getCurrentPlace() {
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getContext());
-
-
-            Task<Location> locationResult = fusedLocationProviderClient.getLastLocation();
-        }
-
-    }
 
     public void initListeners() {
         fragmentMapBinding.testButton.setOnClickListener(new View.OnClickListener() {
@@ -169,6 +110,75 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mapView.getMapAsync(this);
         mapView.onCreate(savedInstanceState);
         mapView.onStart();
+    }
+
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+        Log.d(TAG, "MAP READY");
+        map = googleMap;
+        mapViewModel.mapLiveData.postValue(googleMap);
+        googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(@NonNull LatLng latLng) {
+                /*
+                MarkerOptions markerOptions = new MarkerOptions();
+                markerOptions.position(latLng);
+                markerOptions.title(latLng.latitude + " : " + latLng.longitude);
+                googleMap.clear();
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+                googleMap.addMarker(markerOptions);
+
+                 */
+
+            }
+        });
+        mapViewModel.initPlaces(googleMap, getActivity());
+        getCurrentPlace();
+    }
+
+    private void getCurrentPlace() {
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            Task<Location> locationResult = fusedLocationProviderClient.getLastLocation();
+            locationResult.addOnCompleteListener(getActivity(), new OnCompleteListener<Location>() {
+                @Override
+                public void onComplete(@NonNull Task<Location> task) {
+                    if (task.isSuccessful()) {
+                        Log.d(TAG, "Success getCurrentPlace");
+                        mapViewModel.currentLocation.postValue(task.getResult());
+/*
+                        lastKnownLocation = task.getResult();
+                        if (lastKnownLocation != null) {
+                            LatLng lastLatLng = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
+                            map.addMarker(new MarkerOptions().position(lastLatLng).title("YOU").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+
+                            map.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                                    new LatLng(lastKnownLocation.getLatitude(),
+                                            lastKnownLocation.getLongitude()), 20));
+
+ */
+                    } else {
+                        Log.d(TAG, "Fail getCurrentPlace");
+                    }
+
+                }
+            });
+
+        }
+
+    }
+
+
+    private void checkAndRequestPermissions() {
+        Log.d(TAG, "FINE LOCATION PERMISSION : " + ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION));
+        requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 19);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        Log.d(TAG, "Code : " + requestCode + " Permissions : " + Arrays.toString(permissions) + " result :" + Arrays.toString(grantResults));
+
     }
 
     @Override
@@ -211,44 +221,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void onLowMemory() {
         super.onLowMemory();
         if (mapView != null) mapView.onLowMemory();
-    }
-
-    @Override
-    public void onMapReady(@NonNull GoogleMap googleMap) {
-        Log.d(TAG, "MAP READY");
-        LatLng paris = new LatLng(48.86306560056864, 2.2962409807179216);
-        googleMap.addMarker(new MarkerOptions().position(paris).title("Paris"));
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(paris));
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(paris, 14));
-
-        googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-            @Override
-            public void onMapClick(@NonNull LatLng latLng) {
-                /*
-                MarkerOptions markerOptions = new MarkerOptions();
-                markerOptions.position(latLng);
-                markerOptions.title(latLng.latitude + " : " + latLng.longitude);
-                googleMap.clear();
-                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
-                googleMap.addMarker(markerOptions);
-
-                 */
-
-            }
-        });
-        initPlaces(googleMap);
-    }
-
-    private void checkAndRequestPermissions() {
-        Log.d(TAG, "FINE LOCATION PERMISSION : " + ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION));
-        requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 19);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        Log.d(TAG, "Code : " + requestCode + " Permissions : " + Arrays.toString(permissions) + " result :" + Arrays.toString(grantResults));
-
     }
 
 
