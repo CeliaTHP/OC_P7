@@ -16,6 +16,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -28,6 +29,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.openclassrooms.oc_p7.databinding.FragmentMapBinding;
+import com.openclassrooms.oc_p7.injection.Injection;
 import com.openclassrooms.oc_p7.view.LoginActivity;
 import com.openclassrooms.oc_p7.view_model.LoginViewModel;
 
@@ -42,7 +44,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private FragmentMapBinding fragmentMapBinding;
     private MapView mapView;
     private FusedLocationProviderClient fusedLocationProviderClient;
-    private GoogleMap map;
 
 
     private LoginViewModel loginViewModel;
@@ -51,13 +52,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
+        //initBinding
         fragmentMapBinding = FragmentMapBinding.inflate(LayoutInflater.from(this.getContext()), null, false);
-        mapViewModel =
-                new ViewModelProvider(this).get(MapViewModel.class);
-        loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
 
-        mapView = fragmentMapBinding.googleMap;
+        initViewModels();
         initMap(savedInstanceState);
+        initListeners();
 
         return fragmentMapBinding.getRoot();
     }
@@ -67,10 +67,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         super.onActivityCreated(savedInstanceState);
 
         // mapViewModel.initMap(fragmentMapBinding.googleMap);
-
-        initListeners();
         checkAndRequestPermissions();
 
+    }
+
+    public void initViewModels() {
+        //INIT MAPVIEWMODEL
+        MapViewModelFactory mapViewModelFactory = Injection.provideMapViewModelFactory(getActivity());
+        mapViewModel =
+                ViewModelProviders.of(this, mapViewModelFactory).get(MapViewModel.class);
+
+        loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
     }
 
 
@@ -107,6 +114,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void initMap(Bundle savedInstanceState) {
+        mapView = fragmentMapBinding.googleMap;
         mapView.getMapAsync(this);
         mapView.onCreate(savedInstanceState);
         mapView.onStart();
@@ -115,7 +123,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         Log.d(TAG, "MAP READY");
-        map = googleMap;
         mapViewModel.mapLiveData.postValue(googleMap);
         googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
@@ -145,7 +152,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 public void onComplete(@NonNull Task<Location> task) {
                     if (task.isSuccessful()) {
                         Log.d(TAG, "Success getCurrentPlace");
-                        mapViewModel.currentLocation.postValue(task.getResult());
+                        mapViewModel.setCurrentLocation(task.getResult());
+                        //mapViewModel.currentLocation.postValue(task.getResult());
 /*
                         lastKnownLocation = task.getResult();
                         if (lastKnownLocation != null) {
