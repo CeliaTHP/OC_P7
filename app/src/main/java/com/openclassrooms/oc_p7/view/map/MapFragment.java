@@ -1,7 +1,6 @@
 package com.openclassrooms.oc_p7.view.map;
 
 import android.Manifest;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -18,7 +17,6 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
@@ -27,10 +25,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
 import com.openclassrooms.oc_p7.databinding.FragmentMapBinding;
 import com.openclassrooms.oc_p7.injection.Injection;
-import com.openclassrooms.oc_p7.view.LoginActivity;
 import com.openclassrooms.oc_p7.view_model.LoginViewModel;
 
 import java.util.Arrays;
@@ -45,18 +41,24 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private MapView mapView;
     private FusedLocationProviderClient fusedLocationProviderClient;
 
+    private Bundle savedInstanceState;
 
     private LoginViewModel loginViewModel;
+
+    private Boolean shouldReload = false;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+
+        this.savedInstanceState = savedInstanceState;
 
         //initBinding
         fragmentMapBinding = FragmentMapBinding.inflate(LayoutInflater.from(this.getContext()), null, false);
 
         initViewModels();
         initMap(savedInstanceState);
+        initObservers();
         initListeners();
 
         return fragmentMapBinding.getRoot();
@@ -66,14 +68,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        // mapViewModel.initMap(fragmentMapBinding.googleMap);
         checkAndRequestPermissions();
 
     }
 
     public void initViewModels() {
         //INIT MAPVIEWMODEL
-        MapViewModelFactory mapViewModelFactory = Injection.provideMapViewModelFactory(getActivity());
+        MapViewModelFactory mapViewModelFactory = Injection.provideMapViewModelFactory();
         mapViewModel =
                 ViewModelProviders.of(this, mapViewModelFactory).get(MapViewModel.class);
 
@@ -82,6 +83,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
 
     public void initListeners() {
+        /*
         fragmentMapBinding.testButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -104,6 +106,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
+         */
         mapViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
@@ -112,6 +115,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         });
 
     }
+
+    private void initObservers() {
+        mapViewModel.currentLocationLiveData.observe(getViewLifecycleOwner(), new Observer<Location>() {
+            @Override
+            public void onChanged(Location location) {
+                mapViewModel.updateCurrentLocation(location);
+            }
+        });
+    }
+
 
     private void initMap(Bundle savedInstanceState) {
         mapView = fragmentMapBinding.googleMap;
@@ -139,7 +152,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
             }
         });
-        mapViewModel.initPlaces(googleMap, getActivity());
+        mapViewModel.getNearbyPlaces(googleMap, getActivity());
         getCurrentPlace();
     }
 
@@ -152,7 +165,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 public void onComplete(@NonNull Task<Location> task) {
                     if (task.isSuccessful()) {
                         Log.d(TAG, "Success getCurrentPlace");
-                        mapViewModel.setCurrentLocation(task.getResult());
+                        //mapViewModel.setCurrentLocation(task.getResult());
+                        mapViewModel.currentLocationLiveData.postValue(task.getResult());
                         //mapViewModel.currentLocation.postValue(task.getResult());
 /*
                         lastKnownLocation = task.getResult();
@@ -186,6 +200,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         Log.d(TAG, "Code : " + requestCode + " Permissions : " + Arrays.toString(permissions) + " result :" + Arrays.toString(grantResults));
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            shouldReload = true;
+        }
+
 
     }
 
@@ -193,30 +211,46 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (mapView != null) mapView.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate");
+
     }
 
     @Override
     public void onStart() {
         super.onStart();
         if (mapView != null) mapView.onStart();
+        Log.d(TAG, "onStart");
+
     }
 
     @Override
     public void onResume() {
         super.onResume();
         if (mapView != null) mapView.onResume();
+        if (shouldReload) {
+            Log.d(TAG, "shouldReload");
+
+            mapViewModel.getNearbyPlaces(mapViewModel.mapLiveData.getValue(), getActivity());
+            getCurrentPlace();
+            shouldReload = false;
+        }
+        Log.d(TAG, "onResume");
     }
 
     @Override
     public void onPause() {
         super.onPause();
         if (mapView != null) mapView.onPause();
+        Log.d(TAG, "onPause");
+
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         if (mapView != null) mapView.onDestroy();
+        Log.d(TAG, "onDestroy");
+
     }
 
     @Override

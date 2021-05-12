@@ -23,8 +23,8 @@ import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class PlaceRepository {
@@ -33,10 +33,18 @@ public class PlaceRepository {
 
     public MutableLiveData<Location> currentLocation = new MutableLiveData<>();
 
-    public List<Place> placeList = Collections.emptyList();
+    public ArrayList<Place> placeList = new ArrayList<>();
+
+    public void updateCurrentLocation(Location location, GoogleMap map) {
+        //AFTER GETTING ALL PLACES ADD USER POSITION
+        LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+        map.addMarker(new MarkerOptions().position(currentLatLng).title("YOU").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+        map.moveCamera(CameraUpdateFactory.newLatLng(currentLatLng));
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15));
+    }
 
 
-    public void initPlaces(GoogleMap googleMap, Context context) {
+    public List<Place> getNearbyPlaces(GoogleMap googleMap, Context context) {
 
         Places.initialize(context, "AIzaSyAfA5LPuDm4ZaZzcifGry_RhEPLjmSi5N4");
         PlacesClient placesClient = Places.createClient(context);
@@ -54,16 +62,12 @@ public class PlaceRepository {
                     FindCurrentPlaceResponse responseLatLng = task.getResult();
                     for (PlaceLikelihood placeLikelihood : responseLatLng.getPlaceLikelihoods()) {
                         Log.d(TAG, placeLikelihood.toString());
-                        //placeList.add(placeLikelihood.getPlace());
+                        placeList.add(placeLikelihood.getPlace());
                         googleMap.addMarker(new MarkerOptions().position(placeLikelihood.getPlace().getLatLng()).title(placeLikelihood.getPlace().getName()));
 
                     }
+                    //LIST OF ALL PLACES NEAR USER
                     Log.d(TAG, placeList.toString());
-                    //AFTER GETTING ALL PLACES ADD USER POSITION
-                    LatLng currentLatLng = new LatLng(currentLocation.getValue().getLatitude(), currentLocation.getValue().getLongitude());
-                    googleMap.addMarker(new MarkerOptions().position(currentLatLng).title("YOU").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLng(currentLatLng));
-                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15));
 
                 } else {
                     Exception exception = task.getException();
@@ -73,9 +77,11 @@ public class PlaceRepository {
                     }
                 }
 
+
             });
         } else {
             //ask permissions
         }
+        return placeList;
     }
 }

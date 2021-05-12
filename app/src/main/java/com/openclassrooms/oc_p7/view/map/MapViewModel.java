@@ -18,6 +18,7 @@ public class MapViewModel extends ViewModel {
 
 
     public MutableLiveData<GoogleMap> mapLiveData = new MutableLiveData<>();
+    public MutableLiveData<Location> currentLocationLiveData = new MutableLiveData<>();
 
 
     public MapViewModel(PlaceRepository placeRepository) {
@@ -30,13 +31,17 @@ public class MapViewModel extends ViewModel {
         return mText;
     }
 
-    public void setCurrentLocation(Location location) {
-        placeRepository.currentLocation.postValue(location);
+    //PASSER MAP A CHAQUE FOIS OU RECUP VALEURS ET UPDATE AVEC LA MAP DEPUIS VM ?
+    //AJOUT DES MARQEURS ICI ???
+    // REPO DOIVENT UNIQUEMENT RETOURNER LES DONNEES ?
 
+    public void getNearbyPlaces(GoogleMap googleMap, Activity activity) {
+        placeRepository.getNearbyPlaces(googleMap, activity);
     }
 
-    public void initPlaces(GoogleMap googleMap, Activity activity) {
-        placeRepository.initPlaces(googleMap, activity);
+    public void updateCurrentLocation(Location location) {
+        placeRepository.updateCurrentLocation(location, mapLiveData.getValue());
+
     }
 
 
