@@ -6,6 +6,13 @@
     android:layout_height="match_parent"
     tools:context=".view.workmates.WorkmatesFragment">
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:listitem="@layout/item_layout_attendees"
+
+        />
+
     <TextView
         android:id="@+id/text_workmates"
         android:layout_width="match_parent"

@@ -14,12 +14,25 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ImageButton
+        android:id="@+id/location_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20sp"
+        android:layout_marginBottom="80sp"
+        android:background="@drawable/round_background"
+        android:elevation="5dp"
+        android:src="@drawable/ic_location"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+
+    <!-- BUTTONS
     <TextView
         android:id="@+id/text_map"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:visibility="gone"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:textAlignment="center"
@@ -33,7 +46,6 @@
         android:id="@+id/testButton"
         android:layout_width="80dp"
         android:layout_height="60dp"
-        android:visibility="gone"
         android:backgroundTint="@color/dark_orange"
         android:text="TEST"
         app:cornerRadius="5dp"
@@ -44,7 +56,6 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/signOutButton"
         android:layout_width="80dp"
-        android:visibility="gone"
         android:layout_height="60dp"
         android:backgroundTint="@color/purple_200"
         android:text="SIGN OUT"
@@ -52,6 +63,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/testButton" />
-
+-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

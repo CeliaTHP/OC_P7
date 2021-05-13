@@ -83,6 +83,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
 
     public void initListeners() {
+
+        fragmentMapBinding.locationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mapViewModel.updateCurrentLocation(mapViewModel.currentLocationLiveData.getValue());
+            }
+        });
         /*
         fragmentMapBinding.testButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,12 +114,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         });
 
          */
-        mapViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                fragmentMapBinding.textMap.setText(s);
-            }
-        });
+
 
     }
 

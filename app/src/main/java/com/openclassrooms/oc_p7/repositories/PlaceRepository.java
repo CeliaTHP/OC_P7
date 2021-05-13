@@ -36,10 +36,12 @@ public class PlaceRepository {
 
     public void updateCurrentLocation(Location location, GoogleMap map) {
         //AFTER GETTING ALL PLACES ADD USER POSITION
-        LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-        map.addMarker(new MarkerOptions().position(currentLatLng).title("YOU").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-        map.moveCamera(CameraUpdateFactory.newLatLng(currentLatLng));
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15));
+        if (location != null) {
+            LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+            map.addMarker(new MarkerOptions().position(currentLatLng).title("YOU").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+            map.moveCamera(CameraUpdateFactory.newLatLng(currentLatLng));
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15));
+        }
     }
 
 
