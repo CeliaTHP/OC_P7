@@ -152,6 +152,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
             }
         });
+        refreshMap(googleMap);
+
+    }
+
+    private void refreshMap(GoogleMap googleMap) {
         mapViewModel.getNearbyPlaces(googleMap, getActivity());
         getCurrentPlace();
     }
@@ -236,8 +241,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         // if(shouldShowPermissionDialog) Dialog if user denied gps access
         if (shouldReload) {
             Log.d(TAG, "shouldReload");
-            mapViewModel.getNearbyPlaces(mapViewModel.mapLiveData.getValue(), getActivity());
-            getCurrentPlace();
+            refreshMap(mapViewModel.mapLiveData.getValue());
             shouldReload = false;
         }
     }
