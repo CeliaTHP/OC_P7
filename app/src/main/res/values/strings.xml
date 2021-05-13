@@ -21,5 +21,7 @@
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
 
+    <string name="workmate_text">%1$s mange %2$s (%3$s)</string>
+
 
 </resources>

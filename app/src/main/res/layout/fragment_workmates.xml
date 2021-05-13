@@ -7,11 +7,10 @@
     tools:context=".view.workmates.WorkmatesFragment">
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/workmate_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/item_layout_attendees"
-
-        />
+        tools:listitem="@layout/item_layout_workmates" />
 
     <TextView
         android:id="@+id/text_workmates"
