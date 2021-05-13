@@ -6,12 +6,14 @@ public class User {
     private String surname;
     private String email;
     private String lunch;
+    private String pic;
 
-    public User(String name, String surname, String email, String lunch) {
+    public User(String name, String surname, String email, String lunch, String pic) {
         this.name = name;
         this.surname = surname;
         this.email = email;
         this.lunch = lunch;
+        this.pic = pic;
 
     }
 
@@ -45,5 +47,13 @@ public class User {
 
     public void setLunch(String lunch) {
         this.lunch = lunch;
+    }
+
+    public String getPic() {
+        return pic;
+    }
+
+    public void setPic(String pic) {
+        this.pic = pic;
     }
 }

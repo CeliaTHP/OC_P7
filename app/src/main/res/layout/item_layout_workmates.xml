@@ -8,17 +8,17 @@
     android:elevation="5dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="10dp">
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/workmate_pic"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/round_background"
-            android:backgroundTint="@color/main_orange"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:src="@drawable/ic_profile"
+            app:civ_border_color="@color/dark_orange"
+            app:civ_border_width="2dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -29,7 +29,7 @@
             android:layout_marginStart="20dp"
             android:text="@string/workmate_text"
             android:textColor="@color/black"
-            android:textSize="14sp"
+            android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="@id/workmate_pic"
             app:layout_constraintStart_toEndOf="@id/workmate_pic"
             app:layout_constraintTop_toTopOf="@id/workmate_pic" />
