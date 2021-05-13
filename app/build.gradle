@@ -14,6 +14,7 @@ android {
         versionCode 1
         versionName "1.0"
         resValue "string", "GOOGLE_MAP_API_KEY", "\"AIzaSyAfA5LPuDm4ZaZzcifGry_RhEPLjmSi5N4\""
+        buildConfigField ("String" , "GoogleMapApiKey", "\"AIzaSyAfA5LPuDm4ZaZzcifGry_RhEPLjmSi5N4\"" )
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true

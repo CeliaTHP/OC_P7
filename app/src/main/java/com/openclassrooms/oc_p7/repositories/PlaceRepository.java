@@ -7,7 +7,6 @@ import android.location.Location;
 import android.util.Log;
 
 import androidx.core.content.ContextCompat;
-import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -22,6 +21,7 @@ import com.google.android.libraries.places.api.model.PlaceLikelihood;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
+import com.openclassrooms.oc_p7.BuildConfig;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,7 +31,6 @@ public class PlaceRepository {
 
     private String TAG = "PlaceRepository";
 
-    public MutableLiveData<Location> currentLocation = new MutableLiveData<>();
 
     public ArrayList<Place> placeList = new ArrayList<>();
 
@@ -46,7 +45,7 @@ public class PlaceRepository {
 
     public List<Place> getNearbyPlaces(GoogleMap googleMap, Context context) {
 
-        Places.initialize(context, "AIzaSyAfA5LPuDm4ZaZzcifGry_RhEPLjmSi5N4");
+        Places.initialize(context, BuildConfig.GoogleMapApiKey);
         PlacesClient placesClient = Places.createClient(context);
 
         // Use fields to define the data types to return.

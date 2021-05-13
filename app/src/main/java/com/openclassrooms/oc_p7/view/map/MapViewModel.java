@@ -8,7 +8,10 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.libraries.places.api.model.Place;
 import com.openclassrooms.oc_p7.repositories.PlaceRepository;
+
+import java.util.List;
 
 public class MapViewModel extends ViewModel {
 
@@ -17,8 +20,10 @@ public class MapViewModel extends ViewModel {
     private MutableLiveData<String> mText;
 
 
+
     public MutableLiveData<GoogleMap> mapLiveData = new MutableLiveData<>();
     public MutableLiveData<Location> currentLocationLiveData = new MutableLiveData<>();
+    public MutableLiveData<List<Place>> placeListLiveData = new MutableLiveData<>();
 
 
     public MapViewModel(PlaceRepository placeRepository) {

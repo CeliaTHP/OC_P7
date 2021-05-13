@@ -156,6 +156,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         getCurrentPlace();
     }
 
+
     private void getCurrentPlace() {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -227,14 +228,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void onResume() {
         super.onResume();
         if (mapView != null) mapView.onResume();
+        verifyMapState();
+        Log.d(TAG, "onResume");
+    }
+
+    public void verifyMapState() {
+        // if(shouldShowPermissionDialog) Dialog if user denied gps access
         if (shouldReload) {
             Log.d(TAG, "shouldReload");
-
             mapViewModel.getNearbyPlaces(mapViewModel.mapLiveData.getValue(), getActivity());
             getCurrentPlace();
             shouldReload = false;
         }
-        Log.d(TAG, "onResume");
     }
 
     @Override
