@@ -23,13 +23,16 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.libraries.places.api.model.Place;
 import com.openclassrooms.oc_p7.databinding.FragmentMapBinding;
 import com.openclassrooms.oc_p7.injection.Injection;
 import com.openclassrooms.oc_p7.view_model.LoginViewModel;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
 
@@ -44,6 +47,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private Bundle savedInstanceState;
 
     private LoginViewModel loginViewModel;
+
+    private GoogleMap googleMap;
 
     private Boolean shouldReload = false;
 
@@ -90,6 +95,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 mapViewModel.updateCurrentLocation(mapViewModel.currentLocationLiveData.getValue());
             }
         });
+
+
         /*
         fragmentMapBinding.testButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,8 +132,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 mapViewModel.updateCurrentLocation(location);
             }
         });
-    }
 
+        mapViewModel.placeListLiveData.observe(getViewLifecycleOwner(), new Observer<List<Place>>() {
+            @Override
+            public void onChanged(List<Place> places) {
+                googleMap.clear();
+                for (Place place : places) {
+                    googleMap.addMarker(new MarkerOptions().position(place.getLatLng()).title(place.getName()));
+                }
+            }
+        });
+    }
 
     private void initMap(Bundle savedInstanceState) {
         mapView = fragmentMapBinding.googleMap;
@@ -135,9 +151,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mapView.onStart();
     }
 
+
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         Log.d(TAG, "MAP READY");
+        this.googleMap = googleMap;
         mapViewModel.mapLiveData.postValue(googleMap);
         googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
@@ -154,12 +172,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
             }
         });
-        refreshMap(googleMap);
+        refreshMap();
 
     }
 
-    private void refreshMap(GoogleMap googleMap) {
-        mapViewModel.getNearbyPlaces(googleMap, getActivity());
+    private void refreshMap() {
+        mapViewModel.getNearbyPlaces(getActivity());
         getCurrentPlace();
     }
 
@@ -174,19 +192,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     if (task.isSuccessful()) {
                         Log.d(TAG, "Success getCurrentPlace");
                         //mapViewModel.setCurrentLocation(task.getResult());
-                        mapViewModel.currentLocationLiveData.postValue(task.getResult());
-                        //mapViewModel.currentLocation.postValue(task.getResult());
-/*
-                        lastKnownLocation = task.getResult();
-                        if (lastKnownLocation != null) {
-                            LatLng lastLatLng = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
-                            map.addMarker(new MarkerOptions().position(lastLatLng).title("YOU").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
 
-                            map.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                                    new LatLng(lastKnownLocation.getLatitude(),
-                                            lastKnownLocation.getLongitude()), 20));
+                        mapViewModel.setCurrentLocation(task.getResult());
 
- */
+
                     } else {
                         Log.d(TAG, "Fail getCurrentPlace");
                     }
@@ -205,7 +214,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         Log.d(TAG, "Code : " + requestCode + " Permissions : " + Arrays.toString(permissions) + " result :" + Arrays.toString(grantResults));
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -243,7 +253,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         // if(shouldShowPermissionDialog) Dialog if user denied gps access
         if (shouldReload) {
             Log.d(TAG, "shouldReload");
-            refreshMap(mapViewModel.mapLiveData.getValue());
+            refreshMap();
             shouldReload = false;
         }
     }

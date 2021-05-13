@@ -7,6 +7,7 @@ import android.location.Location;
 import android.util.Log;
 
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -34,6 +35,9 @@ public class PlaceRepository {
 
     public ArrayList<Place> placeList = new ArrayList<>();
 
+    public MutableLiveData<List<Place>> placesLiveData = new MutableLiveData<>();
+
+    //NO MAP HERE
     public void updateCurrentLocation(Location location, GoogleMap map) {
         //AFTER GETTING ALL PLACES ADD USER POSITION
         if (location != null) {
@@ -45,7 +49,8 @@ public class PlaceRepository {
     }
 
 
-    public List<Place> getNearbyPlaces(GoogleMap googleMap, Context context) {
+    //LIVEDATA
+    public void getNearbyPlaces(Context context) {
 
         Places.initialize(context, BuildConfig.GoogleMapApiKey);
         PlacesClient placesClient = Places.createClient(context);
@@ -64,10 +69,11 @@ public class PlaceRepository {
                     for (PlaceLikelihood placeLikelihood : responseLatLng.getPlaceLikelihoods()) {
                         Log.d(TAG, placeLikelihood.toString());
                         placeList.add(placeLikelihood.getPlace());
-                        googleMap.addMarker(new MarkerOptions().position(placeLikelihood.getPlace().getLatLng()).title(placeLikelihood.getPlace().getName()));
+                        //googleMap.addMarker(new MarkerOptions().position(placeLikelihood.getPlace().getLatLng()).title(placeLikelihood.getPlace().getName()));
 
                     }
                     //LIST OF ALL PLACES NEAR USER
+                    placesLiveData.postValue(placeList);
                     Log.d(TAG, placeList.toString());
 
                 } else {
@@ -83,6 +89,5 @@ public class PlaceRepository {
         } else {
             //ask permissions
         }
-        return placeList;
     }
 }

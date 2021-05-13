@@ -20,14 +20,15 @@ public class MapViewModel extends ViewModel {
     private MutableLiveData<String> mText;
 
 
-
     public MutableLiveData<GoogleMap> mapLiveData = new MutableLiveData<>();
+
     public MutableLiveData<Location> currentLocationLiveData = new MutableLiveData<>();
-    public MutableLiveData<List<Place>> placeListLiveData = new MutableLiveData<>();
+    public MutableLiveData<List<Place>> placeListLiveData;
 
 
     public MapViewModel(PlaceRepository placeRepository) {
         this.placeRepository = placeRepository;
+        placeListLiveData = placeRepository.placesLiveData;
         mText = new MutableLiveData<>();
         mText.setValue("This is map fragment");
     }
@@ -40,8 +41,13 @@ public class MapViewModel extends ViewModel {
     //AJOUT DES MARQEURS ICI ???
     // REPO DOIVENT UNIQUEMENT RETOURNER LES DONNEES ?
 
-    public void getNearbyPlaces(GoogleMap googleMap, Activity activity) {
-        placeRepository.getNearbyPlaces(googleMap, activity);
+    public void getNearbyPlaces(Activity activity) {
+        //NO MAP FOR REPOSITORY
+        placeRepository.getNearbyPlaces(activity);
+    }
+
+    public void setCurrentLocation(Location location) {
+        currentLocationLiveData.postValue(location);
     }
 
     public void updateCurrentLocation(Location location) {

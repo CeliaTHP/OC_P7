@@ -32,7 +32,7 @@ public class DummyWorkmateGenerator {
     }
 
     public static String getRandomPic() {
-        return "https://i.pravatar.cc/150?img=" + new Random().nextInt((70) + 1);
+       return "https://i.pravatar.cc/150?img=" + new Random().nextInt((70) + 1);
     }
 
 }
