@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -46,9 +47,40 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getMenuInflater().inflate(R.menu.toolbar_menu, menu);
 
+        MenuItem.OnActionExpandListener onActionExpandListener = new MenuItem.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                return true;
+            }
+        };
+        menu.findItem(R.id.toolbar_search).setOnActionExpandListener(onActionExpandListener);
+        SearchView searchView = (SearchView) menu.findItem(R.id.toolbar_search).getActionView();
+        searchView.setQueryHint("Search location...");
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Log.d(TAG, "query : " + query);
+
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                Log.d(TAG, "text changed : " + newText);
+
+                return true;
+            }
+        });
+
         return true;
 
     }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
