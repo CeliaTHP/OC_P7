@@ -1,6 +1,7 @@
 package com.openclassrooms.oc_p7.repositories;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -10,11 +11,7 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
@@ -33,21 +30,21 @@ public class PlaceRepository {
     private String TAG = "PlaceRepository";
 
 
-    public ArrayList<Place> placeList = new ArrayList<>();
+    private ArrayList<Place> placeList = new ArrayList<>();
 
     public MutableLiveData<List<Place>> placesLiveData = new MutableLiveData<>();
+    public MutableLiveData<Location> currentLocationLiveData = new MutableLiveData<>();
 
-    //NO MAP HERE
-    public void updateCurrentLocation(Location location, GoogleMap map) {
-        //AFTER GETTING ALL PLACES ADD USER POSITION
-        if (location != null) {
-            LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-            map.addMarker(new MarkerOptions().position(currentLatLng).title("YOU").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-            map.moveCamera(CameraUpdateFactory.newLatLng(currentLatLng));
-            map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15));
-        }
+
+    public void getCurrentLocation(FusedLocationProviderClient fusedLocationProviderClient) {
+        @SuppressLint("MissingPermission") //Already asked for Location
+                Task<Location> task = fusedLocationProviderClient.getLastLocation();
+        task.addOnSuccessListener(location -> {
+            if (location != null) {
+                currentLocationLiveData.postValue(location);
+            }
+        });
     }
-
 
     //LIVEDATA
     public void getNearbyPlaces(Context context) {

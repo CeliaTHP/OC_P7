@@ -19,4 +19,5 @@
         <item name="android:textColorSecondary">@color/white</item>
         <item name="actionMenuTextColor">@color/white</item>
     </style>
+
 </resources>

@@ -7,7 +7,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.libraries.places.api.model.Place;
 import com.openclassrooms.oc_p7.repositories.PlaceRepository;
 
@@ -20,17 +20,13 @@ public class MapViewModel extends ViewModel {
     private MutableLiveData<String> mText;
 
 
-    public MutableLiveData<GoogleMap> mapLiveData = new MutableLiveData<>();
-
-    public MutableLiveData<Location> currentLocationLiveData = new MutableLiveData<>();
     public MutableLiveData<List<Place>> placeListLiveData;
-
+    public MutableLiveData<Location> currentLocationLiveData;
 
     public MapViewModel(PlaceRepository placeRepository) {
         this.placeRepository = placeRepository;
         placeListLiveData = placeRepository.placesLiveData;
-        mText = new MutableLiveData<>();
-        mText.setValue("This is map fragment");
+        currentLocationLiveData = placeRepository.currentLocationLiveData;
     }
 
     public LiveData<String> getText() {
@@ -46,15 +42,8 @@ public class MapViewModel extends ViewModel {
         placeRepository.getNearbyPlaces(activity);
     }
 
-    public void setCurrentLocation(Location location) {
-        currentLocationLiveData.postValue(location);
+    public void getCurrentLocation(FusedLocationProviderClient fusedLocationProviderClient) {
+        placeRepository.getCurrentLocation(fusedLocationProviderClient);
     }
-
-    public void updateCurrentLocation(Location location) {
-        placeRepository.updateCurrentLocation(location, mapLiveData.getValue());
-
-    }
-
-
 }
 

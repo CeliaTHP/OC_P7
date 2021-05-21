@@ -13,14 +13,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-
         <fragment
             android:id="@+id/nav_host_fragment"
             android:name="androidx.navigation.fragment.NavHostFragment"
             android:layout_width="match_parent"
-            android:layout_marginBottom="50dp"
             android:layout_height="match_parent"
             android:layout_marginTop="?android:attr/actionBarSize"
+            android:layout_marginBottom="50dp"
             app:defaultNavHost="true"
             app:navGraph="@navigation/mobile_navigation" />
 
@@ -42,8 +41,8 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/main_orange"
-            app:layout_constraintStart_toStartOf="parent"
             android:theme="@style/ToolbarStyle"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.bottomnavigation.BottomNavigationView

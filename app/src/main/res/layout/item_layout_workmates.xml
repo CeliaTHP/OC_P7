@@ -28,12 +28,10 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:text="@string/workmate_text"
-            android:textColor="@color/black"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="@id/workmate_pic"
             app:layout_constraintStart_toEndOf="@id/workmate_pic"
             app:layout_constraintTop_toTopOf="@id/workmate_pic" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

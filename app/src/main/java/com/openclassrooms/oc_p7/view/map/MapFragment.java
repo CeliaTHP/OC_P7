@@ -2,7 +2,6 @@ package com.openclassrooms.oc_p7.view.map;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,28 +10,27 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.model.Place;
 import com.openclassrooms.oc_p7.databinding.FragmentMapBinding;
 import com.openclassrooms.oc_p7.injection.Injection;
 import com.openclassrooms.oc_p7.view_model.LoginViewModel;
 
 import java.util.Arrays;
-import java.util.List;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
 
@@ -92,10 +90,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         fragmentMapBinding.locationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mapViewModel.updateCurrentLocation(mapViewModel.currentLocationLiveData.getValue());
+                Log.d(TAG, "onClick locationButton");
+                LatLng currentLatLng = new LatLng(mapViewModel.currentLocationLiveData.getValue().getLatitude(), mapViewModel.currentLocationLiveData.getValue().getLongitude());
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 14));
             }
         });
-
 
         /*
         fragmentMapBinding.testButton.setOnClickListener(new View.OnClickListener() {
@@ -126,20 +125,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void initObservers() {
-        mapViewModel.currentLocationLiveData.observe(getViewLifecycleOwner(), new Observer<Location>() {
-            @Override
-            public void onChanged(Location location) {
-                mapViewModel.updateCurrentLocation(location);
-            }
+
+        mapViewModel.currentLocationLiveData.observe(getViewLifecycleOwner(), location -> {
+            LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+            googleMap.addMarker(new MarkerOptions().position(currentLatLng).title("YOU").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))).showInfoWindow();
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(currentLatLng));
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 14));
         });
 
-        mapViewModel.placeListLiveData.observe(getViewLifecycleOwner(), new Observer<List<Place>>() {
-            @Override
-            public void onChanged(List<Place> places) {
-                googleMap.clear();
-                for (Place place : places) {
-                    googleMap.addMarker(new MarkerOptions().position(place.getLatLng()).title(place.getName()));
-                }
+
+        mapViewModel.placeListLiveData.observe(getViewLifecycleOwner(), placeList -> {
+            Log.d(TAG, "placeListLiveData onChanged");
+            for (Place place : placeList) {
+                googleMap.addMarker(new MarkerOptions().position(place.getLatLng()).title(place.getName()));
             }
         });
     }
@@ -156,7 +154,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(@NonNull GoogleMap googleMap) {
         Log.d(TAG, "MAP READY");
         this.googleMap = googleMap;
-        mapViewModel.mapLiveData.postValue(googleMap);
         googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(@NonNull LatLng latLng) {
@@ -177,36 +174,22 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void refreshMap() {
+        Log.d(TAG, "Refresh Map");
+        googleMap.clear();
         mapViewModel.getNearbyPlaces(getActivity());
-        getCurrentPlace();
+        getCurrentLocation();
     }
 
-
-    private void getCurrentPlace() {
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            Task<Location> locationResult = fusedLocationProviderClient.getLastLocation();
-            locationResult.addOnCompleteListener(getActivity(), new OnCompleteListener<Location>() {
-                @Override
-                public void onComplete(@NonNull Task<Location> task) {
-                    if (task.isSuccessful()) {
-                        Log.d(TAG, "Success getCurrentPlace");
-                        //mapViewModel.setCurrentLocation(task.getResult());
-
-                        mapViewModel.setCurrentLocation(task.getResult());
-
-
-                    } else {
-                        Log.d(TAG, "Fail getCurrentPlace");
-                    }
-
-                }
-            });
+    public void getCurrentLocation() {
+        FusedLocationProviderClient fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getContext());
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Log.d(TAG, "shouldRequestPermissions");
+            checkAndRequestPermissions();
+        } else {
+            mapViewModel.getCurrentLocation(fusedLocationProviderClient);
 
         }
-
     }
-
 
     private void checkAndRequestPermissions() {
         Log.d(TAG, "FINE LOCATION PERMISSION : " + ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION));
@@ -251,6 +234,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     public void verifyMapState() {
         // if(shouldShowPermissionDialog) Dialog if user denied gps access
+
         if (shouldReload) {
             Log.d(TAG, "shouldReload");
             refreshMap();
