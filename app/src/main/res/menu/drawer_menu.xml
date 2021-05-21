@@ -2,7 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
-
+        <item
+            android:id="@+id/side_menu_home"
+            android:icon="@drawable/ic_food_logo"
+            android:title="@string/side_menu_home" />
         <item
             android:id="@+id/side_menu_lunch"
             android:icon="@drawable/ic_food_logo"
@@ -16,6 +19,5 @@
             android:icon="@drawable/ic_power"
             android:title="@string/side_menu_logout" />
     </group>
-
 
 </menu>

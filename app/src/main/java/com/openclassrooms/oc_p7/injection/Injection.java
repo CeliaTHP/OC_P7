@@ -3,7 +3,7 @@ package com.openclassrooms.oc_p7.injection;
 import com.openclassrooms.oc_p7.model.User;
 import com.openclassrooms.oc_p7.repositories.PlaceRepository;
 import com.openclassrooms.oc_p7.service.DummyWorkmateGenerator;
-import com.openclassrooms.oc_p7.view.map.MapViewModelFactory;
+import com.openclassrooms.oc_p7.view.home.map.MapViewModelFactory;
 
 import java.util.List;
 

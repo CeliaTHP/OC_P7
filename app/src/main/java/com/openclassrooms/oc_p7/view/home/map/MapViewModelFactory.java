@@ -1,4 +1,4 @@
-package com.openclassrooms.oc_p7.view.map;
+package com.openclassrooms.oc_p7.view.home.map;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;

@@ -46,14 +46,21 @@ public class PlaceRepository {
         });
     }
 
+    /*
+    public void getNearbyPlaces(Context context) {
+
+    }
+
+*/
     //LIVEDATA
+
     public void getNearbyPlaces(Context context) {
 
         Places.initialize(context, BuildConfig.GoogleMapApiKey);
         PlacesClient placesClient = Places.createClient(context);
 
         // Use fields to define the data types to return.
-        List<Place.Field> placeFields = Arrays.asList(Place.Field.LAT_LNG, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.RATING);
+        List<Place.Field> placeFields = Arrays.asList(Place.Field.LAT_LNG, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.RATING, Place.Field.TYPES);
 
         FindCurrentPlaceRequest request = FindCurrentPlaceRequest.newInstance(placeFields);
 
@@ -87,4 +94,5 @@ public class PlaceRepository {
             //ask permissions
         }
     }
+
 }

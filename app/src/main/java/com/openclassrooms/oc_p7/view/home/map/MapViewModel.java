@@ -1,4 +1,4 @@
-package com.openclassrooms.oc_p7.view.map;
+package com.openclassrooms.oc_p7.view.home.map;
 
 import android.app.Activity;
 import android.location.Location;

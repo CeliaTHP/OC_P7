@@ -1,4 +1,4 @@
-package com.openclassrooms.oc_p7.view.workmates;
+package com.openclassrooms.oc_p7.view.home.workmates;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

@@ -8,14 +8,14 @@ import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.gms.common.api.Status;
@@ -23,9 +23,9 @@ import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.openclassrooms.oc_p7.R;
+import com.openclassrooms.oc_p7.databinding.ActivityDashboardBinding;
 
 import java.util.Arrays;
 import java.util.List;
@@ -33,11 +33,14 @@ import java.util.List;
 public class DashboardActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = " DashboardActivity ";
-    private DrawerLayout drawerLayout;
+    private NavController drawerNavController;
     private NavigationView navigationView;
-    private ActionBar toolbar;
+    private ActionBarDrawerToggle actionBarDrawerToggle;
+    private Toolbar toolbar;
     private final static int AUTOCOMPLETE_REQUEST_CODE = 1;
     SearchView searchView;
+
+    ActivityDashboardBinding activityDashboardBinding;
     /*
         public static final int RESULT_CANCELED    = 0;
      Standard activity result: operation succeeded.
@@ -51,13 +54,11 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dashboard);
-        setNavigation();
+        activityDashboardBinding = ActivityDashboardBinding.inflate(getLayoutInflater());
+        setContentView(activityDashboardBinding.getRoot());
 
         setToolbar();
-        //initAutoCompleteSupportFragment();
-
-        //  configureDrawerLayout();
+        setDrawerLayout();
         // configureNavigationView();
     }
 
@@ -67,9 +68,11 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        toolbar = getSupportActionBar();
+
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu);// set drawable icon
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
         getMenuInflater().inflate(R.menu.toolbar_menu, menu);
 
         setUpSearchView(menu);
@@ -124,34 +127,6 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
         });
     }
 
-    /*
-    public void initAutoCompleteSupportFragment() {
-        // Initialize the AutocompleteSupportFragment.
-        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
-                getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
-
-        // Specify the types of place data to return.
-        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME));
-
-        // Set up a PlaceSelectionListener to handle the response.
-        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-            @Override
-            public void onPlaceSelected(@NonNull Place place) {
-                // TODO: Get info about the selected place.
-                Log.d(TAG, "Place: " + place.getName() + ", " + place.getId());
-            }
-
-
-            @Override
-            public void onError(@NonNull Status status) {
-                // TODO: Handle the error.
-                Log.d(TAG, "An error occurred: " + status);
-            }
-        });
-
-    }
-
-     */
     public void onSearchCalled() {
         // Set the fields to specify which types of place data to return.
         List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG);
@@ -192,8 +167,8 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        if (drawerLayout.isDrawerOpen(GravityCompat.START))
-            drawerLayout.closeDrawer(GravityCompat.START);
+        if (activityDashboardBinding.drawerLayout.isDrawerOpen(GravityCompat.START))
+            activityDashboardBinding.drawerLayout.closeDrawer(GravityCompat.START);
         else
             super.onBackPressed();
     }
@@ -212,52 +187,48 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                 Log.d(TAG, "Nav Logout");
 
         }
-        if (drawerLayout.isDrawerOpen(drawerLayout))
-            drawerLayout.closeDrawer(GravityCompat.START);
+        if (activityDashboardBinding.drawerLayout.isDrawerOpen(activityDashboardBinding.drawerLayout))
+            activityDashboardBinding.drawerLayout.closeDrawer(GravityCompat.START);
 
         return true;
-    }
-
-
-    private void configureNavigationView() {
-        // navigationView = (NavigationView) findViewById(R.id.drawer_nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
     }
 
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
+
             case android.R.id.home:
-                Log.d(TAG, "HOME CHOSEN");
+                Log.d(TAG, item.getItemId() + "");
+                activityDashboardBinding.drawerLayout.open();
                 return true;
             case R.id.toolbar_search:
+                activityDashboardBinding.drawerLayout.open();
+
                 Log.d(TAG, "SEARCH CHOSEN");
                 return true;
+
+
             default:
+                Log.d(TAG, item.getItemId() + "");
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    void setToolbar() {
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        /*
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
-        actionBar.setDisplayShowHomeEnabled(true);
 
-         */
+    void setToolbar() {
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
     }
 
 
-    void setNavigation() {
-        BottomNavigationView navView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavigationUI.setupWithNavController(navView, navController);
-
+    private void setDrawerLayout() {
+        NavController navController = ((NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.drawer_nav_host_fragment)).getNavController();
+        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(R.id.side_menu_home, R.id.side_menu_lunch, R.id.side_menu_settings, R.id.side_menu_logout).build();
+        NavigationUI.setupWithNavController(toolbar, navController, appBarConfiguration);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, activityDashboardBinding.drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        activityDashboardBinding.drawerLayout.addDrawerListener(toggle);
     }
 
 }

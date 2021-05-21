@@ -1,4 +1,4 @@
-package com.openclassrooms.oc_p7.view.list;
+package com.openclassrooms.oc_p7.view.home.list;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

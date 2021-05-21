@@ -16,6 +16,7 @@
     <string name="side_menu_logout">Log out</string>
 
     <string name="workmate_text">%1$s is eating at %2$s (%3$s)</string>
+    <string name="side_menu_home">Home</string>
 
 
 </resources>

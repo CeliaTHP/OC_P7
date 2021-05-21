@@ -1,16 +1,16 @@
-package com.openclassrooms.oc_p7.view.workmates;
+package com.openclassrooms.oc_p7.view.home.list;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class WorkmatesViewModel extends ViewModel {
+public class ListViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
 
-    public WorkmatesViewModel() {
+    public ListViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is workmates fragment");
+        mText.setValue("This is list fragment");
     }
 
     public LiveData<String> getText() {

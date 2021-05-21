@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.map.MapFragment">
+    tools:context=".view.home.map.MapFragment">
 
     <com.google.android.gms.maps.MapView
         android:id="@+id/google_map"
@@ -14,12 +14,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/location_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="20sp"
-        android:background="@drawable/round_background"
+        android:backgroundTint="@color/white"
         android:elevation="5dp"
         android:src="@drawable/ic_location"
         app:layout_constraintBottom_toBottomOf="parent"
