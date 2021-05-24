@@ -1,8 +1,11 @@
 package com.openclassrooms.oc_p7.view;
 
+import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.os.Bundle;
+import com.openclassrooms.oc_p7.R;
+
 
 public class SettingsActivity extends AppCompatActivity {
 

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,8 +25,10 @@ import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.databinding.ActivityDashboardBinding;
+import com.openclassrooms.oc_p7.databinding.DrawerHeaderBinding;
 
 import java.util.Arrays;
 import java.util.List;
@@ -41,13 +44,13 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
     SearchView searchView;
 
     ActivityDashboardBinding activityDashboardBinding;
+    DrawerHeaderBinding drawerHeaderBinding;
     /*
         public static final int RESULT_CANCELED    = 0;
      Standard activity result: operation succeeded.
     public static final int RESULT_OK           = -1;
      Start of user-defined activity results.
     public static final int RESULT_FIRST_USER   = 1;
-
      */
 
 
@@ -55,13 +58,33 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activityDashboardBinding = ActivityDashboardBinding.inflate(getLayoutInflater());
+        drawerHeaderBinding = DrawerHeaderBinding.bind(activityDashboardBinding.drawerNavView.getHeaderView(0));
         setContentView(activityDashboardBinding.getRoot());
 
         setToolbar();
         setDrawerLayout();
+        setHeaderTexts();
+
+        drawerHeaderBinding.sideMenuPicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "CLICKED");
+            }
+        });
         // configureNavigationView();
     }
 
+
+    public void setHeaderTexts() {
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            Log.d(TAG, "email " + FirebaseAuth.getInstance().getCurrentUser().getEmail());
+            drawerHeaderBinding.sideMenuName.setText(getString(R.string.drawer_header_name, FirebaseAuth.getInstance().getCurrentUser().getDisplayName()));
+
+            drawerHeaderBinding.sideMenuEmail.setText(getString(R.string.drawer_header_email, FirebaseAuth.getInstance().getCurrentUser().getEmail()));
+        } else {
+            Log.d(TAG, "User null");
+        }
+    }
 
     /**
      * Setting up the toolbar
@@ -175,26 +198,6 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
 
 
     @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
-
-        switch (id) {
-            case R.id.side_menu_lunch:
-                Log.d(TAG, "Nav Lunch");
-            case R.id.side_menu_settings:
-                Log.d(TAG, "Nav Settings");
-            case R.id.side_menu_logout:
-                Log.d(TAG, "Nav Logout");
-
-        }
-        if (activityDashboardBinding.drawerLayout.isDrawerOpen(activityDashboardBinding.drawerLayout))
-            activityDashboardBinding.drawerLayout.closeDrawer(GravityCompat.START);
-
-        return true;
-    }
-
-
-    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
 
@@ -229,6 +232,35 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
         NavigationUI.setupWithNavController(toolbar, navController, appBarConfiguration);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, activityDashboardBinding.drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         activityDashboardBinding.drawerLayout.addDrawerListener(toggle);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.drawer_nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+    }
+
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.side_menu_home:
+                Log.d(TAG, "Home pressed");
+                break;
+            case R.id.side_menu_lunch:
+                Log.d(TAG, "Lunch pressed");
+                break;
+            case R.id.side_menu_settings:
+                goToSettings();
+                Log.d(TAG, "Setting pressed");
+                break;
+            case R.id.side_menu_logout:
+                Log.d(TAG, "Logout pressed");
+                break;
+        }
+        activityDashboardBinding.drawerLayout.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    private void goToSettings() {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
     }
 
 }

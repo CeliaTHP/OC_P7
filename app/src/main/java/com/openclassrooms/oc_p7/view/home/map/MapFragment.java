@@ -2,6 +2,7 @@ package com.openclassrooms.oc_p7.view.home.map;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -130,16 +131,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         mapViewModel.currentLocationLiveData.observe(getViewLifecycleOwner(), location -> {
             LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-            googleMap.addMarker(new MarkerOptions().position(currentLatLng).title("YOU").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))).showInfoWindow();
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(currentLatLng));
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 14));
+            if (googleMap != null) {
+                googleMap.addMarker(new MarkerOptions().position(currentLatLng).title("YOU").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))).showInfoWindow();
+                googleMap.moveCamera(CameraUpdateFactory.newLatLng(currentLatLng));
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 14));
+            }
         });
 
 
         mapViewModel.placeListLiveData.observe(getViewLifecycleOwner(), placeList -> {
             Log.d(TAG, "placeListLiveData onChanged");
             for (Place place : placeList) {
-                googleMap.addMarker(new MarkerOptions().position(place.getLatLng()).title(place.getName()));
+                if (googleMap != null)
+                    googleMap.addMarker(new MarkerOptions().position(place.getLatLng()).title(place.getName()));
             }
         });
     }
@@ -151,12 +155,26 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mapView.onStart();
     }
 
+    public Boolean getTheme() {
+        switch (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) {
+            case Configuration.UI_MODE_NIGHT_YES:
+                Log.d(TAG, "NightMode");
+                return true;
+            case Configuration.UI_MODE_NIGHT_NO:
+                Log.d(TAG, "LightMode");
+                return false;
+            default:
+                return false;
+        }
+    }
+
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         Log.d(TAG, "MAP READY");
         this.googleMap = googleMap;
-        googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.mapstyle));
+        if (getTheme())
+            googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.mapstyle));
         googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(@NonNull LatLng latLng) {
@@ -167,7 +185,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 googleMap.clear();
                 googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
                 googleMap.addMarker(markerOptions);
-
                  */
 
             }
@@ -178,7 +195,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private void refreshMap() {
         Log.d(TAG, "Refresh Map");
-        googleMap.clear();
+        if (googleMap != null) googleMap.clear();
         mapViewModel.getNearbyPlaces(getActivity());
         getCurrentLocation();
     }

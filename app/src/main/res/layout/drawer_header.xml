@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="200dp"
-    android:background="@color/yellow">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/main_orange">
 
     <TextView
         android:id="@+id/side_menu_app_title"
@@ -21,6 +22,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="20sp"
         android:layout_marginBottom="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -46,9 +48,9 @@
                 android:id="@+id/side_menu_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="NAME SURNAME"
+                tools:text="NOM PRENOM"
                 android:textColor="@color/white"
-                android:textSize="20dp"
+                android:textSize="26dp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@id/side_menu_picture"
                 app:layout_constraintStart_toEndOf="@id/side_menu_picture"
@@ -58,9 +60,9 @@
                 android:id="@+id/side_menu_email"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="emailadress@blbbl.fr"
+                android:text="@string/drawer_header_email"
                 android:textColor="@color/white"
-                android:textSize="20sp"
+                android:textSize="24sp"
                 app:layout_constraintStart_toEndOf="@id/side_menu_picture"
                 app:layout_constraintTop_toBottomOf="@id/side_menu_name" />
 
