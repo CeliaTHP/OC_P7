@@ -33,6 +33,8 @@ import com.openclassrooms.oc_p7.databinding.FragmentMapBinding;
 import com.openclassrooms.oc_p7.injection.Injection;
 import com.openclassrooms.oc_p7.view_model.LoginViewModel;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Arrays;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
@@ -168,6 +170,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
+    @Override
+    public void onConfigurationChanged(@NonNull @NotNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (getTheme())
+            googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.mapstyle));
+
+    }
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
@@ -175,6 +184,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         this.googleMap = googleMap;
         if (getTheme())
             googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.mapstyle));
+
         googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(@NonNull LatLng latLng) {
@@ -193,12 +203,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     }
 
+
     private void refreshMap() {
         Log.d(TAG, "Refresh Map");
         if (googleMap != null) googleMap.clear();
         mapViewModel.getNearbyPlaces(getActivity());
         getCurrentLocation();
     }
+
 
     public void getCurrentLocation() {
         FusedLocationProviderClient fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getContext());
