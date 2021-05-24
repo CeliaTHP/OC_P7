@@ -49,8 +49,11 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        app:itemIconPadding="20dp"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/drawer_header"
+        app:itemHorizontalPadding="20dp"
+        app:itemTextAppearance="@style/DrawerStyle"
         app:layout_constraintBottom_toTopOf="@id/bottom_nav_view"
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/drawer_menu" />

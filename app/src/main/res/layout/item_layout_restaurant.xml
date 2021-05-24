@@ -9,17 +9,17 @@
         android:id="@+id/item_restaurant_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Nom du Restaurant"
+        android:text="@string/item_restaurant_name"
         android:textColor="@color/black"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/item_restaurant_address"
+        android:id="@+id/item_restaurant_type_and_address"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Chinois - 99 Random adresse"
+        android:text="@string/item_restaurant_type_and_address"
         android:textColor="@color/black"
         android:textSize="16dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -29,18 +29,18 @@
         android:id="@+id/item_restaurant_hours"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Open until 8 pm"
+        android:text="@string/item_restaurant_hours"
         android:textColor="@color/black"
         android:textSize="14dp"
         android:textStyle="italic"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/item_restaurant_address" />
+        app:layout_constraintTop_toBottomOf="@id/item_restaurant_type_and_address" />
 
     <TextView
         android:id="@+id/item_restaurant_distance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="300m"
+        android:text="@string/item_restaurant_distance"
         android:textColor="@color/black"
         app:layout_constraintEnd_toStartOf="@id/item_restaurant_pic"
         app:layout_constraintTop_toTopOf="parent" />
@@ -49,7 +49,7 @@
         android:id="@+id/item_restaurant_attendees"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="(12)"
+        android:text="@string/item_restaurant_attendees"
         android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="@id/item_restaurant_rate1"
         app:layout_constraintEnd_toStartOf="@id/item_restaurant_pic"

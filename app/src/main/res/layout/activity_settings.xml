@@ -6,7 +6,9 @@
     android:layout_height="match_parent"
     tools:context=".view.SettingsActivity">
 
+
     <TextView
+        android:layout_marginTop="20dp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center"

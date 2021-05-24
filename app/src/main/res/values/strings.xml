@@ -1,31 +1,42 @@
 <resources>
-    <string name="app_name">Go4Lunch</string>
-    <string name="menu_map">Vue Carte</string>
-    <string name="menu_list">Vue Liste</string>
-    <string name="menu_workmates">Collègues</string>
-    <string name="toolbar_menu">Menu</string>
-    <string name="toolbar_search">Rechercher</string>
+
+    <!--LOGIN-->
     <string name="login_facebook">Connexion avec Facebook</string>
     <string name="login_google">Connexion avec Google</string>
     <string name="login_twitter">Connexion avec Twitter</string>
 
+    <!--DASHBOARD-->
+    <string name="app_name">Go4Lunch</string>
+    <string name="menu_map">Vue Carte</string>
+    <string name="menu_list">Vue Liste</string>
+    <string name="menu_workmates">Collègues</string>
+    <string name="toolbar_search">Rechercher</string>
+    <string name="location_button">Centrer vue</string>
+
+    <!--FACEBOOK LOGIN-->
     <string name="facebook_app_id" translatable="false">950434559094038</string>
     <string name="fb_login_protocol_scheme" translatable="false">fb950434559094038</string>
 
-
-    <string name="side_menu_lunch">Mon repas</string>
-    <string name="side_menu_settings">Paramètres</string>
-    <string name="side_menu_login">Connexion</string>
-    <string name="side_menu_logout">Déconnexion</string>
-
+    <!--DRAWER-->
+    <string name="drawer_home">ACCUEIL</string>
+    <string name="drawer_lunch">MON REPAS</string>
+    <string name="drawer_settings">PARAMÈTRES</string>
+    <string name="drawer_login">CONNEXION</string>
+    <string name="drawer_logout">DÉCONNEXION</string>
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
-
-    <string name="workmate_text">%1$s mange au %2$s (%3$s)</string>
-    <string name="side_menu_home">Accueil</string>
     <string name="drawer_header_name" translatable="false">%1$s</string>
     <string name="drawer_header_email" translatable="false">%1$s</string>
-    <string name="location_button">centrer vue</string>
+
+    <!--WORKMATES-->
+    <string name="workmate_text">%1$s mange au %2$s (%3$s)</string>
+
+    <!--LIST VIEW -->
+    <string name="item_restaurant_type_and_address" translatable="false">%1$s - %2$s</string>
+    <string name="item_restaurant_name" translatable="false">%1$s</string>
+    <string name="item_restaurant_distance" translatable="false">%1$s</string>
+    <string name="item_restaurant_attendees" translatable="false">( %1$s )</string>
+    <string name="item_restaurant_hours">Ouvert jusqu\'à %1$s</string>
 
 
 </resources>

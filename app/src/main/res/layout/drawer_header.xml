@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="200dp"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/main_orange">
 
     <TextView
@@ -13,24 +13,25 @@
         android:layout_marginTop="20dp"
         android:text="@string/app_name"
         android:textColor="@color/white"
-        android:textSize="42sp"
+        android:textSize="30sp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/side_menu_infos_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/side_menu_infos_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20sp"
-        android:layout_marginBottom="20dp"
+        android:layout_margin="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/side_menu_picture"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:src="@drawable/ic_profile"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -48,13 +49,13 @@
                 android:id="@+id/side_menu_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="NOM PRENOM"
                 android:textColor="@color/white"
-                android:textSize="26dp"
+                android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@id/side_menu_picture"
                 app:layout_constraintStart_toEndOf="@id/side_menu_picture"
-                app:layout_constraintTop_toTopOf="@id/side_menu_picture" />
+                app:layout_constraintTop_toTopOf="@id/side_menu_picture"
+                tools:text="NOM PRENOM" />
 
             <TextView
                 android:id="@+id/side_menu_email"
@@ -62,10 +63,9 @@
                 android:layout_height="wrap_content"
                 android:text="@string/drawer_header_email"
                 android:textColor="@color/white"
-                android:textSize="24sp"
+                android:textSize="12sp"
                 app:layout_constraintStart_toEndOf="@id/side_menu_picture"
                 app:layout_constraintTop_toBottomOf="@id/side_menu_name" />
-
 
         </LinearLayout>
 

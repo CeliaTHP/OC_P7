@@ -3,21 +3,21 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/side_menu_home"
+            android:id="@+id/drawer_home"
             android:icon="@drawable/ic_home_logo"
-            android:title="@string/side_menu_home" />
+            android:title="@string/drawer_home" />
         <item
-            android:id="@+id/side_menu_lunch"
+            android:id="@+id/drawer_lunch"
             android:icon="@drawable/ic_food_logo"
-            android:title="@string/side_menu_lunch" />
+            android:title="@string/drawer_lunch" />
         <item
-            android:id="@+id/side_menu_settings"
+            android:id="@+id/drawer_settings"
             android:icon="@drawable/ic_settings"
-            android:title="@string/side_menu_settings" />
+            android:title="@string/drawer_settings" />
         <item
-            android:id="@+id/side_menu_logout"
+            android:id="@+id/drawer_logout"
             android:icon="@drawable/ic_power"
-            android:title="@string/side_menu_logout" />
+            android:title="@string/drawer_logout" />
     </group>
 
 </menu>

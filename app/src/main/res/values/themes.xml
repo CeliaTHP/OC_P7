@@ -12,12 +12,18 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <item name="android:textColor">@color/black</item>
     </style>
 
     <style name="ToolbarStyle" parent="Theme.AppCompat">
         <item name="android:textColorPrimary">@color/white</item>
         <item name="android:textColorSecondary">@color/white</item>
         <item name="actionMenuTextColor">@color/white</item>
+    </style>
+
+    <!--Drawer style-->
+    <style name="DrawerStyle" parent="Theme.AppCompat">
+        <item name="android:textSize">16sp</item>
     </style>
 
 </resources>
