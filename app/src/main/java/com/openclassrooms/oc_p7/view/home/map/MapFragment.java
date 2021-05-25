@@ -18,7 +18,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -82,7 +81,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     public void initViewModels() {
         //INIT MAPVIEWMODEL
-        MapViewModelFactory mapViewModelFactory = Injection.provideMapViewModelFactory();
+        MapViewModelFactory mapViewModelFactory = Injection.provideMapViewModelFactory(getContext());
         mapViewModel =
                 ViewModelProviders.of(this, mapViewModelFactory).get(MapViewModel.class);
 
@@ -213,13 +212,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
 
     public void getCurrentLocation() {
-        FusedLocationProviderClient fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getContext());
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             Log.d(TAG, "shouldRequestPermissions");
             checkAndRequestPermissions();
         } else {
-            mapViewModel.getCurrentLocation(fusedLocationProviderClient);
-
+            mapViewModel.getCurrentLocation();
         }
     }
 

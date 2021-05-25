@@ -157,6 +157,8 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                 .build(this);
         startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
 
+        //add location bias
+
         Log.d(TAG, "onSearchCalled");
 
 

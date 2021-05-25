@@ -51,7 +51,6 @@ public class LoginActivity extends AppCompatActivity {
         initGoogleClient();
         initObservers();
 
-
     }
 
     private void initLoginViewModel() {
@@ -159,6 +158,5 @@ public class LoginActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         loginViewModel.verifyAuth();
-
     }
 }

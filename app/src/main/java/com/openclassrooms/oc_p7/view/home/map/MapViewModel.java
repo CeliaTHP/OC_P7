@@ -3,11 +3,9 @@ package com.openclassrooms.oc_p7.view.home.map;
 import android.app.Activity;
 import android.location.Location;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.libraries.places.api.model.Place;
 import com.openclassrooms.oc_p7.repositories.PlaceRepository;
 
@@ -17,8 +15,6 @@ public class MapViewModel extends ViewModel {
 
     private static final String TAG = "MapViewModel";
     private PlaceRepository placeRepository;
-    private MutableLiveData<String> mText;
-
 
     public MutableLiveData<List<Place>> placeListLiveData;
     public MutableLiveData<Location> currentLocationLiveData;
@@ -27,10 +23,6 @@ public class MapViewModel extends ViewModel {
         this.placeRepository = placeRepository;
         placeListLiveData = placeRepository.placesLiveData;
         currentLocationLiveData = placeRepository.currentLocationLiveData;
-    }
-
-    public LiveData<String> getText() {
-        return mText;
     }
 
     //PASSER MAP A CHAQUE FOIS OU RECUP VALEURS ET UPDATE AVEC LA MAP DEPUIS VM ?
@@ -42,8 +34,8 @@ public class MapViewModel extends ViewModel {
         placeRepository.getNearbyPlaces(activity);
     }
 
-    public void getCurrentLocation(FusedLocationProviderClient fusedLocationProviderClient) {
-        placeRepository.getCurrentLocation(fusedLocationProviderClient);
+    public void getCurrentLocation() {
+        placeRepository.updateCurrentLocation();
     }
 }
 

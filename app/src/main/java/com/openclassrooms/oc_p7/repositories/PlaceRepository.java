@@ -27,18 +27,22 @@ import java.util.List;
 
 public class PlaceRepository {
 
-    private String TAG = "PlaceRepository";
+    FusedLocationProviderClient fusedLocationProviderClient;
 
+    public PlaceRepository(FusedLocationProviderClient fusedLocationProviderClient) {
+        this.fusedLocationProviderClient = fusedLocationProviderClient;
+    }
+
+    private String TAG = "PlaceRepository";
 
     private ArrayList<Place> placeList = new ArrayList<>();
 
     public MutableLiveData<List<Place>> placesLiveData = new MutableLiveData<>();
     public MutableLiveData<Location> currentLocationLiveData = new MutableLiveData<>();
 
-
-    public void getCurrentLocation(FusedLocationProviderClient fusedLocationProviderClient) {
-        @SuppressLint("MissingPermission") //Already asked for Location
-                Task<Location> task = fusedLocationProviderClient.getLastLocation();
+    @SuppressLint("MissingPermission") //Already asked for Location
+    public void updateCurrentLocation() {
+        Task<Location> task = fusedLocationProviderClient.getLastLocation();
         task.addOnSuccessListener(location -> {
             if (location != null) {
                 currentLocationLiveData.postValue(location);
@@ -46,12 +50,6 @@ public class PlaceRepository {
         });
     }
 
-    /*
-    public void getNearbyPlaces(Context context) {
-
-    }
-
-*/
     //LIVEDATA
 
     public void getNearbyPlaces(Context context) {
