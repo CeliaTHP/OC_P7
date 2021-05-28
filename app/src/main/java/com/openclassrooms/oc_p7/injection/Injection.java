@@ -7,9 +7,13 @@ import com.google.android.gms.location.LocationServices;
 import com.openclassrooms.oc_p7.model.User;
 import com.openclassrooms.oc_p7.repositories.PlaceRepository;
 import com.openclassrooms.oc_p7.service.DummyWorkmateGenerator;
+import com.openclassrooms.oc_p7.service.api.PlacesApi;
 import com.openclassrooms.oc_p7.view.home.map.MapViewModelFactory;
 
 import java.util.List;
+
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Injection {
 
@@ -28,6 +32,17 @@ public class Injection {
 
     public static FusedLocationProviderClient provideFusedLocationProviderClient(Context context) {
         return LocationServices.getFusedLocationProviderClient(context);
+    }
+
+    public static PlacesApi provideApiClient() {
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://maps.googleapis.com/maps/api/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        return retrofit.create(PlacesApi.class);
+
     }
 
 }

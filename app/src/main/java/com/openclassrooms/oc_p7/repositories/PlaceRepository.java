@@ -1,28 +1,18 @@
 package com.openclassrooms.oc_p7.repositories;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.location.Location;
-import android.util.Log;
 
-import androidx.core.content.ContextCompat;
 import androidx.lifecycle.MutableLiveData;
 
-import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.tasks.Task;
-import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.model.PlaceLikelihood;
-import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
-import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
-import com.google.android.libraries.places.api.net.PlacesClient;
-import com.openclassrooms.oc_p7.BuildConfig;
+import com.openclassrooms.oc_p7.injection.Injection;
+import com.openclassrooms.oc_p7.service.api.PlacesApi;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class PlaceRepository {
@@ -50,8 +40,38 @@ public class PlaceRepository {
         });
     }
 
-    //LIVEDATA
+    public void getNearbyPlaces(Context context) {
+        PlacesApi placesApi = Injection.provideApiClient();
+        String location = "49.024979226793775,2.463881854135891";
+        String radius = "100";
+        /*
+        Call<JsonObject> call = placesApi.getNearbyPlaces(location, BuildConfig.GoogleMapApiKey, radius);
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                Log.d(TAG, "response : " + response);
 
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                Log.d(TAG, "onFailure: " + t.getMessage() );
+
+            }
+        });
+
+
+
+         */
+
+        //     Log.d(TAG, "call " + call);
+        //                Log.d(TAG, "response : " + response);
+        //                Log.d(TAG, "onFailure: " + t.getMessage() );
+    }
+
+
+    //LIVEDATA
+/*
     public void getNearbyPlaces(Context context) {
 
         Places.initialize(context, BuildConfig.GoogleMapApiKey);
@@ -86,11 +106,12 @@ public class PlaceRepository {
                     }
                 }
 
-
             });
         } else {
             //ask permissions
         }
     }
 
+
+ */
 }
