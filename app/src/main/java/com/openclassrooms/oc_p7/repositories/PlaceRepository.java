@@ -3,17 +3,25 @@ package com.openclassrooms.oc_p7.repositories;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.location.Location;
+import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.model.Place;
+import com.openclassrooms.oc_p7.BuildConfig;
 import com.openclassrooms.oc_p7.injection.Injection;
+import com.openclassrooms.oc_p7.model.pojo.NearbyPlaceResponse;
+import com.openclassrooms.oc_p7.model.pojo.Result;
 import com.openclassrooms.oc_p7.service.api.PlacesApi;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class PlaceRepository {
 
@@ -44,25 +52,27 @@ public class PlaceRepository {
         PlacesApi placesApi = Injection.provideApiClient();
         String location = "49.024979226793775,2.463881854135891";
         String radius = "100";
-        /*
-        Call<JsonObject> call = placesApi.getNearbyPlaces(location, BuildConfig.GoogleMapApiKey, radius);
-        call.enqueue(new Callback<JsonObject>() {
+
+        NearbyPlaceResponse nearbyPlaceResponse = new NearbyPlaceResponse();
+
+
+        Call<NearbyPlaceResponse> call = placesApi.getNearbyPlaces(location, BuildConfig.GoogleMapApiKey, radius);
+        call.enqueue(new Callback<NearbyPlaceResponse>() {
             @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                Log.d(TAG, "response : " + response);
+            public void onResponse(Call<NearbyPlaceResponse> call, Response<NearbyPlaceResponse> response) {
+                for (Result result : response.body().results) {
+                    Log.d(TAG, "response : " + result.name);
+                }
 
             }
 
             @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-                Log.d(TAG, "onFailure: " + t.getMessage() );
+            public void onFailure(Call<NearbyPlaceResponse> call, Throwable t) {
+                Log.d(TAG, "onFailure: " + t.getMessage());
 
             }
         });
 
-
-
-         */
 
         //     Log.d(TAG, "call " + call);
         //                Log.d(TAG, "response : " + response);

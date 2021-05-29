@@ -266,7 +266,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         if (shouldReload) {
             Log.d(TAG, "shouldReload");
-            refreshMap();
+          //  refreshMap();
             shouldReload = false;
         }
     }

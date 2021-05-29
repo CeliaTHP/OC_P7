@@ -1,6 +1,7 @@
 package com.openclassrooms.oc_p7.service.api;
 
 import com.google.gson.JsonObject;
+import com.openclassrooms.oc_p7.model.pojo.NearbyPlaceResponse;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -16,7 +17,7 @@ public interface PlacesApi {
     //TEST
 
     @GET("place/nearbysearch/json")
-    Call<JsonObject> getNearbyPlaces(
+    Call<NearbyPlaceResponse> getNearbyPlaces(
             @Query("location") String location,
             @Query("key") String googleApiKey,
             @Query("radius") String radius
