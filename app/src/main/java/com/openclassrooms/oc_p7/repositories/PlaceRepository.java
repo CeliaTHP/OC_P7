@@ -1,7 +1,6 @@
 package com.openclassrooms.oc_p7.repositories;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.location.Location;
 import android.util.Log;
 
@@ -9,7 +8,6 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.tasks.Task;
-import com.google.android.libraries.places.api.model.Place;
 import com.openclassrooms.oc_p7.BuildConfig;
 import com.openclassrooms.oc_p7.injection.Injection;
 import com.openclassrooms.oc_p7.model.pojo.NearbyPlaceResponse;
@@ -33,9 +31,9 @@ public class PlaceRepository {
 
     private String TAG = "PlaceRepository";
 
-    private ArrayList<Place> placeList = new ArrayList<>();
+    private ArrayList<Result> placeList = new ArrayList<>();
 
-    public MutableLiveData<List<Place>> placesLiveData = new MutableLiveData<>();
+    public MutableLiveData<List<Result>> nearbyPlacesLiveData = new MutableLiveData<>();
     public MutableLiveData<Location> currentLocationLiveData = new MutableLiveData<>();
 
     @SuppressLint("MissingPermission") //Already asked for Location
@@ -44,25 +42,38 @@ public class PlaceRepository {
         task.addOnSuccessListener(location -> {
             if (location != null) {
                 currentLocationLiveData.postValue(location);
+                getNearbyPlaces(location);
             }
         });
     }
 
-    public void getNearbyPlaces(Context context) {
+    public void getNearbyPlaces(Location location) {
+        //working with fakeLocation !!!!
         PlacesApi placesApi = Injection.provideApiClient();
-        String location = "49.024979226793775,2.463881854135891";
+
+        String fakeLocation = "49.024979226793775,2.463881854135891";
+//        String location = currentLocationLiveData.getValue().getLatitude() + "," + currentLocationLiveData.getValue().getLongitude();
         String radius = "100";
 
-        NearbyPlaceResponse nearbyPlaceResponse = new NearbyPlaceResponse();
+        Log.d(TAG, "expected format : " + fakeLocation);
+        Log.d(TAG, "format is : " + location);
 
-
-        Call<NearbyPlaceResponse> call = placesApi.getNearbyPlaces(location, BuildConfig.GoogleMapApiKey, radius);
+        String locationString = String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude());
+        Call<NearbyPlaceResponse> call = placesApi.getNearbyPlaces(locationString, BuildConfig.GoogleMapApiKey, radius);
         call.enqueue(new Callback<NearbyPlaceResponse>() {
             @Override
             public void onResponse(Call<NearbyPlaceResponse> call, Response<NearbyPlaceResponse> response) {
                 for (Result result : response.body().results) {
-                    Log.d(TAG, "response : " + result.name);
+                    placeList.add(result);
+                    Log.d(TAG, "name: " + result.name);
+                    Log.d(TAG, "lat " + result.geometry.location.lat);
+
+                    if (result.opening_hours != null)
+                        Log.d(TAG, "open now" + result.opening_hours.open_now);
+                    Log.d(TAG, "types " + result.types);
+
                 }
+                nearbyPlacesLiveData.postValue(placeList);
 
             }
 

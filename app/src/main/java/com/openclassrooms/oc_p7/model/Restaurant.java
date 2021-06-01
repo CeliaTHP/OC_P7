@@ -1,13 +1,15 @@
 package com.openclassrooms.oc_p7.model;
 
+import com.google.android.gms.maps.model.LatLng;
+
+import java.util.List;
+
 public class Restaurant {
 
     private int restaurantId;
     private String name;
-
     private String text;
-    /*
-    private ImageView picture;
+    private String url;
     private String address;
     private LatLng latLng;
     private String type;
@@ -18,8 +20,6 @@ public class Restaurant {
     private String isFavorite;
     private String isChosen;
     private List<User> attendees;
-
-     */
 
     public Restaurant(String name) {
         this.name = name;

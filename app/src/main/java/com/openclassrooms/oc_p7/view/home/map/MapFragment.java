@@ -26,10 +26,10 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.libraries.places.api.model.Place;
 import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.databinding.FragmentMapBinding;
 import com.openclassrooms.oc_p7.injection.Injection;
+import com.openclassrooms.oc_p7.model.pojo.Result;
 import com.openclassrooms.oc_p7.view_model.LoginViewModel;
 
 import org.jetbrains.annotations.NotNull;
@@ -100,32 +100,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
-        /*
-        fragmentMapBinding.testButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (loginViewModel.isUserConnected()) {
-                    Log.d(TAG, loginViewModel.getUserDisplayName());
-                    Log.d(TAG, " SERVICE : " + GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getContext()));
-
-                } else
-                    Log.d(TAG, "User not connected");
-            }
-        });
-
-        fragmentMapBinding.signOutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(getActivity(), LoginActivity.class);
-                startActivity(intent);
-
-            }
-        });
-
-         */
-
-
     }
 
     private void initObservers() {
@@ -140,11 +114,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         });
 
 
-        mapViewModel.placeListLiveData.observe(getViewLifecycleOwner(), placeList -> {
+        mapViewModel.nearbyPlacesLiveData.observe(getViewLifecycleOwner(), placeList -> {
             Log.d(TAG, "placeListLiveData onChanged");
-            for (Place place : placeList) {
-                if (googleMap != null)
-                    googleMap.addMarker(new MarkerOptions().position(place.getLatLng()).title(place.getName()));
+            for (Result place : placeList) {
+                if (googleMap != null) {
+                    LatLng latLng = new LatLng(place.geometry.location.lat, place.geometry.location.lng);
+                    googleMap.addMarker(new MarkerOptions().position(latLng).title(place.name));
+                }
             }
         });
     }
@@ -206,7 +182,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private void refreshMap() {
         Log.d(TAG, "Refresh Map");
         if (googleMap != null) googleMap.clear();
-        mapViewModel.getNearbyPlaces(getActivity());
         getCurrentLocation();
     }
 
@@ -216,7 +191,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             Log.d(TAG, "shouldRequestPermissions");
             checkAndRequestPermissions();
         } else {
-            mapViewModel.getCurrentLocation();
+            mapViewModel.getLocationInformations();
         }
     }
 
@@ -266,7 +241,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         if (shouldReload) {
             Log.d(TAG, "shouldReload");
-          //  refreshMap();
+            //  refreshMap();
             shouldReload = false;
         }
     }
