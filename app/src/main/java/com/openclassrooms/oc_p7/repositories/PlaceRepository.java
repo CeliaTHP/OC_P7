@@ -9,9 +9,11 @@ import androidx.lifecycle.MutableLiveData;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.tasks.Task;
 import com.openclassrooms.oc_p7.BuildConfig;
+import com.openclassrooms.oc_p7.database.RestaurantDao;
 import com.openclassrooms.oc_p7.injection.Injection;
+import com.openclassrooms.oc_p7.model.Restaurant;
 import com.openclassrooms.oc_p7.model.pojo_models.NearbyPlaceResponse;
-import com.openclassrooms.oc_p7.model.pojo_models.Restaurant;
+import com.openclassrooms.oc_p7.model.pojo_models.RestaurantResult;
 import com.openclassrooms.oc_p7.service.api.PlacesApi;
 
 import java.util.ArrayList;
@@ -23,17 +25,19 @@ import retrofit2.Response;
 
 public class PlaceRepository {
 
-    FusedLocationProviderClient fusedLocationProviderClient;
+    private FusedLocationProviderClient fusedLocationProviderClient;
+    private RestaurantDao restaurantDao;
 
-    public PlaceRepository(FusedLocationProviderClient fusedLocationProviderClient) {
+    public PlaceRepository(FusedLocationProviderClient fusedLocationProviderClient, RestaurantDao restaurantDao) {
         this.fusedLocationProviderClient = fusedLocationProviderClient;
+        this.restaurantDao = restaurantDao;
     }
 
     private String TAG = "PlaceRepository";
 
-    private ArrayList<Restaurant> placeList = new ArrayList<>();
+    private ArrayList<RestaurantResult> placeList = new ArrayList<>();
 
-    public MutableLiveData<List<Restaurant>> nearbyPlacesLiveData = new MutableLiveData<>();
+    public MutableLiveData<List<RestaurantResult>> nearbyPlacesLiveData = new MutableLiveData<>();
     public MutableLiveData<Location> currentLocationLiveData = new MutableLiveData<>();
 
     @SuppressLint("MissingPermission") //Already asked for Location
@@ -45,6 +49,10 @@ public class PlaceRepository {
                 getNearbyPlaces(location);
             }
         });
+    }
+
+    public List<Restaurant> getNearbyPlacesFromDatabase() {
+        return restaurantDao.getAll();
     }
 
     public void getNearbyPlaces(Location location) {
@@ -63,14 +71,18 @@ public class PlaceRepository {
         call.enqueue(new Callback<NearbyPlaceResponse>() {
             @Override
             public void onResponse(Call<NearbyPlaceResponse> call, Response<NearbyPlaceResponse> response) {
-                for (Restaurant restaurant : response.body().restaurants) {
-                    placeList.add(restaurant);
-                    Log.d(TAG, "name: " + restaurant.name);
-                    Log.d(TAG, "lat " + restaurant.geometry.location.lat);
+                for (RestaurantResult restaurantResult : response.body().restaurantResults) {
+                    placeList.add(restaurantResult);
+                    restaurantDao.createRestaurant(new Restaurant(restaurantResult.place_id, restaurantResult.name, restaurantResult.geometry.location.lat,
+                            restaurantResult.geometry.location.lng, restaurantResult.rating, false, false));
 
-                    if (restaurant.opening_hours != null)
-                        Log.d(TAG, "open now" + restaurant.opening_hours.open_now);
-                    Log.d(TAG, "types " + restaurant.types);
+
+                    Log.d(TAG, "name: " + restaurantResult.name);
+                    Log.d(TAG, "lat " + restaurantResult.geometry.location.lat);
+
+                    if (restaurantResult.opening_hours != null)
+                        Log.d(TAG, "open now" + restaurantResult.opening_hours.open_now);
+                    Log.d(TAG, "types " + restaurantResult.types);
 
                 }
                 nearbyPlacesLiveData.postValue(placeList);
@@ -85,54 +97,5 @@ public class PlaceRepository {
         });
 
 
-        //     Log.d(TAG, "call " + call);
-        //                Log.d(TAG, "response : " + response);
-        //                Log.d(TAG, "onFailure: " + t.getMessage() );
     }
-
-
-    //LIVEDATA
-/*
-    public void getNearbyPlaces(Context context) {
-
-        Places.initialize(context, BuildConfig.GoogleMapApiKey);
-        PlacesClient placesClient = Places.createClient(context);
-
-        // Use fields to define the data types to return.
-        List<Place.Field> placeFields = Arrays.asList(Place.Field.LAT_LNG, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.RATING, Place.Field.TYPES);
-
-        FindCurrentPlaceRequest request = FindCurrentPlaceRequest.newInstance(placeFields);
-
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-
-            Task<FindCurrentPlaceResponse> placeResponse = placesClient.findCurrentPlace(request);
-            placeResponse.addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    FindCurrentPlaceResponse responseLatLng = task.getResult();
-                    for (PlaceLikelihood placeLikelihood : responseLatLng.getPlaceLikelihoods()) {
-                        Log.d(TAG, placeLikelihood.toString());
-                        placeList.add(placeLikelihood.getPlace());
-                        //googleMap.addMarker(new MarkerOptions().position(placeLikelihood.getPlace().getLatLng()).title(placeLikelihood.getPlace().getName()));
-
-                    }
-                    //LIST OF ALL PLACES NEAR USER
-                    placesLiveData.postValue(placeList);
-                    Log.d(TAG, placeList.toString());
-
-                } else {
-                    Exception exception = task.getException();
-                    if (exception instanceof ApiException) {
-                        ApiException apiException = (ApiException) exception;
-                        Log.d(TAG, "PLACE NOT FOUND : " + apiException.getMessage());
-                    }
-                }
-
-            });
-        } else {
-            //ask permissions
-        }
-    }
-
-
- */
 }

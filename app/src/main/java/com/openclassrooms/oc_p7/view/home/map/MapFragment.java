@@ -29,7 +29,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.databinding.FragmentMapBinding;
 import com.openclassrooms.oc_p7.injection.Injection;
-import com.openclassrooms.oc_p7.model.pojo_models.Restaurant;
+import com.openclassrooms.oc_p7.model.pojo_models.RestaurantResult;
 import com.openclassrooms.oc_p7.view_model.LoginViewModel;
 
 import org.jetbrains.annotations.NotNull;
@@ -116,7 +116,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         mapViewModel.nearbyPlacesLiveData.observe(getViewLifecycleOwner(), placeList -> {
             Log.d(TAG, "placeListLiveData onChanged");
-            for (Restaurant place : placeList) {
+            for (RestaurantResult place : placeList) {
                 if (googleMap != null) {
                     LatLng latLng = new LatLng(place.geometry.location.lat, place.geometry.location.lng);
                     googleMap.addMarker(new MarkerOptions().position(latLng).title(place.name));
