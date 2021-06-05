@@ -59,7 +59,7 @@ public class PlaceRepository {
         Log.d(TAG, "format is : " + location);
 
         String locationString = String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude());
-        Call<NearbyPlaceResponse> call = placesApi.getNearbyPlaces(locationString, BuildConfig.GoogleMapApiKey, radius);
+        Call<NearbyPlaceResponse> call = placesApi.getNearbyPlaces(locationString, BuildConfig.GoogleMapApiKey, radius, "restaurant");
         call.enqueue(new Callback<NearbyPlaceResponse>() {
             @Override
             public void onResponse(Call<NearbyPlaceResponse> call, Response<NearbyPlaceResponse> response) {

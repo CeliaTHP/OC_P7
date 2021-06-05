@@ -68,6 +68,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
 
     }
 
+
     public void setHeaderInfos() {
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             Log.d(TAG, "email " + FirebaseAuth.getInstance().getCurrentUser().getEmail());
@@ -275,5 +276,9 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
     @Override
     protected void onResume() {
         super.onResume();
+        setToolbar();
+        setDrawerLayout();
     }
+
+
 }

@@ -24,7 +24,6 @@
         android:contentDescription="@string/location_button"
         android:elevation="5dp"
         android:src="@drawable/ic_location"
-        app:backgroundTint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
