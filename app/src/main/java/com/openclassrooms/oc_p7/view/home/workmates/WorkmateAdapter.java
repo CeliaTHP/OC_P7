@@ -9,15 +9,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.databinding.ItemLayoutWorkmatesBinding;
-import com.openclassrooms.oc_p7.model.User;
+import com.openclassrooms.oc_p7.model.Workmate;
 
 import java.util.List;
 
 public class WorkmateAdapter extends RecyclerView.Adapter<WorkmateViewHolder.ViewHolder> {
 
-    private List<User> workmateList;
+    private List<Workmate> workmateList;
 
-    public WorkmateAdapter(List<User> workmateList) {
+    public WorkmateAdapter(List<Workmate> workmateList) {
         this.workmateList = workmateList;
     }
 
@@ -30,12 +30,18 @@ public class WorkmateAdapter extends RecyclerView.Adapter<WorkmateViewHolder.Vie
 
     @Override
     public void onBindViewHolder(@NonNull WorkmateViewHolder.ViewHolder holder, int position) {
-        User workmate = workmateList.get(position);
-        holder.itemLayoutWorkmatesBinding.workmateText.setText(holder.itemView.getContext().getString(R.string.workmate_text, workmate.getName(), workmate.getLunch(), "Etoile dorée"));
-        Glide.with(holder.itemView.getContext())
-                .load(workmate.getPic())
-                .centerCrop()
-                .into(holder.itemLayoutWorkmatesBinding.workmatePic);
+        Workmate workmate = workmateList.get(position);
+        if (workmate.getRestaurant() != null)
+            holder.itemLayoutWorkmatesBinding.workmateText.setText(holder.itemView.getContext().getString(R.string.workmate_text, workmate.getName(), workmate.getRestaurant().name, workmate.getRestaurant().types));
+        else
+            holder.itemLayoutWorkmatesBinding.workmateText.setText(holder.itemView.getContext().getString(R.string.workmate_text_no_lunch, workmate.getName()));
+
+        if (workmate.getName() != null) {
+            Glide.with(holder.itemView.getContext())
+                    .load(workmate.getPicUrl())
+                    .centerCrop()
+                    .into(holder.itemLayoutWorkmatesBinding.workmatePic);
+        }
 
     }
 

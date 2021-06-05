@@ -38,14 +38,6 @@ public class LoginViewModel extends AndroidViewModel {
         super(application);
     }
 
-    public Boolean isUserConnected() {
-        return FirebaseAuth.getInstance().getCurrentUser() != null;
-    }
-
-    public String getUserDisplayName() {
-        return FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
-    }
-
 
     private void firebaseAuthWithFacebook(AccessToken token) {
         Log.d(TAG, "handleFacebookAccessToken:" + token);
@@ -68,7 +60,7 @@ public class LoginViewModel extends AndroidViewModel {
                 });
     }
 
-     public void firebaseAuthWithGoogle(String idToken) {
+    public void firebaseAuthWithGoogle(String idToken) {
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
         auth.signInWithCredential(credential)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -88,7 +80,7 @@ public class LoginViewModel extends AndroidViewModel {
 
     public void firebaseAuthWithTwitter(LoginActivity activity, OAuthProvider.Builder provider) {
         auth
-                    .startActivityForSignInWithProvider(activity, provider.build())
+                .startActivityForSignInWithProvider(activity, provider.build())
                 .addOnSuccessListener(
                         new OnSuccessListener<AuthResult>() {
                             @Override
@@ -180,9 +172,6 @@ public class LoginViewModel extends AndroidViewModel {
         if (user != null) {
             authenticatedUserLiveData.postValue(auth.getCurrentUser());
             Log.d(TAG, "User Logged : " + user.getDisplayName());
-        } else {
-            Log.d(TAG, "User Not Found");
-
         }
     }
 

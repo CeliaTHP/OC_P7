@@ -1,7 +1,7 @@
 package com.openclassrooms.oc_p7.service.api;
 
 import com.google.gson.JsonObject;
-import com.openclassrooms.oc_p7.model.pojo.NearbyPlaceResponse;
+import com.openclassrooms.oc_p7.model.pojo_models.NearbyPlaceResponse;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

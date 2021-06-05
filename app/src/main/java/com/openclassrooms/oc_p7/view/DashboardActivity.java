@@ -68,12 +68,10 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
 
     }
 
-
     public void setHeaderInfos() {
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             Log.d(TAG, "email " + FirebaseAuth.getInstance().getCurrentUser().getEmail());
             drawerHeaderBinding.sideMenuName.setText(getString(R.string.drawer_header_name, FirebaseAuth.getInstance().getCurrentUser().getDisplayName()));
-
             drawerHeaderBinding.sideMenuEmail.setText(getString(R.string.drawer_header_email, FirebaseAuth.getInstance().getCurrentUser().getEmail()));
             Glide.with(this)
                     .load(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl())

@@ -1,10 +1,10 @@
-package com.openclassrooms.oc_p7.model.pojo;
+package com.openclassrooms.oc_p7.model.pojo_models;
 
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class Result {
+public class Restaurant {
 
     @SerializedName("geometry")
     public Geometry geometry;

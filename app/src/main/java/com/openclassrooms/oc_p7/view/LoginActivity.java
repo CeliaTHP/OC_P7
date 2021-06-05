@@ -142,7 +142,12 @@ public class LoginActivity extends AppCompatActivity {
         loginViewModel.authenticatedUserLiveData.observe(this, new Observer<FirebaseUser>() {
             @Override
             public void onChanged(FirebaseUser firebaseUser) {
-                if (firebaseUser != null) goToDashboard();
+                Log.d(TAG, "name : " + firebaseUser.getDisplayName());
+                Log.d(TAG, "email: " + firebaseUser.getEmail());
+                Log.d(TAG, "pic " + firebaseUser.getPhotoUrl());
+                Log.d(TAG, "num " + firebaseUser.getPhoneNumber());
+
+                goToDashboard();
 
             }
         });

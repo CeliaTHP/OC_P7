@@ -10,8 +10,8 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.tasks.Task;
 import com.openclassrooms.oc_p7.BuildConfig;
 import com.openclassrooms.oc_p7.injection.Injection;
-import com.openclassrooms.oc_p7.model.pojo.NearbyPlaceResponse;
-import com.openclassrooms.oc_p7.model.pojo.Result;
+import com.openclassrooms.oc_p7.model.pojo_models.NearbyPlaceResponse;
+import com.openclassrooms.oc_p7.model.pojo_models.Restaurant;
 import com.openclassrooms.oc_p7.service.api.PlacesApi;
 
 import java.util.ArrayList;
@@ -31,9 +31,9 @@ public class PlaceRepository {
 
     private String TAG = "PlaceRepository";
 
-    private ArrayList<Result> placeList = new ArrayList<>();
+    private ArrayList<Restaurant> placeList = new ArrayList<>();
 
-    public MutableLiveData<List<Result>> nearbyPlacesLiveData = new MutableLiveData<>();
+    public MutableLiveData<List<Restaurant>> nearbyPlacesLiveData = new MutableLiveData<>();
     public MutableLiveData<Location> currentLocationLiveData = new MutableLiveData<>();
 
     @SuppressLint("MissingPermission") //Already asked for Location
@@ -63,14 +63,14 @@ public class PlaceRepository {
         call.enqueue(new Callback<NearbyPlaceResponse>() {
             @Override
             public void onResponse(Call<NearbyPlaceResponse> call, Response<NearbyPlaceResponse> response) {
-                for (Result result : response.body().results) {
-                    placeList.add(result);
-                    Log.d(TAG, "name: " + result.name);
-                    Log.d(TAG, "lat " + result.geometry.location.lat);
+                for (Restaurant restaurant : response.body().restaurants) {
+                    placeList.add(restaurant);
+                    Log.d(TAG, "name: " + restaurant.name);
+                    Log.d(TAG, "lat " + restaurant.geometry.location.lat);
 
-                    if (result.opening_hours != null)
-                        Log.d(TAG, "open now" + result.opening_hours.open_now);
-                    Log.d(TAG, "types " + result.types);
+                    if (restaurant.opening_hours != null)
+                        Log.d(TAG, "open now" + restaurant.opening_hours.open_now);
+                    Log.d(TAG, "types " + restaurant.types);
 
                 }
                 nearbyPlacesLiveData.postValue(placeList);

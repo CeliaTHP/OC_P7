@@ -30,6 +30,8 @@
 
     <!--WORKMATES-->
     <string name="workmate_text">%1$s mange au %2$s (%3$s)</string>
+    <string name="workmate_text_no_lunch">%1$s n\'a pas encore choisi </string>
+
 
     <!--LIST VIEW -->
     <string name="item_restaurant_type_and_address" translatable="false">%1$s - %2$s</string>

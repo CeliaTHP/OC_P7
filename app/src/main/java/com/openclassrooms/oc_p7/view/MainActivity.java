@@ -23,9 +23,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        verifyAuth();
-
     }
+
+
 
     @Override
     protected void onResume() {
@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
         if (user != null) {
+            //UserService.synchUser(user);
             goToActivity(new DashboardActivity());
             Log.d(TAG, "User Logged : " + user.getDisplayName());
         } else {

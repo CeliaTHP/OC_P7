@@ -1,6 +1,6 @@
 package com.openclassrooms.oc_p7.service;
 
-import com.openclassrooms.oc_p7.model.User;
+import com.openclassrooms.oc_p7.model.Workmate;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -8,31 +8,32 @@ import java.util.Random;
 public class DummyWorkmateGenerator {
 
 
-    private final static ArrayList<User> DUMMY_WORKMATES = new ArrayList<User>(10) {
+    private final static ArrayList<Workmate> DUMMY_WORKMATES = new ArrayList<Workmate>(10) {
         {
             /*https://i.pravatar.cc/150?u=a042581f4e29026704d
 
              */
-            add(new User("Maeve", "Pink", "pinkMaeve@dummy.com", "PinkFood", getRandomPic()));
-            add(new User("Ash", "Red", "redAsh@dummy.com", "RedFood", getRandomPic()));
-            add(new User("Pip", "Yellow", "yellowPip@dummy.com", "YellowFood", getRandomPic()));
-            add(new User("Seris", "Purple", "purpleSeris@dummy.com", "PurpleFood", getRandomPic()));
-            add(new User("Cassie", "Orange", "orangeCassie@dummy.com", "OrangeFood", getRandomPic()));
-            add(new User("Atlas", "Blue", "blueAtlas@dummy.com", "BlueFood", getRandomPic()));
-            add(new User("Koga", "Grey", "greyKoga@dummy.com", "GreyFood", getRandomPic()));
-            add(new User("Buck", "Brown", "brownBuck@dummy.com", "BrownFood", getRandomPic()));
-            add(new User("Io", "White", "whiteIok@dummy.com", "WhiteFood", getRandomPic()));
-            add(new User("Zhin", "Black", "blackZhink@dummy.com", "BlackFood", getRandomPic()));
+            add(new Workmate("Maeve", "pinkMaeve@dummy.com", getRandomPic()));
+            add(new Workmate("Ash", "redAsh@dummy.com", getRandomPic()));
+            add(new Workmate("Pip", "yellowPip@dummy.com", getRandomPic()));
+            add(new Workmate("Seris", "purpleSeris@dummy.com", getRandomPic()));
+            add(new Workmate("Cassie", "orangeCassie@dummy.com", getRandomPic()));
+            add(new Workmate("Atlas", "blueAtlas@dummy.com", getRandomPic()));
+            add(new Workmate("Koga", "greyKoga@dummy.com", getRandomPic()));
+            add(new Workmate("Buck", "brownBuck@dummy.com", getRandomPic()));
+            add(new Workmate("Io", "whiteIo@dummy.com", getRandomPic()));
+            add(new Workmate("Zhin", "blackZhin@dummy.com", getRandomPic()));
 
         }
     };
 
-    public static ArrayList<User> generateWorkmates() {
+    public static ArrayList<Workmate> generateWorkmates() {
         return DUMMY_WORKMATES;
     }
 
-    public static String getRandomPic() {
-       return "https://i.pravatar.cc/150?img=" + new Random().nextInt((70) + 1);
+
+    private static String getRandomPic() {
+        return "https://i.pravatar.cc/150?img=" + new Random().nextInt((70) + 1);
     }
 
 }

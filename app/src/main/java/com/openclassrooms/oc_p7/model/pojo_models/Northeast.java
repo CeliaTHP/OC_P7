@@ -1,4 +1,4 @@
-package com.openclassrooms.oc_p7.model.pojo;
+package com.openclassrooms.oc_p7.model.pojo_models;
 
 import com.google.gson.annotations.SerializedName;
 

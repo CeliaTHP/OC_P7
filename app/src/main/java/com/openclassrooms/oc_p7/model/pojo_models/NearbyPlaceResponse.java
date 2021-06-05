@@ -1,4 +1,4 @@
-package com.openclassrooms.oc_p7.model.pojo;
+package com.openclassrooms.oc_p7.model.pojo_models;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -12,8 +12,8 @@ public class NearbyPlaceResponse {
         @SerializedName("next_page_token")
         public String next_page_token;
 
-        @SerializedName("results")
-        public List<Result> results;
+    @SerializedName("results")
+    public List<Restaurant> restaurants;
 
         @SerializedName("status")
         public String status;

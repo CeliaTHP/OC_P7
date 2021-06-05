@@ -4,13 +4,9 @@ import android.content.Context;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.openclassrooms.oc_p7.model.User;
 import com.openclassrooms.oc_p7.repositories.PlaceRepository;
-import com.openclassrooms.oc_p7.service.DummyWorkmateGenerator;
 import com.openclassrooms.oc_p7.service.api.PlacesApi;
 import com.openclassrooms.oc_p7.view.home.map.MapViewModelFactory;
-
-import java.util.List;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -24,10 +20,6 @@ public class Injection {
     public static MapViewModelFactory provideMapViewModelFactory(Context context) {
         PlaceRepository placeRepository = providePlaceRepository(context);
         return new MapViewModelFactory(placeRepository);
-    }
-
-    public static List<User> getWorkmates() {
-        return DummyWorkmateGenerator.generateWorkmates();
     }
 
     public static FusedLocationProviderClient provideFusedLocationProviderClient(Context context) {
