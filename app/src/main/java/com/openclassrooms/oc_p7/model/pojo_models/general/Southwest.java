@@ -1,8 +1,8 @@
-package com.openclassrooms.oc_p7.model.pojo_models;
+package com.openclassrooms.oc_p7.model.pojo_models.general;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Northeast {
+public class Southwest {
 
     @SerializedName("lat")
     public double lat;

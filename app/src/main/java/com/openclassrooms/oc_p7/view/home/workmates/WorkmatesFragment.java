@@ -22,7 +22,6 @@ public class WorkmatesFragment extends Fragment {
 
     private WorkmatesViewModel workmatesViewModel;
 
-    private WorkmateAdapter workmateAdapter;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,

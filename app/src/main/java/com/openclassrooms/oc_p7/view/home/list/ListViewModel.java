@@ -21,5 +21,9 @@ public class ListViewModel extends ViewModel {
         return placeRepository.getNearbyPlacesFromDatabase();
     }
 
+    public void getDetailsById() {
+        placeRepository.getDetailsById();
+    }
+
 
 }

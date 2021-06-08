@@ -1,7 +1,6 @@
 package com.openclassrooms.oc_p7.view.home.list;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,10 +8,10 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.openclassrooms.oc_p7.databinding.FragmentListBinding;
 import com.openclassrooms.oc_p7.injection.Injection;
-import com.openclassrooms.oc_p7.model.Restaurant;
 
 public class ListFragment extends Fragment {
 
@@ -26,7 +25,8 @@ public class ListFragment extends Fragment {
         fragmentListBinding = FragmentListBinding.inflate(LayoutInflater.from(this.getContext()));
 
         initViewModels();
-        getRestaurants();
+        initRecyclerView();
+        searchById();
 
         return fragmentListBinding.getRoot();
     }
@@ -38,9 +38,15 @@ public class ListFragment extends Fragment {
 
     }
 
-    private void getRestaurants() {
-        for (Restaurant restaurant : listViewModel.getAllRestaurant())
-            Log.d(TAG, restaurant.getName());
+
+    private void initRecyclerView() {
+        // fragmentListBinding.restaurantRecyclerView.setAdapter(new RestaurantAdapter(listViewModel.getAllRestaurant()));
+        fragmentListBinding.restaurantRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+    }
+
+    private void searchById() {
+        listViewModel.getDetailsById();
     }
 
 }

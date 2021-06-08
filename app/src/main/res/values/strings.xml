@@ -40,5 +40,9 @@
     <string name="item_restaurant_attendees" translatable="false">( %1$s )</string>
     <string name="item_restaurant_hours">Ouvert jusqu\'à %1$s</string>
 
+    <!--API INFOS -->
+    <string name="query_radius" translatable="false">100</string>
+    <string name="query_restaurant" translatable="false">restaurant</string>
+
 
 </resources>

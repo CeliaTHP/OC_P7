@@ -1,9 +1,9 @@
-package com.openclassrooms.oc_p7.model.pojo_models;
+package com.openclassrooms.oc_p7.model.pojo_models.general;
 
 import java.util.List;
 
 
-public class RestaurantResult {
+public class Restaurant {
 
     public Geometry geometry;
 
