@@ -39,10 +39,10 @@ public class WorkmatesFragment extends Fragment {
     }
 
     public void initRecyclerView() {
-
         Log.d(TAG, FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
         fragmentWorkmatesBinding.workmateRecyclerView.setAdapter(new WorkmateAdapter(DummyWorkmateGenerator.generateWorkmates()));
         fragmentWorkmatesBinding.workmateRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
     }
+
+
 }

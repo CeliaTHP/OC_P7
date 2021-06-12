@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -21,12 +20,13 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
 import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.databinding.ActivityLoginBinding;
+import com.openclassrooms.oc_p7.service.firestore.UserHelper;
 import com.openclassrooms.oc_p7.view_model.LoginViewModel;
 
 import java.util.Arrays;
 
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends BaseActivity {
 
     private static final String TAG = "LoginActivity";
     private static final int RC_GOOGLE_SIGN_IN = 1;
@@ -142,6 +142,7 @@ public class LoginActivity extends AppCompatActivity {
         loginViewModel.authenticatedUserLiveData.observe(this, new Observer<FirebaseUser>() {
             @Override
             public void onChanged(FirebaseUser firebaseUser) {
+                UserHelper.createUser(firebaseUser.getUid(), firebaseUser.getDisplayName(), firebaseUser.getEmail(), "" + firebaseUser.getPhotoUrl());
                 Log.d(TAG, "name : " + firebaseUser.getDisplayName());
                 Log.d(TAG, "email: " + firebaseUser.getEmail());
                 Log.d(TAG, "pic " + firebaseUser.getPhotoUrl());

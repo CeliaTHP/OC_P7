@@ -4,19 +4,28 @@ import java.util.List;
 
 public class User {
 
+    private String uid;
     private String name;
-    private String surname;
     private String email;
-    private String lunch;
     private String picUrl;
+    private String restaurantId;
+    private String restaurantName;
+    private String restaurantType;
     private List<Workmate> workmates;
 
-    public User(String name, String email, String lunch, String picUrl, List<Workmate> workmates) {
+    public User(String uid, String name, String email, String picUrl) {
+        this.uid = uid;
         this.name = name;
         this.email = email;
-        this.lunch = lunch;
         this.picUrl = picUrl;
-        this.workmates = workmates;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public String getName() {
@@ -35,13 +44,6 @@ public class User {
         this.email = email;
     }
 
-    public String getLunch() {
-        return lunch;
-    }
-
-    public void setLunch(String lunch) {
-        this.lunch = lunch;
-    }
 
     public String getPicUrl() {
         return picUrl;
@@ -57,5 +59,29 @@ public class User {
 
     public void setWorkmates(List<Workmate> workmates) {
         this.workmates = workmates;
+    }
+
+    public String getRestaurantId() {
+        return restaurantId;
+    }
+
+    public void setRestaurantId(String restaurantId) {
+        this.restaurantId = restaurantId;
+    }
+
+    public String getRestaurantName() {
+        return restaurantName;
+    }
+
+    public void setRestaurantName(String restaurantName) {
+        this.restaurantName = restaurantName;
+    }
+
+    public String getRestaurantType() {
+        return restaurantType;
+    }
+
+    public void setRestaurantType(String restaurantType) {
+        this.restaurantType = restaurantType;
     }
 }

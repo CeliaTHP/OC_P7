@@ -1,18 +1,29 @@
 package com.openclassrooms.oc_p7.model;
 
-import com.openclassrooms.oc_p7.model.pojo_models.general.Restaurant;
-
 public class Workmate {
 
+    private String uid;
     private String name;
     private String email;
     private String picUrl;
-    private Restaurant restaurant;
+    private String restaurantId;
+    private String restaurantName;
+    private String restaurantType;
 
-    public Workmate(String name, String email, String picUrl) {
+
+    public Workmate(String uid, String name, String email, String picUrl) {
+        this.uid = uid;
         this.name = name;
         this.email = email;
         this.picUrl = picUrl;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public String getName() {
@@ -39,11 +50,27 @@ public class Workmate {
         this.picUrl = picUrl;
     }
 
-    public Restaurant getRestaurant() {
-        return restaurant;
+    public String getRestaurantId() {
+        return restaurantId;
     }
 
-    public void setRestaurant(Restaurant restaurant) {
-        this.restaurant = restaurant;
+    public void setRestaurantId(String restaurantId) {
+        this.restaurantId = restaurantId;
+    }
+
+    public String getRestaurantName() {
+        return restaurantName;
+    }
+
+    public void setRestaurantName(String restaurantName) {
+        this.restaurantName = restaurantName;
+    }
+
+    public String getRestaurantType() {
+        return restaurantType;
+    }
+
+    public void setRestaurantType(String restaurantType) {
+        this.restaurantType = restaurantType;
     }
 }
