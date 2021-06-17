@@ -15,22 +15,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.OC_P7">
-        <activity android:name=".view.SettingsActivity"></activity>
-        <activity android:name=".view.DetailsActivity" />
+        <activity android:name=".views.activities.SettingsActivity"></activity>
+        <activity android:name=".views.activities.DetailsActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/GOOGLE_MAP_API_KEY" />
 
-        <activity android:name=".view.MainActivity">
+        <activity android:name=".views.activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.DashboardActivity" />
-        <activity android:name=".view.LoginActivity" />
+        <activity android:name=".views.activities.DashboardActivity" />
+        <activity android:name=".views.activities.LoginActivity" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"

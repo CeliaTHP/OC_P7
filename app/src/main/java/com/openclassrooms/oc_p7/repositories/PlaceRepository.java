@@ -11,12 +11,12 @@ import com.google.android.gms.tasks.Task;
 import com.openclassrooms.oc_p7.BuildConfig;
 import com.openclassrooms.oc_p7.MyApplication;
 import com.openclassrooms.oc_p7.R;
-import com.openclassrooms.oc_p7.database.RestaurantDao;
-import com.openclassrooms.oc_p7.injection.Injection;
-import com.openclassrooms.oc_p7.model.pojo_models.details.DetailPlaceResponse;
-import com.openclassrooms.oc_p7.model.pojo_models.general.NearbyPlaceResponse;
-import com.openclassrooms.oc_p7.model.pojo_models.general.Restaurant;
-import com.openclassrooms.oc_p7.service.api.PlacesApi;
+import com.openclassrooms.oc_p7.databases.RestaurantDao;
+import com.openclassrooms.oc_p7.injections.Injection;
+import com.openclassrooms.oc_p7.models.pojo_models.details.DetailPlaceResponse;
+import com.openclassrooms.oc_p7.models.pojo_models.general.NearbyPlaceResponse;
+import com.openclassrooms.oc_p7.models.pojo_models.general.Restaurant;
+import com.openclassrooms.oc_p7.services.apis.PlacesApi;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +55,7 @@ public class PlaceRepository {
         });
     }
 
-    public List<com.openclassrooms.oc_p7.model.Restaurant> getNearbyPlacesFromDatabase() {
+    public List<com.openclassrooms.oc_p7.models.Restaurant> getNearbyPlacesFromDatabase() {
         return restaurantDao.getAll();
     }
 
