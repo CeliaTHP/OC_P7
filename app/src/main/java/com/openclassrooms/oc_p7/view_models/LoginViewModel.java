@@ -181,8 +181,12 @@ public class LoginViewModel extends AndroidViewModel {
     public void initWorkmates() {
         for (Workmate workmate : DummyWorkmateGenerator.generateWorkmates()) {
             WorkmateHelper.createWorkmate(workmate.getUid(), workmate.getName(), workmate.getEmail(), workmate.getPicUrl());
-            workmate.setUserUid(FirebaseAuth.getInstance().getUid());
-
+            if (workmate.getRestaurantId() != null)
+                WorkmateHelper.updateWorkmateRestaurantId(workmate.getRestaurantId(), workmate.getUid());
+            if (workmate.getRestaurantName() != null)
+                WorkmateHelper.updateWorkmateRestaurantName(workmate.getRestaurantName(), workmate.getUid());
+            if (workmate.getRestaurantType() != null)
+                WorkmateHelper.updateWorkmateRestaurantType(workmate.getRestaurantType(), workmate.getUid());
         }
     }
 

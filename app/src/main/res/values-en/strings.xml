@@ -22,7 +22,7 @@
     <string name="drawer_logout">LOG OUT</string>
 
     <!--WORKMATES-->
-    <string name="workmate_text">%1$s is eating at %2$s (%3$s)</string>
+    <string name="workmate_text">%1$s is eating %2$s (%3$s)</string>
     <string name="workmate_text_no_lunch">%1$s did not choose yet </string>
 
 

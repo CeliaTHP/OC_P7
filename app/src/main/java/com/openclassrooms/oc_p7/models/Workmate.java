@@ -9,7 +9,6 @@ public class Workmate {
     private String restaurantId;
     private String restaurantName;
     private String restaurantType;
-    private String userUid;
 
 
     public Workmate(String uid, String name, String email, String picUrl) {
@@ -19,13 +18,6 @@ public class Workmate {
         this.picUrl = picUrl;
     }
 
-    public String getUserUid() {
-        return userUid;
-    }
-
-    public void setUserUid(String userUid) {
-        this.userUid = userUid;
-    }
 
     public String getUid() {
         return uid;

@@ -41,6 +41,10 @@ public class WorkmateHelper {
         return WorkmateHelper.getWorkmatesCollection().document(uid).update("name", name);
     }
 
+    public static Task<Void> updateWorkmateRestaurantId(String restaurantId, String uid) {
+        return WorkmateHelper.getWorkmatesCollection().document(uid).update("restaurantId", restaurantId);
+    }
+
     public static Task<Void> updateWorkmateRestaurantName(String restaurantName, String uid) {
         return WorkmateHelper.getWorkmatesCollection().document(uid).update("restaurantName", restaurantName);
     }
@@ -50,9 +54,15 @@ public class WorkmateHelper {
         return WorkmateHelper.getWorkmatesCollection().document(uid).update("restaurantType", restaurantType);
     }
 
-    // DELETE
+    // DELETE WORKMATE
     public static Task<Void> deleteWorkmate(String uid) {
         return WorkmateHelper.getWorkmatesCollection().document(uid).delete();
     }
+
+    // DELETE ALL WORKMATES
+    public static void deleteAllWorkmate() {
+
+    }
+
 
 }

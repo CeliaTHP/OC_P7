@@ -11,7 +11,6 @@ import com.google.android.gms.tasks.Task;
 import com.openclassrooms.oc_p7.BuildConfig;
 import com.openclassrooms.oc_p7.MyApplication;
 import com.openclassrooms.oc_p7.R;
-import com.openclassrooms.oc_p7.databases.RestaurantDao;
 import com.openclassrooms.oc_p7.injections.Injection;
 import com.openclassrooms.oc_p7.models.pojo_models.details.DetailPlaceResponse;
 import com.openclassrooms.oc_p7.models.pojo_models.general.NearbyPlaceResponse;
@@ -30,11 +29,9 @@ public class PlaceRepository {
     private PlacesApi placesApi = Injection.provideApiClient();
 
     private FusedLocationProviderClient fusedLocationProviderClient;
-    private RestaurantDao restaurantDao;
 
-    public PlaceRepository(FusedLocationProviderClient fusedLocationProviderClient, RestaurantDao restaurantDao) {
+    public PlaceRepository(FusedLocationProviderClient fusedLocationProviderClient) {
         this.fusedLocationProviderClient = fusedLocationProviderClient;
-        this.restaurantDao = restaurantDao;
     }
 
     private String TAG = "PlaceRepository";
@@ -55,9 +52,6 @@ public class PlaceRepository {
         });
     }
 
-    public List<com.openclassrooms.oc_p7.models.Restaurant> getNearbyPlacesFromDatabase() {
-        return restaurantDao.getAll();
-    }
 
     public void getNearbyPlaces(Location location) {
         //working with fakeLocation !!!!

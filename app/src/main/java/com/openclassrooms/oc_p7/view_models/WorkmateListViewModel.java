@@ -35,14 +35,27 @@ public class WorkmateListViewModel extends ViewModel {
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        //TODO : USE queryDocumentSnapshots.foreach FOREACH INSTEAD ?
+
                         Log.d(TAG, "onSuccess");
+
                         List<DocumentSnapshot> snapshotList = queryDocumentSnapshots.getDocuments();
+
                         for (DocumentSnapshot snapshot : snapshotList) {
                             Workmate workmate = new Workmate(
                                     snapshot.get("uid").toString(),
                                     snapshot.get("name").toString(),
                                     snapshot.get("email").toString(),
-                                    snapshot.get("picUrl").toString());
+                                    snapshot.get("picUrl").toString()
+                            );
+
+                            if (snapshot.get("restaurantName") != null)
+                                workmate.setRestaurantName(snapshot.get("restaurantName").toString());
+                            if (snapshot.get("restaurantType") != null)
+                                workmate.setRestaurantType(snapshot.get("restaurantType").toString());
+                            if (snapshot.get("restaurantId") != null)
+                                workmate.setRestaurantId(snapshot.get("restaurantId").toString());
+
                             workmateList.add(workmate);
                         }
                         Log.d(TAG, workmateList + "");

@@ -4,8 +4,6 @@ import android.content.Context;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.openclassrooms.oc_p7.databases.RestaurantDao;
-import com.openclassrooms.oc_p7.databases.RestaurantDatabase;
 import com.openclassrooms.oc_p7.repositories.PlaceRepository;
 import com.openclassrooms.oc_p7.services.apis.PlacesApi;
 import com.openclassrooms.oc_p7.services.factories.ListViewModelFactory;
@@ -17,7 +15,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class Injection {
 
     public static PlaceRepository providePlaceRepository(Context context) {
-        return new PlaceRepository(provideFusedLocationProviderClient(context), provideRestaurantDao(context));
+        return new PlaceRepository(provideFusedLocationProviderClient(context));
     }
 
     public static MapViewModelFactory provideMapViewModelFactory(Context context) {
@@ -46,9 +44,6 @@ public class Injection {
 
     }
 
-    public static RestaurantDao provideRestaurantDao(Context context) {
-        return RestaurantDatabase.getInstance(context).getRestaurantDao();
-    }
 
 
 }
