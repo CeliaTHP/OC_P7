@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.databinding.ItemLayoutRestaurantBinding;
 import com.openclassrooms.oc_p7.models.pojo_models.general.RestaurantPojo;
 
@@ -16,6 +17,7 @@ import java.util.List;
 
 public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder.ViewHolder> {
 
+    private final static String TAG = "RestaurantAdapter";
     private List<RestaurantPojo> restaurantList;
     private Context context;
 
@@ -34,11 +36,24 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
     @Override
     public void onBindViewHolder(@NonNull @NotNull RestaurantViewHolder.ViewHolder holder, int position) {
         RestaurantPojo restaurant = restaurantList.get(position);
-        if (restaurant != null)
+        if (restaurant != null) {
+            holder.itemLayoutRestaurantBinding.itemRestaurantTypeAndAddress.setText(holder.itemView.getContext().getString(R.string.item_restaurant_address));
             holder.itemLayoutRestaurantBinding.itemRestaurantName.setText(restaurant.name);
 
 
+            //TODO : PARSE TO GET URL
+            /*
+                Glide.with(holder.itemView.getContext())
+                        .load(restaurant.photos.get(0).html_attributions)
+                        .centerCrop()
+                        .into(holder.itemLayoutRestaurantBinding.itemRestaurantPic);
+
+
+             */
+        }
+
     }
+
 
     @Override
     public int getItemCount() {

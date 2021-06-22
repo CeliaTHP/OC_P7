@@ -34,7 +34,7 @@
 
 
     <!--LIST VIEW -->
-    <string name="item_restaurant_type_and_address" translatable="false">%1$s - %2$s</string>
+    <string name="item_restaurant_address" translatable="false">%1$</string>
     <string name="item_restaurant_name" translatable="false">%1$s</string>
     <string name="item_restaurant_distance" translatable="false">%1$s</string>
     <string name="item_restaurant_attendees" translatable="false">( %1$s )</string>
