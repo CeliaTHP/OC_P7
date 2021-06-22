@@ -1,6 +1,6 @@
 package com.openclassrooms.oc_p7.services.apis;
 
-import com.openclassrooms.oc_p7.models.pojo_models.details.DetailPlaceResponse;
+import com.openclassrooms.oc_p7.models.pojo_models.details.DetailsPlaceResponse;
 import com.openclassrooms.oc_p7.models.pojo_models.general.NearbyPlaceResponse;
 
 import retrofit2.Call;
@@ -18,7 +18,7 @@ public interface PlacesApi {
     );
 
     @GET("place/details/json")
-    Call<DetailPlaceResponse> getDetailsById(
+    Call<DetailsPlaceResponse> getDetailsById(
             @Query("key") String googleApiKey,
             @Query("place_id") String placeId
     );

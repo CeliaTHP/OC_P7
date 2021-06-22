@@ -2,11 +2,11 @@ package com.openclassrooms.oc_p7.models.pojo_models.details;
 
 import java.util.List;
 
-public class DetailPlaceResponse {
+public class DetailsPlaceResponse {
 
     public List<Object> html_attributions;
 
-    public RestaurantDetails result;
+    public RestaurantDetailsPojo result;
 
     public String status;
 }

@@ -6,7 +6,7 @@ import com.openclassrooms.oc_p7.models.pojo_models.general.PlusCode;
 
 import java.util.List;
 
-public class RestaurantDetails {
+public class RestaurantDetailsPojo {
 
     public List<AddressComponent> address_components;
     public String adr_address;
