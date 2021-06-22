@@ -175,7 +175,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void onConfigurationChanged(@NonNull @NotNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         if (getTheme())
-            googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.mapstyle));
+            googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.mapstyle));
 
     }
 
@@ -184,7 +184,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         Log.d(TAG, "MAP READY");
         this.googleMap = googleMap;
         if (getTheme())
-            googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.mapstyle));
+            googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.mapstyle));
 
         googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
@@ -215,16 +215,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
 
     public void getCurrentLocation() {
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             Log.d(TAG, "shouldRequestPermissions");
             checkAndRequestPermissions();
         } else {
-            mapViewModel.getLocationInformations();
+            mapViewModel.getLocationInformations(getContext());
         }
     }
 
     private void checkAndRequestPermissions() {
-        Log.d(TAG, "FINE LOCATION PERMISSION : " + ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION));
+        Log.d(TAG, "FINE LOCATION PERMISSION : " + ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION));
         requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 19);
     }
 
@@ -233,7 +233,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         Log.d(TAG, "Code : " + requestCode + " Permissions : " + Arrays.toString(permissions) + " result :" + Arrays.toString(grantResults));
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             shouldReload = true;
         }
 

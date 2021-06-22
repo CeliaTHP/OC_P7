@@ -53,7 +53,7 @@ public class RestaurantListFragment extends Fragment {
     }
 
     private void initPlaces() {
-        mapViewModel.getLocationInformations();
+        mapViewModel.getLocationInformations(getContext());
     }
 
     private void initObservers() {
@@ -70,7 +70,7 @@ public class RestaurantListFragment extends Fragment {
 
     private void initRecyclerView(List<RestaurantPojo> restaurantPojoList) {
         fragmentListRestaurantsBinding.restaurantRecyclerView.setAdapter(new RestaurantAdapter(restaurantPojoList));
-        fragmentListRestaurantsBinding.restaurantRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        fragmentListRestaurantsBinding.restaurantRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
     }
 

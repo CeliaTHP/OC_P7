@@ -1,13 +1,10 @@
 package com.openclassrooms.oc_p7.repositories;
 
-import android.annotation.SuppressLint;
 import android.location.Location;
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.tasks.Task;
 import com.openclassrooms.oc_p7.BuildConfig;
 import com.openclassrooms.oc_p7.MyApplication;
 import com.openclassrooms.oc_p7.R;
@@ -28,11 +25,6 @@ public class PlaceRepository {
 
     private PlacesApi placesApi = Injection.provideApiClient();
 
-    private FusedLocationProviderClient fusedLocationProviderClient;
-
-    public PlaceRepository(FusedLocationProviderClient fusedLocationProviderClient) {
-        this.fusedLocationProviderClient = fusedLocationProviderClient;
-    }
 
     private String TAG = "PlaceRepository";
 
@@ -41,23 +33,9 @@ public class PlaceRepository {
     public MutableLiveData<List<RestaurantPojo>> nearbyPlacesLiveData = new MutableLiveData<>();
     public MutableLiveData<Location> currentLocationLiveData = new MutableLiveData<>();
 
-    @SuppressLint("MissingPermission") //Already asked for Location
-    public void updateCurrentLocation() {
-        Task<Location> task = fusedLocationProviderClient.getLastLocation();
-        task.addOnSuccessListener(location -> {
-            if (location != null) {
-                currentLocationLiveData.postValue(location);
-                getNearbyPlaces(location);
-            }
-        });
-    }
-
-
     public void getNearbyPlaces(Location location) {
-        String fakeLocation = "49.024979226793775,2.463881854135891";
+        //String fakeLocation = "49.024979226793775,2.463881854135891";
 //        String location = currentLocationLiveData.getValue().getLatitude() + "," + currentLocationLiveData.getValue().getLongitude();
-        Log.d(TAG, "expected format : " + fakeLocation);
-        Log.d(TAG, "format is : " + location);
 
         String radiusQuery = MyApplication.getInstance().getApplicationContext().getString(R.string.query_radius);
         String restaurantQuery = MyApplication.getInstance().getApplicationContext().getString(R.string.query_restaurant);
@@ -68,6 +46,7 @@ public class PlaceRepository {
         call.enqueue(new Callback<NearbyPlaceResponse>() {
             @Override
             public void onResponse(Call<NearbyPlaceResponse> call, Response<NearbyPlaceResponse> response) {
+                //TODO use Rx
                 placeList.addAll(response.body().restaurantPojos);
                 nearbyPlacesLiveData.postValue(placeList);
                 Log.d(TAG, placeList.toString());

@@ -37,11 +37,11 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
     public void onBindViewHolder(@NonNull @NotNull RestaurantViewHolder.ViewHolder holder, int position) {
         RestaurantPojo restaurant = restaurantList.get(position);
         if (restaurant != null) {
-            holder.itemLayoutRestaurantBinding.itemRestaurantTypeAndAddress.setText(holder.itemView.getContext().getString(R.string.item_restaurant_address));
+            holder.itemLayoutRestaurantBinding.itemRestaurantTypeAndAddress.setText(holder.itemView.getContext().getString(R.string.item_restaurant_address, restaurant.vicinity));
             holder.itemLayoutRestaurantBinding.itemRestaurantName.setText(restaurant.name);
 
-
             //TODO : PARSE TO GET URL
+            //TODO : https://developers.google.com/maps/documentation/places/web-service/photos
             /*
                 Glide.with(holder.itemView.getContext())
                         .load(restaurant.photos.get(0).html_attributions)

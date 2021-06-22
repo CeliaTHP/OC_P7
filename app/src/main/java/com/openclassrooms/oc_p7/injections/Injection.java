@@ -15,8 +15,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Injection {
 
-    public static PlaceRepository providePlaceRepository(Context context) {
-        return new PlaceRepository(provideFusedLocationProviderClient(context));
+    public static PlaceRepository providePlaceRepository() {
+        return new PlaceRepository();
     }
 
     public static WorkmateRepository provideWorkmateRepository(Context context) {
@@ -24,8 +24,8 @@ public class Injection {
     }
 
     public static MapViewModelFactory provideMapViewModelFactory(Context context) {
-        PlaceRepository placeRepository = providePlaceRepository(context);
-        return new MapViewModelFactory(placeRepository);
+        PlaceRepository placeRepository = providePlaceRepository();
+        return new MapViewModelFactory(placeRepository, Injection.provideFusedLocationProviderClient(context));
     }
 
     public static WorkmateViewModelFactory provideWorkmateViewModelFactory(Context context) {
