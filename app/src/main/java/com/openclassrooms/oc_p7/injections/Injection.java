@@ -5,9 +5,10 @@ import android.content.Context;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.openclassrooms.oc_p7.repositories.PlaceRepository;
+import com.openclassrooms.oc_p7.repositories.WorkmateRepository;
 import com.openclassrooms.oc_p7.services.apis.PlacesApi;
-import com.openclassrooms.oc_p7.services.factories.ListViewModelFactory;
 import com.openclassrooms.oc_p7.services.factories.MapViewModelFactory;
+import com.openclassrooms.oc_p7.services.factories.WorkmateViewModelFactory;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -18,14 +19,18 @@ public class Injection {
         return new PlaceRepository(provideFusedLocationProviderClient(context));
     }
 
+    public static WorkmateRepository provideWorkmateRepository(Context context) {
+        return new WorkmateRepository();
+    }
+
     public static MapViewModelFactory provideMapViewModelFactory(Context context) {
         PlaceRepository placeRepository = providePlaceRepository(context);
         return new MapViewModelFactory(placeRepository);
     }
 
-    public static ListViewModelFactory provideListViewModelFactory(Context context) {
-        PlaceRepository placeRepository = providePlaceRepository(context);
-        return new ListViewModelFactory(placeRepository);
+    public static WorkmateViewModelFactory provideWorkmateViewModelFactory(Context context) {
+        WorkmateRepository workmateRepository = provideWorkmateRepository(context);
+        return new WorkmateViewModelFactory(workmateRepository);
     }
 
 

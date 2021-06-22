@@ -14,7 +14,7 @@ import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.injections.Injection;
 import com.openclassrooms.oc_p7.models.pojo_models.details.DetailPlaceResponse;
 import com.openclassrooms.oc_p7.models.pojo_models.general.NearbyPlaceResponse;
-import com.openclassrooms.oc_p7.models.pojo_models.general.Restaurant;
+import com.openclassrooms.oc_p7.models.pojo_models.general.RestaurantPojo;
 import com.openclassrooms.oc_p7.services.apis.PlacesApi;
 
 import java.util.ArrayList;
@@ -36,9 +36,9 @@ public class PlaceRepository {
 
     private String TAG = "PlaceRepository";
 
-    private ArrayList<Restaurant> placeList = new ArrayList<>();
+    private ArrayList<RestaurantPojo> placeList = new ArrayList<>();
 
-    public MutableLiveData<List<Restaurant>> nearbyPlacesLiveData = new MutableLiveData<>();
+    public MutableLiveData<List<RestaurantPojo>> nearbyPlacesLiveData = new MutableLiveData<>();
     public MutableLiveData<Location> currentLocationLiveData = new MutableLiveData<>();
 
     @SuppressLint("MissingPermission") //Already asked for Location
@@ -54,34 +54,23 @@ public class PlaceRepository {
 
 
     public void getNearbyPlaces(Location location) {
-        //working with fakeLocation !!!!
-
         String fakeLocation = "49.024979226793775,2.463881854135891";
 //        String location = currentLocationLiveData.getValue().getLatitude() + "," + currentLocationLiveData.getValue().getLongitude();
         Log.d(TAG, "expected format : " + fakeLocation);
         Log.d(TAG, "format is : " + location);
 
-        String radius = MyApplication.getInstance().getApplicationContext().getString(R.string.query_radius);
-        String restaurant = MyApplication.getInstance().getApplicationContext().getString(R.string.query_restaurant);
+        String radiusQuery = MyApplication.getInstance().getApplicationContext().getString(R.string.query_radius);
+        String restaurantQuery = MyApplication.getInstance().getApplicationContext().getString(R.string.query_restaurant);
 
-        String locationString = String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude());
+        String locationStringQuery = String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude());
 
-        Call<NearbyPlaceResponse> call = placesApi.getNearbyPlaces(BuildConfig.GoogleMapApiKey, locationString, radius, restaurant);
+        Call<NearbyPlaceResponse> call = placesApi.getNearbyPlaces(BuildConfig.GoogleMapApiKey, locationStringQuery, radiusQuery, restaurantQuery);
         call.enqueue(new Callback<NearbyPlaceResponse>() {
             @Override
             public void onResponse(Call<NearbyPlaceResponse> call, Response<NearbyPlaceResponse> response) {
-                for (Restaurant restaurant : response.body().restaurants) {
-                    placeList.add(restaurant);
-
-                    Log.d(TAG, "name : " + restaurant.name);
-                    Log.d(TAG, "lat " + restaurant.geometry.location.lat);
-
-                    if (restaurant.opening_hours != null)
-                        Log.d(TAG, "open now " + restaurant.opening_hours.open_now);
-                    Log.d(TAG, "types " + restaurant.types);
-
-                }
+                placeList.addAll(response.body().restaurantPojos);
                 nearbyPlacesLiveData.postValue(placeList);
+                Log.d(TAG, placeList.toString());
 
             }
 

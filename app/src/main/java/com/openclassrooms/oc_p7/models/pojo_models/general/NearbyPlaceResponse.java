@@ -11,7 +11,7 @@ public class NearbyPlaceResponse {
     public String next_page_token;
 
     @SerializedName("results")
-    public List<Restaurant> restaurants;
+    public List<RestaurantPojo> restaurantPojos;
 
     public String status;
 

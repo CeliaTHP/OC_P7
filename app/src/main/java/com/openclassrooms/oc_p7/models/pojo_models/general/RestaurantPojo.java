@@ -3,7 +3,7 @@ package com.openclassrooms.oc_p7.models.pojo_models.general;
 import java.util.List;
 
 
-public class Restaurant {
+public class RestaurantPojo {
 
     public Geometry geometry;
 

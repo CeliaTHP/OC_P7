@@ -8,14 +8,15 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.openclassrooms.oc_p7.databinding.FragmentListWorkmatesBinding;
+import com.openclassrooms.oc_p7.injections.Injection;
 import com.openclassrooms.oc_p7.models.Workmate;
-import com.openclassrooms.oc_p7.view_models.WorkmateListViewModel;
+import com.openclassrooms.oc_p7.services.factories.WorkmateViewModelFactory;
+import com.openclassrooms.oc_p7.view_models.WorkmateViewModel;
 import com.openclassrooms.oc_p7.views.adapters.WorkmateAdapter;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class WorkmateListFragment extends Fragment {
     private final String TAG = "WorkmatesFragment";
     private FragmentListWorkmatesBinding fragmentListWorkmatesBinding;
 
-    private WorkmateListViewModel workmateListViewModel;
+    private WorkmateViewModel workmateViewModel;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -33,26 +34,23 @@ public class WorkmateListFragment extends Fragment {
 
         fragmentListWorkmatesBinding = FragmentListWorkmatesBinding.inflate(LayoutInflater.from(getContext()));
 
-        workmateListViewModel =
-                new ViewModelProvider(this).get(WorkmateListViewModel.class);
-
+        initViewModels();
         initObservers();
 
-        workmateListViewModel.initWorkmateList();
+        workmateViewModel.getWorkmateList();
 
 
         return fragmentListWorkmatesBinding.getRoot();
     }
 
+    private void initViewModels() {
+        WorkmateViewModelFactory workmateViewModelFactory = Injection.provideWorkmateViewModelFactory(getContext());
+        workmateViewModel = ViewModelProviders.of(this, workmateViewModelFactory).get(WorkmateViewModel.class);
+    }
+
 
     private void initObservers() {
-        workmateListViewModel.workmateListLiveData.observe(getViewLifecycleOwner(), new Observer<List<Workmate>>() {
-            @Override
-            public void onChanged(List<Workmate> workmates) {
-                initRecyclerView(workmates);
-
-            }
-        });
+        workmateViewModel.workmateListLiveData.observe(getViewLifecycleOwner(), workmates -> initRecyclerView(workmates));
     }
 
     private void initRecyclerView(List<Workmate> workmateList) {

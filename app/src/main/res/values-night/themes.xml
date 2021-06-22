@@ -15,5 +15,9 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
+    <style name="workmate_list_text_no_lunch">
+        <item name="android:textStyle">italic</item>
+        <item name="android:textColor">@color/light_grey</item>
+    </style>
 
 </resources>

@@ -15,6 +15,11 @@
         <item name="android:textColor">@color/black</item>
     </style>
 
+    <style name="workmate_list_text_no_lunch">
+        <item name="android:textStyle">italic</item>
+        <item name="android:textColor">@color/grey</item>
+    </style>
+
     <style name="ToolbarStyle" parent="Theme.AppCompat">
         <item name="android:textColorPrimary">@color/white</item>
         <item name="android:textColorSecondary">@color/white</item>

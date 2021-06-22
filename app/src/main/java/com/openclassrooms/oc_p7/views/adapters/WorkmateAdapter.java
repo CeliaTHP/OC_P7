@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.core.widget.TextViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -33,10 +34,13 @@ public class WorkmateAdapter extends RecyclerView.Adapter<WorkmateViewHolder.Vie
         Workmate workmate = workmateList.get(position);
         if (workmate.getRestaurantName() != null && workmate.getRestaurantType() != null)
             holder.itemLayoutWorkmatesBinding.workmateText.setText(holder.itemView.getContext().getString(R.string.workmate_text, workmate.getName(), workmate.getRestaurantName(), workmate.getRestaurantType()));
-        else
-            holder.itemLayoutWorkmatesBinding.workmateText.setText(holder.itemView.getContext().getString(R.string.workmate_text_no_lunch, workmate.getName()));
 
-        if (workmate.getName() != null) {
+        else {
+            holder.itemLayoutWorkmatesBinding.workmateText.setText(holder.itemView.getContext().getString(R.string.workmate_text_no_lunch, workmate.getName()));
+            TextViewCompat.setTextAppearance(holder.itemLayoutWorkmatesBinding.workmateText, R.style.workmate_list_text_no_lunch);
+        }
+
+        if (workmate.getPicUrl() != null) {
             Glide.with(holder.itemView.getContext())
                     .load(workmate.getPicUrl())
                     .centerCrop()

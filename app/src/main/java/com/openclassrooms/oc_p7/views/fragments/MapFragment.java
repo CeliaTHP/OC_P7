@@ -17,7 +17,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -29,13 +28,16 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.databinding.FragmentMapBinding;
 import com.openclassrooms.oc_p7.injections.Injection;
-import com.openclassrooms.oc_p7.models.pojo_models.general.Restaurant;
+import com.openclassrooms.oc_p7.models.pojo_models.general.RestaurantPojo;
 import com.openclassrooms.oc_p7.services.factories.MapViewModelFactory;
+import com.openclassrooms.oc_p7.services.factories.WorkmateViewModelFactory;
 import com.openclassrooms.oc_p7.view_models.LoginViewModel;
 import com.openclassrooms.oc_p7.view_models.MapViewModel;
+import com.openclassrooms.oc_p7.view_models.WorkmateViewModel;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
@@ -44,9 +46,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
 
     private MapViewModel mapViewModel;
+    private WorkmateViewModel workmateViewModel;
+
+    private ArrayList<RestaurantPojo> nearbyPlaceList = new ArrayList<>();
+
     private FragmentMapBinding fragmentMapBinding;
     private MapView mapView;
-    private FusedLocationProviderClient fusedLocationProviderClient;
 
     private Bundle savedInstanceState;
 
@@ -55,7 +60,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private GoogleMap googleMap;
 
     private Boolean shouldReload = false;
-
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -81,13 +85,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     }
 
-    public void initViewModels() {
-        //INIT MAPVIEWMODEL
+    private void initViewModels() {
+        loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
+
         MapViewModelFactory mapViewModelFactory = Injection.provideMapViewModelFactory(getContext());
         mapViewModel =
                 ViewModelProviders.of(this, mapViewModelFactory).get(MapViewModel.class);
 
-        loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
+        WorkmateViewModelFactory workmateViewModelFactory = Injection.provideWorkmateViewModelFactory(getContext());
+        workmateViewModel =
+                ViewModelProviders.of(this, workmateViewModelFactory).get(WorkmateViewModel.class);
+
     }
 
 
@@ -118,13 +126,29 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         mapViewModel.nearbyPlacesLiveData.observe(getViewLifecycleOwner(), placeList -> {
             Log.d(TAG, "placeListLiveData onChanged");
-            for (Restaurant place : placeList) {
+            for (RestaurantPojo place : placeList) {
                 if (googleMap != null) {
                     LatLng latLng = new LatLng(place.geometry.location.lat, place.geometry.location.lng);
                     googleMap.addMarker(new MarkerOptions().position(latLng).title(place.name));
+
                 }
             }
         });
+
+        workmateViewModel.workmatePlaceIdListLiveData.observe(getViewLifecycleOwner(), placeIdList -> {
+            Log.d(TAG, "placeIdListLiveData onChanged");
+            /*for (String id : placeIdList) {
+                for (Restaurant nearbyPlace : nearbyPlaceList) {
+                    if (nearbyPlace.place_id.equals(id)) {
+                        LatLng latLng = new LatLng(nearbyPlace.geometry.location.lat, nearbyPlace.geometry.location.lng);
+                        googleMap.addMarker(new MarkerOptions().position(latLng).title(nearbyPlace.name));
+                    }
+                }
+            }
+
+             */
+        });
+
     }
 
     private void initMap(Bundle savedInstanceState) {
@@ -176,15 +200,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
             }
         });
-        //refreshMap();
+        refreshMap();
 
     }
 
 
     private void refreshMap() {
         Log.d(TAG, "Refresh Map");
-        if (googleMap != null) googleMap.clear();
-        getCurrentLocation();
+        if (googleMap != null) {
+            googleMap.clear();
+            getCurrentLocation();
+        }
     }
 
 

@@ -8,7 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.openclassrooms.oc_p7.databinding.ItemLayoutRestaurantBinding;
-import com.openclassrooms.oc_p7.models.Restaurant;
+import com.openclassrooms.oc_p7.models.pojo_models.general.RestaurantPojo;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -16,10 +16,10 @@ import java.util.List;
 
 public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder.ViewHolder> {
 
-    private List<Restaurant> restaurantList;
+    private List<RestaurantPojo> restaurantList;
     private Context context;
 
-    public RestaurantAdapter(List<Restaurant> restaurantList) {
+    public RestaurantAdapter(List<RestaurantPojo> restaurantList) {
         this.restaurantList = restaurantList;
     }
 
@@ -33,9 +33,9 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull RestaurantViewHolder.ViewHolder holder, int position) {
-        Restaurant restaurant = restaurantList.get(position);
+        RestaurantPojo restaurant = restaurantList.get(position);
         if (restaurant != null)
-            holder.itemLayoutRestaurantBinding.itemRestaurantName.setText(restaurant.getName());
+            holder.itemLayoutRestaurantBinding.itemRestaurantName.setText(restaurant.name);
 
 
     }
