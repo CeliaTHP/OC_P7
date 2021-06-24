@@ -39,6 +39,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
 
@@ -49,6 +50,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private WorkmateViewModel workmateViewModel;
 
     private ArrayList<RestaurantPojo> nearbyPlaceList = new ArrayList<>();
+    private List<String> placeIdList = new ArrayList<>();
 
     private FragmentMapBinding fragmentMapBinding;
     private MapView mapView;
@@ -73,6 +75,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         initMap(savedInstanceState);
         initObservers();
         initListeners();
+        workmateViewModel.getWorkmateList();
 
         return fragmentMapBinding.getRoot();
     }
@@ -129,25 +132,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             for (RestaurantPojo place : placeList) {
                 if (googleMap != null) {
                     LatLng latLng = new LatLng(place.geometry.location.lat, place.geometry.location.lng);
-                    googleMap.addMarker(new MarkerOptions().position(latLng).title(place.name));
-
+                    if (placeIdList.contains(place.place_id))
+                        googleMap.addMarker(new MarkerOptions().position(latLng).title(place.name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)));
+                    else
+                        googleMap.addMarker(new MarkerOptions().position(latLng).title(place.name));
                 }
             }
         });
 
-        workmateViewModel.workmatePlaceIdListLiveData.observe(getViewLifecycleOwner(), placeIdList -> {
-            Log.d(TAG, "placeIdListLiveData onChanged");
-            /*for (String id : placeIdList) {
-                for (Restaurant nearbyPlace : nearbyPlaceList) {
-                    if (nearbyPlace.place_id.equals(id)) {
-                        LatLng latLng = new LatLng(nearbyPlace.geometry.location.lat, nearbyPlace.geometry.location.lng);
-                        googleMap.addMarker(new MarkerOptions().position(latLng).title(nearbyPlace.name));
-                    }
-                }
-            }
-
-             */
-        });
+        workmateViewModel.workmatePlaceIdListLiveData.observe(getViewLifecycleOwner(), idList -> placeIdList = idList);
 
     }
 

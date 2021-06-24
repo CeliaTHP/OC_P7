@@ -113,7 +113,8 @@
             android:src="@drawable/ic_cutlery"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/blue_twitter" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
