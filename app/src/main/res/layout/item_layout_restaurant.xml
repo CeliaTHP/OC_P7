@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
@@ -11,11 +12,14 @@
         android:layout_height="wrap_content"
         android:layout_margin="12dp">
 
+
         <LinearLayout
             android:id="@+id/item_restaurant_main_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintEnd_toStartOf="@id/item_restaurant_sub_layout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -24,22 +28,22 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:ellipsize="marquee"
-                android:maxLength="28"
+                android:ellipsize="end"
+                android:lines="1"
                 android:text="@string/item_restaurant_name"
                 android:textSize="16sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                tools:text="Super Restaurant Insane Avec un Nom beaucoup Trop Long" />
 
             <TextView
                 android:id="@+id/item_restaurant_type_and_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
+                android:ellipsize="end"
+                android:lines="2"
                 android:text="@string/item_restaurant_address"
                 android:textSize="14sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/item_restaurant_name" />
+                tools:text="Adresse de la mort troooooop longue genre vraiment super long qui dépasse de partout " />
 
             <TextView
                 android:id="@+id/item_restaurant_hours"
@@ -49,8 +53,7 @@
                 android:text="@string/item_restaurant_hours"
                 android:textSize="14sp"
                 android:textStyle="italic"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/item_restaurant_type_and_address" />
+                tools:text="Ouvert jusque 23h30" />
 
 
         </LinearLayout>
@@ -59,9 +62,10 @@
             android:id="@+id/item_restaurant_sub_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
             android:gravity="center"
             android:orientation="vertical"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/item_restaurant_pic"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -69,11 +73,11 @@
                 android:id="@+id/item_restaurant_distance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/item_restaurant_distance"
                 android:textSize="14sp"
                 app:layout_constraintBottom_toTopOf="@id/item_restaurant_attendees"
                 app:layout_constraintEnd_toStartOf="@id/item_restaurant_pic"
-                app:layout_constraintTop_toBottomOf="@id/item_restaurant_name" />
+                app:layout_constraintTop_toBottomOf="@id/item_restaurant_name"
+                tools:text="200m" />
 
             <TextView
                 android:id="@+id/item_restaurant_attendees"
@@ -81,27 +85,22 @@
                 android:layout_height="wrap_content"
                 android:text="@string/item_restaurant_attendees"
                 android:textSize="14sp"
-                app:layout_constraintBottom_toBottomOf="@id/item_restaurant_rate1"
+                app:drawableStartCompat="@drawable/ic_people"
+                app:layout_constraintBottom_toBottomOf="@id/item_restaurant_rating"
                 app:layout_constraintEnd_toStartOf="@id/item_restaurant_pic"
-                app:layout_constraintTop_toTopOf="@id/item_restaurant_distance" />
+                app:layout_constraintTop_toTopOf="@id/item_restaurant_distance"
+                tools:text="(4)" />
 
-            <ImageView
-                android:id="@+id/item_restaurant_people"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/ic_people"
-                app:layout_constraintBottom_toBottomOf="@id/item_restaurant_attendees"
-                app:layout_constraintEnd_toStartOf="@id/item_restaurant_attendees"
-                app:layout_constraintTop_toTopOf="@id/item_restaurant_attendees" />
-
-            <ImageView
-                android:id="@+id/item_restaurant_rate1"
+            <RatingBar
+                android:id="@+id/item_restaurant_rating"
+                style="?android:ratingBarStyleSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_star"
-                app:layout_constraintBottom_toBottomOf="@id/item_restaurant_pic"
-                app:layout_constraintEnd_toStartOf="@id/item_restaurant_pic"
-                app:tint="@color/yellow" />
+                android:isIndicator="true"
+                android:numStars="3"
+                android:progressTint="@color/red_google"
+                android:rating="1"
+                android:secondaryProgressTint="@color/main_orange" />
 
 
         </LinearLayout>
@@ -113,8 +112,7 @@
             android:src="@drawable/ic_cutlery"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/blue_twitter" />
+            app:layout_constraintTop_toTopOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

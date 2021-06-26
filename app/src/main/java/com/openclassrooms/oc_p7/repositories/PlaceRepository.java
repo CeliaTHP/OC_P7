@@ -56,9 +56,11 @@ public class PlaceRepository {
                 for (RestaurantPojo restaurantPojo : placeList) {
                     getDetailsById(restaurantPojo);
                 }
-                restaurantLiveData.postValue(restaurantList);
                 nearbyPlacesLiveData.postValue(placeList);
-                Log.d(TAG, placeList.toString());
+                restaurantLiveData.postValue(restaurantList);
+
+                Log.d(TAG, "placeList : " + placeList.toString());
+                Log.d(TAG, "restaurantList : " + restaurantList.toString());
 
             }
 

@@ -69,7 +69,7 @@ public class RestaurantListFragment extends Fragment {
 
 
     private void initRecyclerView(List<RestaurantPojo> restaurantPojoList) {
-        fragmentListRestaurantsBinding.restaurantRecyclerView.setAdapter(new RestaurantAdapter(restaurantPojoList));
+        fragmentListRestaurantsBinding.restaurantRecyclerView.setAdapter(new RestaurantAdapter(restaurantPojoList, mapViewModel.currentLocationLiveData.getValue()));
         fragmentListRestaurantsBinding.restaurantRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
     }

@@ -125,7 +125,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 14));
             }
         });
-/*
+
+        //TODO DOES NOT HAVE TIME TO LOAD
+        /*
         mapViewModel.restaurantLiveData.observe(getViewLifecycleOwner(), restaurantList -> {
             Log.d(TAG, "restaurantLiveData observer : " + restaurantList);
             for (Restaurant restaurant : restaurantList) {
@@ -139,7 +141,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
- */
+*/
 
         mapViewModel.nearbyPlacesLiveData.observe(getViewLifecycleOwner(), placeList -> {
             Log.d(TAG, "placeListLiveData onChanged");
