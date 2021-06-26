@@ -34,7 +34,9 @@ public class PlaceRepository {
     private ArrayList<Restaurant> restaurantList = new ArrayList<>();
 
 
+    public MutableLiveData<List<Restaurant>> restaurantLiveData = new MutableLiveData<>();
     public MutableLiveData<List<RestaurantPojo>> nearbyPlacesLiveData = new MutableLiveData<>();
+
     public MutableLiveData<Location> currentLocationLiveData = new MutableLiveData<>();
 
     public void getNearbyPlaces(Location location) {
@@ -50,11 +52,11 @@ public class PlaceRepository {
         call.enqueue(new Callback<NearbyPlaceResponse>() {
             @Override
             public void onResponse(Call<NearbyPlaceResponse> call, Response<NearbyPlaceResponse> response) {
-                //TODO use Rx
                 placeList.addAll(response.body().restaurantPojos);
                 for (RestaurantPojo restaurantPojo : placeList) {
                     getDetailsById(restaurantPojo);
                 }
+                restaurantLiveData.postValue(restaurantList);
                 nearbyPlacesLiveData.postValue(placeList);
                 Log.d(TAG, placeList.toString());
 
@@ -101,12 +103,12 @@ public class PlaceRepository {
             restaurant.setOpeningHours(restaurantDetailsPojo.opening_hours.weekday_text);
         if (restaurantDetailsPojo.international_phone_number != null)
             restaurant.setPhone(restaurantDetailsPojo.international_phone_number);
-        if (restaurantDetailsPojo.website != null) {
+        if (restaurantDetailsPojo.website != null)
             restaurant.setWebsite(restaurantDetailsPojo.website);
-        }
-
-
+        if (restaurantDetailsPojo.photos != null)
+            restaurant.setPhotoUrl(restaurantDetailsPojo.photos.get(0).photo_reference);
     }
 
 
 }
+

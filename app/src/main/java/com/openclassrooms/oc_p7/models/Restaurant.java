@@ -12,6 +12,7 @@ public class Restaurant {
     private String type;
     private String phone;
     private String website;
+    private String photoUrl;
 
     private double distance;
     private double rating;
@@ -30,6 +31,30 @@ public class Restaurant {
         this.lng = lng;
         isChosen = false;
         isLiked = false;
+    }
+
+    public double getLat() {
+        return lat;
+    }
+
+    public void setLat(double lat) {
+        this.lat = lat;
+    }
+
+    public double getLng() {
+        return lng;
+    }
+
+    public void setLng(double lng) {
+        this.lng = lng;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
     }
 
     public String getId() {

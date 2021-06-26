@@ -125,7 +125,21 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 14));
             }
         });
+/*
+        mapViewModel.restaurantLiveData.observe(getViewLifecycleOwner(), restaurantList -> {
+            Log.d(TAG, "restaurantLiveData observer : " + restaurantList);
+            for (Restaurant restaurant : restaurantList) {
+                if (googleMap != null) {
+                    LatLng latLng = new LatLng(restaurant.getLat(), restaurant.getLng());
+                    if (placeIdList.contains(restaurant.getId()))
+                        googleMap.addMarker(new MarkerOptions().position(latLng).title(restaurant.getName()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+                    else
+                        googleMap.addMarker(new MarkerOptions().position(latLng).title(restaurant.getName()));
+                }
+            }
+        });
 
+ */
 
         mapViewModel.nearbyPlacesLiveData.observe(getViewLifecycleOwner(), placeList -> {
             Log.d(TAG, "placeListLiveData onChanged");
@@ -133,14 +147,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 if (googleMap != null) {
                     LatLng latLng = new LatLng(place.geometry.location.lat, place.geometry.location.lng);
                     if (placeIdList.contains(place.place_id))
-                        googleMap.addMarker(new MarkerOptions().position(latLng).title(place.name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)));
+                        googleMap.addMarker(new MarkerOptions().position(latLng).title(place.name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
                     else
                         googleMap.addMarker(new MarkerOptions().position(latLng).title(place.name));
                 }
             }
         });
 
-        workmateViewModel.workmatePlaceIdListLiveData.observe(getViewLifecycleOwner(), idList -> placeIdList = idList);
+
+        workmateViewModel.workmatePlaceIdListLiveData.observe(getViewLifecycleOwner(), idList -> {
+            placeIdList = idList;
+            refreshMap();
+        });
 
     }
 

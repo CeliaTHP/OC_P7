@@ -1,12 +1,15 @@
 package com.openclassrooms.oc_p7.views.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.openclassrooms.oc_p7.BuildConfig;
 import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.databinding.ItemLayoutRestaurantBinding;
 import com.openclassrooms.oc_p7.models.pojo_models.general.RestaurantPojo;
@@ -21,6 +24,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
     private List<RestaurantPojo> restaurantList;
     private Context context;
 
+    //TODO : RESTAURANT LIST !
     public RestaurantAdapter(List<RestaurantPojo> restaurantList) {
         this.restaurantList = restaurantList;
     }
@@ -40,16 +44,17 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
             holder.itemLayoutRestaurantBinding.itemRestaurantTypeAndAddress.setText(holder.itemView.getContext().getString(R.string.item_restaurant_address, restaurant.vicinity));
             holder.itemLayoutRestaurantBinding.itemRestaurantName.setText(restaurant.name);
 
-            //TODO : PARSE TO GET URL
-            //TODO : https://developers.google.com/maps/documentation/places/web-service/photos
-            /*
+
+            if (restaurant.photos != null) {
+                String picUrl = holder.itemView.getContext().getString(R.string.place_photo_url, BuildConfig.GoogleMapApiKey, restaurant.photos.get(0).photo_reference);
+                Log.d(TAG, picUrl);
                 Glide.with(holder.itemView.getContext())
-                        .load(restaurant.photos.get(0).html_attributions)
+                        .load(picUrl)
                         .centerCrop()
                         .into(holder.itemLayoutRestaurantBinding.itemRestaurantPic);
 
 
-             */
+            }
         }
 
     }
