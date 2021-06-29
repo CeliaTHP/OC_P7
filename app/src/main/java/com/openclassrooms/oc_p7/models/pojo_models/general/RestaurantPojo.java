@@ -35,5 +35,4 @@ public class RestaurantPojo implements Serializable {
 
     public int price_level;
 
-
 }

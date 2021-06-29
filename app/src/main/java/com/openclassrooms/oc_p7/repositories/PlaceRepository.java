@@ -10,7 +10,6 @@ import com.openclassrooms.oc_p7.MyApplication;
 import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.injections.Injection;
 import com.openclassrooms.oc_p7.models.Restaurant;
-import com.openclassrooms.oc_p7.models.pojo_models.details.DetailsPlaceResponse;
 import com.openclassrooms.oc_p7.models.pojo_models.details.RestaurantDetailsPojo;
 import com.openclassrooms.oc_p7.models.pojo_models.general.NearbyPlaceResponse;
 import com.openclassrooms.oc_p7.models.pojo_models.general.RestaurantPojo;
@@ -54,7 +53,10 @@ public class PlaceRepository {
             public void onResponse(Call<NearbyPlaceResponse> call, Response<NearbyPlaceResponse> response) {
                 placeList.addAll(response.body().restaurantPojos);
                 for (RestaurantPojo restaurantPojo : placeList) {
-                    getDetailsById(restaurantPojo);
+                    Restaurant restaurant = createRestaurant(restaurantPojo);
+                    // setRestaurantInfos(response.body().result, restaurant);
+                    restaurantList.add(restaurant);
+                    // getDetailsById(restaurantPojo);
                 }
                 nearbyPlacesLiveData.postValue(placeList);
                 restaurantLiveData.postValue(restaurantList);
@@ -74,30 +76,40 @@ public class PlaceRepository {
 
     }
 
-    public void getDetailsById(RestaurantPojo restaurantPojo) {
+    /*
+        public void getDetailsById(RestaurantPojo restaurantPojo) {
 
-        placesApi.getDetailsById(BuildConfig.GoogleMapApiKey, restaurantPojo.place_id).enqueue(new Callback<DetailsPlaceResponse>() {
-            @Override
-            public void onResponse(Call<DetailsPlaceResponse> call, Response<DetailsPlaceResponse> response) {
-                Log.d(TAG, response.body().result.name);
-                Restaurant restaurant = createRestaurant(response.body().result);
-                setRestaurantInfos(response.body().result, restaurant);
-                restaurantList.add(restaurant);
-                Log.d(TAG, "added : " + restaurant.getId() + " " + restaurant.getName() + " " + restaurant.getAddress() + " " + restaurant.getWebsite() + " " + restaurant.getRating() + " " + restaurant.getPhone() + " " + restaurant.getOpeningHours());
+            placesApi.getDetailsById(BuildConfig.GoogleMapApiKey, restaurantPojo.place_id).enqueue(new Callback<DetailsPlaceResponse>() {
+                @Override
+                public void onResponse(Call<DetailsPlaceResponse> call, Response<DetailsPlaceResponse> response) {
+                    Log.d(TAG, response.body().result.name);
+                   // Restaurant restaurant = createRestaurant(response.body().result);
+                    setRestaurantInfos(response.body().result, restaurant);
+                    restaurantList.add(restaurant);
+                    Log.d(TAG, "added : " + restaurant.getId() + " " + restaurant.getName() + " " + restaurant.getAddress() + " " + restaurant.getWebsite() + " " + restaurant.getRating() + " " + restaurant.getPhone() + " " + restaurant.getOpeningHours());
 
-            }
+                }
 
-            @Override
-            public void onFailure(Call<DetailsPlaceResponse> call, Throwable t) {
-                Log.d(TAG, "onFailure: " + t.getMessage());
-            }
-        });
+                @Override
+                public void onFailure(Call<DetailsPlaceResponse> call, Throwable t) {
+                    Log.d(TAG, "onFailure: " + t.getMessage());
+                }
+            });
+        }
+
+
+     */
+    private Restaurant createRestaurant(RestaurantPojo restaurantPojo) {
+        return new Restaurant(restaurantPojo.place_id, restaurantPojo.name, restaurantPojo.vicinity, restaurantPojo.geometry.location.lat, restaurantPojo.geometry.location.lng);
     }
 
-    private Restaurant createRestaurant(RestaurantDetailsPojo restaurantDetailsPojo) {
-        return new Restaurant(restaurantDetailsPojo.place_id, restaurantDetailsPojo.name, restaurantDetailsPojo.formatted_address, restaurantDetailsPojo.geometry.location.lat, restaurantDetailsPojo.geometry.location.lng);
-    }
+    /*
+        private Restaurant createRestaurant(RestaurantDetailsPojo restaurantDetailsPojo) {
+            return new Restaurant(restaurantDetailsPojo.place_id, restaurantDetailsPojo.name, restaurantDetailsPojo.formatted_address, restaurantDetailsPojo.geometry.location.lat, restaurantDetailsPojo.geometry.location.lng);
+        }
 
+
+     */
     private void setRestaurantInfos(RestaurantDetailsPojo restaurantDetailsPojo, Restaurant restaurant) {
 
         restaurant.setRating(restaurantDetailsPojo.rating);

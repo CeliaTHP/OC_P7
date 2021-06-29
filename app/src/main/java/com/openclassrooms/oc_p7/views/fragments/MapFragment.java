@@ -1,4 +1,4 @@
-    package com.openclassrooms.oc_p7.views.fragments;
+package com.openclassrooms.oc_p7.views.fragments;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -28,6 +28,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.databinding.FragmentMapBinding;
 import com.openclassrooms.oc_p7.injections.Injection;
+import com.openclassrooms.oc_p7.models.Restaurant;
 import com.openclassrooms.oc_p7.models.pojo_models.general.RestaurantPojo;
 import com.openclassrooms.oc_p7.services.factories.MapViewModelFactory;
 import com.openclassrooms.oc_p7.services.factories.WorkmateViewModelFactory;
@@ -62,6 +63,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private GoogleMap googleMap;
 
     private Boolean shouldReload = false;
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -119,29 +121,36 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         mapViewModel.currentLocationLiveData.observe(getViewLifecycleOwner(), location -> {
             LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(currentLatLng));
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 14));
             if (googleMap != null) {
                 googleMap.addMarker(new MarkerOptions().position(currentLatLng).title("YOU").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))).showInfoWindow();
-                googleMap.moveCamera(CameraUpdateFactory.newLatLng(currentLatLng));
-                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 14));
+
             }
         });
 
+
         //TODO DOES NOT HAVE TIME TO LOAD
-        /*
         mapViewModel.restaurantLiveData.observe(getViewLifecycleOwner(), restaurantList -> {
             Log.d(TAG, "restaurantLiveData observer : " + restaurantList);
+            LatLng latLng;
             for (Restaurant restaurant : restaurantList) {
+                //getDetails
+
                 if (googleMap != null) {
-                    LatLng latLng = new LatLng(restaurant.getLat(), restaurant.getLng());
+                    latLng = new LatLng(restaurant.getLat(), restaurant.getLng());
                     if (placeIdList.contains(restaurant.getId()))
                         googleMap.addMarker(new MarkerOptions().position(latLng).title(restaurant.getName()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
                     else
                         googleMap.addMarker(new MarkerOptions().position(latLng).title(restaurant.getName()));
+
                 }
             }
         });
 
-*/
+
+
+ /*
 
         mapViewModel.nearbyPlacesLiveData.observe(getViewLifecycleOwner(), placeList -> {
             Log.d(TAG, "placeListLiveData onChanged");
@@ -154,7 +163,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         googleMap.addMarker(new MarkerOptions().position(latLng).title(place.name));
                 }
             }
+            LatLng currentLatLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(currentLatLng));
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 14));
         });
+
+*/
 
 
         workmateViewModel.workmatePlaceIdListLiveData.observe(getViewLifecycleOwner(), idList -> {
@@ -221,7 +235,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private void refreshMap() {
         Log.d(TAG, "Refresh Map");
         if (googleMap != null) {
-            googleMap.clear();
             getCurrentLocation();
         }
     }

@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.util.Log;
 
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.MutableLiveData;
@@ -50,6 +51,7 @@ public class MapViewModel extends ViewModel {
         Task<Location> task = fusedLocationProviderClient.getLastLocation();
         task.addOnSuccessListener(location -> {
             if (location != null) {
+                Log.d(TAG, location + "");
                 currentLocationLiveData.postValue(location);
                 placeRepository.getNearbyPlaces(location);
             }
