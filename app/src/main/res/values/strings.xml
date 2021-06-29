@@ -41,7 +41,7 @@
     <string name="item_restaurant_hours">Ouvert jusqu\'à %1$s</string>
 
     <!--API INFOS -->
-    <string name="query_radius" translatable="false">1000</string>
+    <string name="query_radius" translatable="false">2000</string>
     <string name="query_restaurant" translatable="false">restaurant</string>
     <string name="place_photo_url" translatable="false">https://maps.googleapis.com/maps/api/place/photo?key=%1$s&amp;photoreference=%2$s&amp;maxwidth=500</string>
 

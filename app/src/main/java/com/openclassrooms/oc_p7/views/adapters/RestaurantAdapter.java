@@ -4,6 +4,7 @@ import android.content.Context;
 import android.location.Location;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.openclassrooms.oc_p7.BuildConfig;
 import com.openclassrooms.oc_p7.R;
+import com.openclassrooms.oc_p7.callbacks.OnRestaurantClickListener;
 import com.openclassrooms.oc_p7.databinding.ItemLayoutRestaurantBinding;
 import com.openclassrooms.oc_p7.models.pojo_models.general.RestaurantPojo;
 
@@ -23,14 +25,18 @@ import java.util.List;
 public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder.ViewHolder> {
 
     private final static String TAG = "RestaurantAdapter";
+
+    private final OnRestaurantClickListener onRestaurantClickListener;
+
     private List<RestaurantPojo> restaurantList;
     private Location currentLocation;
     private Context context;
 
     //TODO : RESTAURANT LIST !
-    public RestaurantAdapter(List<RestaurantPojo> restaurantList, Location currentLocation) {
+    public RestaurantAdapter(List<RestaurantPojo> restaurantList, Location currentLocation, OnRestaurantClickListener onRestaurantClickListener) {
         this.restaurantList = restaurantList;
         this.currentLocation = currentLocation;
+        this.onRestaurantClickListener = onRestaurantClickListener;
     }
 
     @NonNull
@@ -61,7 +67,6 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
             // holder.itemLayoutRestaurantBinding.itemRestaurantHours.setText(setCorrespondingHours(restaurant));
 
             if (restaurant.photos != null) {
-
                 String picUrl = holder.itemView.getContext().getString(R.string.place_photo_url, BuildConfig.GoogleMapApiKey, restaurant.photos.get(0).photo_reference);
                 Log.d(TAG, picUrl);
                 Glide.with(holder.itemView.getContext())
@@ -72,11 +77,17 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
             } else {
                 holder.itemLayoutRestaurantBinding.itemRestaurantPic.setImageResource(R.drawable.ic_cutlery);
             }
+
+            holder.itemLayoutRestaurantBinding.getRoot().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onRestaurantClickListener.onRestaurantClick(restaurant);
+                }
+            });
         }
 
 
     }
-
 
     private String setCorrespondingHours(RestaurantPojo restaurantPojo) {
         String hours = null;
@@ -92,5 +103,4 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
     public int getItemCount() {
         return restaurantList.size();
     }
-//TODO ADAPTER
 }

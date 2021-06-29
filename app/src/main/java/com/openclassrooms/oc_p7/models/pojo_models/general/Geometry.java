@@ -1,6 +1,8 @@
 package com.openclassrooms.oc_p7.models.pojo_models.general;
 
-public class Geometry {
+import java.io.Serializable;
+
+public class Geometry implements Serializable {
 
     public Location location;
 

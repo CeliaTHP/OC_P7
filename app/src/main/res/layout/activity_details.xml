@@ -19,7 +19,7 @@
         <ImageView
             android:id="@+id/details_restaurant_pic"
             android:layout_width="wrap_content"
-            android:layout_height="200dp"
+            android:layout_height="300dp"
             android:scaleType="centerCrop"
             android:src="@drawable/restaurant"
             app:layout_constraintStart_toStartOf="parent"
@@ -34,7 +34,7 @@
             android:layout_marginTop="10dp"
             android:text="Nom Du Restaurant"
             android:textColor="@color/white"
-            android:textSize="20sp"
+            android:textSize="24sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/details_restaurant_pic" />
 
@@ -44,6 +44,7 @@
             android:layout_height="wrap_content"
             android:text="999 Adresse du Restaurant"
             android:textColor="@color/white"
+            android:textSize="18sp"
             app:layout_constraintStart_toStartOf="@id/details_restaurant_name"
             app:layout_constraintTop_toBottomOf="@id/details_restaurant_name" />
 

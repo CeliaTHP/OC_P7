@@ -1,4 +1,4 @@
-package com.openclassrooms.oc_p7.views.fragments;
+    package com.openclassrooms.oc_p7.views.fragments;
 
 import android.Manifest;
 import android.content.pm.PackageManager;

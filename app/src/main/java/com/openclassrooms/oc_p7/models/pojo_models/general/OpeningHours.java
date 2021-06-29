@@ -1,10 +1,9 @@
 package com.openclassrooms.oc_p7.models.pojo_models.general;
 
-import com.google.gson.annotations.SerializedName;
+import java.io.Serializable;
 
-public class OpeningHours {
+public class OpeningHours implements Serializable {
 
-    @SerializedName("open_now")
     public boolean open_now;
 
 }

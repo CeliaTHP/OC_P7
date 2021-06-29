@@ -1,20 +1,15 @@
 package com.openclassrooms.oc_p7.models.pojo_models.general;
 
-import com.google.gson.annotations.SerializedName;
-
+import java.io.Serializable;
 import java.util.List;
 
-public class Photo {
+public class Photo implements Serializable {
 
-    @SerializedName("height")
     public int height;
 
-    @SerializedName("html_attributions")
     public List<String> html_attributions;
 
-    @SerializedName("photo_reference")
     public String photo_reference;
 
-    @SerializedName("width")
     public int width;
 }
