@@ -129,16 +129,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
-
-        //TODO DOES NOT HAVE TIME TO LOAD
         mapViewModel.restaurantLiveData.observe(getViewLifecycleOwner(), restaurantList -> {
             Log.d(TAG, "restaurantLiveData observer : " + restaurantList);
-            LatLng latLng;
             for (Restaurant restaurant : restaurantList) {
                 //getDetails
-
+                mapViewModel.getRestaurantDetails(restaurant);
                 if (googleMap != null) {
-                    latLng = new LatLng(restaurant.getLat(), restaurant.getLng());
+                    LatLng latLng = new LatLng(restaurant.getLat(), restaurant.getLng());
                     if (placeIdList.contains(restaurant.getId()))
                         googleMap.addMarker(new MarkerOptions().position(latLng).title(restaurant.getName()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
                     else
@@ -147,7 +144,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 }
             }
         });
-
 
 
  /*

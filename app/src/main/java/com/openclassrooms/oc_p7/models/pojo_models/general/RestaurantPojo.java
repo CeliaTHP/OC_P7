@@ -1,9 +1,8 @@
 package com.openclassrooms.oc_p7.models.pojo_models.general;
 
-import java.io.Serializable;
 import java.util.List;
 
-public class RestaurantPojo implements Serializable {
+public class RestaurantPojo {
 
     public Geometry geometry;
 

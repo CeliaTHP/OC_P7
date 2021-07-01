@@ -1,8 +1,9 @@
 package com.openclassrooms.oc_p7.models;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Restaurant {
+public class Restaurant implements Serializable {
 
     private String id;
     private String name;
@@ -12,7 +13,7 @@ public class Restaurant {
     private String type;
     private String phone;
     private String website;
-    private String photoUrl;
+    private List<String> photoReferences;
 
     private double distance;
     private double rating;
@@ -49,12 +50,12 @@ public class Restaurant {
         this.lng = lng;
     }
 
-    public String getPhotoUrl() {
-        return photoUrl;
+    public List<String> getPhotoReferences() {
+        return photoReferences;
     }
 
-    public void setPhotoUrl(String photoUrl) {
-        this.photoUrl = photoUrl;
+    public void setPhotoReference(List<String> photoReferences) {
+        this.photoReferences = photoReferences;
     }
 
     public String getId() {

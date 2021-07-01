@@ -13,7 +13,6 @@ import androidx.lifecycle.ViewModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.tasks.Task;
 import com.openclassrooms.oc_p7.models.Restaurant;
-import com.openclassrooms.oc_p7.models.pojo_models.general.RestaurantPojo;
 import com.openclassrooms.oc_p7.repositories.PlaceRepository;
 
 import java.util.List;
@@ -26,13 +25,13 @@ public class MapViewModel extends ViewModel {
 
 
     public MutableLiveData<List<Restaurant>> restaurantLiveData;
-    public MutableLiveData<List<RestaurantPojo>> nearbyPlacesLiveData;
+   // public MutableLiveData<List<RestaurantPojo>> nearbyPlacesLiveData;
     public MutableLiveData<Location> currentLocationLiveData;
 
     public MapViewModel(PlaceRepository placeRepository, FusedLocationProviderClient fusedLocationProviderClient) {
         this.placeRepository = placeRepository;
         this.fusedLocationProviderClient = fusedLocationProviderClient;
-        nearbyPlacesLiveData = placeRepository.nearbyPlacesLiveData;
+        //nearbyPlacesLiveData = placeRepository.nearbyPlacesLiveData;
         currentLocationLiveData = placeRepository.currentLocationLiveData;
         restaurantLiveData = placeRepository.restaurantLiveData;
     }
@@ -56,6 +55,11 @@ public class MapViewModel extends ViewModel {
                 placeRepository.getNearbyPlaces(location);
             }
         });
+
+    }
+
+    public void getRestaurantDetails(Restaurant restaurant) {
+        placeRepository.getRestaurantDetails(restaurant);
 
     }
 

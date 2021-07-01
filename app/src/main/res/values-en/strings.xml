@@ -28,6 +28,7 @@
 
     <!--LIST VIEW -->
     <string name="item_restaurant_hours">Open until %1$s</string>
+    <string name="item_restaurant_no_info">Not specified</string>
 
 
 </resources>

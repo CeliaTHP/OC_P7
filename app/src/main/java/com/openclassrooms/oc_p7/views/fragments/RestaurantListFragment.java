@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.openclassrooms.oc_p7.callbacks.OnRestaurantClickListener;
 import com.openclassrooms.oc_p7.databinding.FragmentListRestaurantsBinding;
 import com.openclassrooms.oc_p7.injections.Injection;
-import com.openclassrooms.oc_p7.models.pojo_models.general.RestaurantPojo;
+import com.openclassrooms.oc_p7.models.Restaurant;
 import com.openclassrooms.oc_p7.services.factories.MapViewModelFactory;
 import com.openclassrooms.oc_p7.services.factories.WorkmateViewModelFactory;
 import com.openclassrooms.oc_p7.view_models.MapViewModel;
@@ -31,6 +31,7 @@ public class RestaurantListFragment extends Fragment implements OnRestaurantClic
     private WorkmateViewModel workmateViewModel;
     private MapViewModel mapViewModel;
     private FragmentListRestaurantsBinding fragmentListRestaurantsBinding;
+    private RestaurantAdapter adapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -59,28 +60,29 @@ public class RestaurantListFragment extends Fragment implements OnRestaurantClic
     }
 
     private void initObservers() {
-        mapViewModel.nearbyPlacesLiveData.observe(getViewLifecycleOwner(), restaurantPojos -> {
+        mapViewModel.restaurantLiveData.observe(getViewLifecycleOwner(), restaurantList -> {
             Log.d(TAG, "nearbyPlacesObserver from Restaurant");
 
-            for (RestaurantPojo restaurantPojo : restaurantPojos)
-                Log.d(TAG, restaurantPojo.name);
+            for (Restaurant restaurant : restaurantList) {
+                mapViewModel.getRestaurantDetails(restaurant);
+            }
+            initRecyclerView(restaurantList);
 
-            initRecyclerView(restaurantPojos);
         });
     }
 
 
-    private void initRecyclerView(List<RestaurantPojo> restaurantPojoList) {
-        fragmentListRestaurantsBinding.restaurantRecyclerView.setAdapter(new RestaurantAdapter(restaurantPojoList, mapViewModel.currentLocationLiveData.getValue(), this));
-        ;
+    private void initRecyclerView(List<Restaurant> restaurantList) {
+        adapter = new RestaurantAdapter(restaurantList, mapViewModel.currentLocationLiveData.getValue(), this);
+        fragmentListRestaurantsBinding.restaurantRecyclerView.setAdapter(adapter);
         fragmentListRestaurantsBinding.restaurantRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
     }
 
 
     @Override
-    public void onRestaurantClick(RestaurantPojo restaurant) {
-        Log.d(TAG, "click on : " + restaurant.name);
+    public void onRestaurantClick(Restaurant restaurant) {
+        Log.d(TAG, "click on : " + restaurant.getName());
         Intent intent = new Intent(this.getActivity(), DetailsActivity.class);
         intent.putExtra("restaurant", restaurant);
         startActivity(intent);

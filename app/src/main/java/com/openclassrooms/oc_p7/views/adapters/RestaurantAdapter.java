@@ -4,7 +4,6 @@ import android.content.Context;
 import android.location.Location;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -15,7 +14,7 @@ import com.openclassrooms.oc_p7.BuildConfig;
 import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.callbacks.OnRestaurantClickListener;
 import com.openclassrooms.oc_p7.databinding.ItemLayoutRestaurantBinding;
-import com.openclassrooms.oc_p7.models.pojo_models.general.RestaurantPojo;
+import com.openclassrooms.oc_p7.models.Restaurant;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -28,12 +27,12 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
 
     private final OnRestaurantClickListener onRestaurantClickListener;
 
-    private List<RestaurantPojo> restaurantList;
+    private List<Restaurant> restaurantList;
     private Location currentLocation;
     private Context context;
 
     //TODO : RESTAURANT LIST !
-    public RestaurantAdapter(List<RestaurantPojo> restaurantList, Location currentLocation, OnRestaurantClickListener onRestaurantClickListener) {
+    public RestaurantAdapter(List<Restaurant> restaurantList, Location currentLocation, OnRestaurantClickListener onRestaurantClickListener) {
         this.restaurantList = restaurantList;
         this.currentLocation = currentLocation;
         this.onRestaurantClickListener = onRestaurantClickListener;
@@ -49,25 +48,24 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull RestaurantViewHolder.ViewHolder holder, int position) {
-        RestaurantPojo restaurant = restaurantList.get(position);
+        Restaurant restaurant = restaurantList.get(position);
         if (restaurant != null) {
 
             Location location = new Location("");
-            location.setLatitude(restaurant.geometry.location.lat);
-            location.setLongitude(restaurant.geometry.location.lng);
+            location.setLatitude(restaurant.getLat());
+            location.setLongitude(restaurant.getLng());
 
-
-            holder.itemLayoutRestaurantBinding.itemRestaurantTypeAndAddress.setText(holder.itemView.getContext().getString(R.string.item_restaurant_address, restaurant.vicinity));
-            holder.itemLayoutRestaurantBinding.itemRestaurantName.setText(restaurant.name);
+            holder.itemLayoutRestaurantBinding.itemRestaurantName.setText(restaurant.getName());
+            holder.itemLayoutRestaurantBinding.itemRestaurantTypeAndAddress.setText(holder.itemView.getContext().getString(R.string.item_restaurant_address, restaurant.getAddress()));
 
             holder.itemLayoutRestaurantBinding.itemRestaurantRating.setStepSize(0.01f);
-            holder.itemLayoutRestaurantBinding.itemRestaurantRating.setRating((float) (restaurant.rating * 3.0 / 5.0));
+            holder.itemLayoutRestaurantBinding.itemRestaurantRating.setRating((float) (restaurant.getRating() * 3.0 / 5.0));
             holder.itemLayoutRestaurantBinding.itemRestaurantRating.invalidate();
             holder.itemLayoutRestaurantBinding.itemRestaurantDistance.setText(holder.itemView.getContext().getString(R.string.item_restaurant_distance, location.distanceTo(currentLocation)));
-            // holder.itemLayoutRestaurantBinding.itemRestaurantHours.setText(setCorrespondingHours(restaurant));
+            holder.itemLayoutRestaurantBinding.itemRestaurantHours.setText(setCorrespondingHours(restaurant));
 
-            if (restaurant.photos != null) {
-                String picUrl = holder.itemView.getContext().getString(R.string.place_photo_url, BuildConfig.GoogleMapApiKey, restaurant.photos.get(0).photo_reference);
+            if (restaurant.getPhotoReferences() != null) {
+                String picUrl = holder.itemView.getContext().getString(R.string.place_photo_url, BuildConfig.GoogleMapApiKey, restaurant.getPhotoReferences().get(0));
                 Log.d(TAG, picUrl);
                 Glide.with(holder.itemView.getContext())
                         .load(picUrl)
@@ -78,22 +76,40 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
                 holder.itemLayoutRestaurantBinding.itemRestaurantPic.setImageResource(R.drawable.ic_cutlery);
             }
 
-            holder.itemLayoutRestaurantBinding.getRoot().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onRestaurantClickListener.onRestaurantClick(restaurant);
-                }
-            });
+            holder.itemLayoutRestaurantBinding.getRoot().setOnClickListener(v -> onRestaurantClickListener.onRestaurantClick(restaurant));
         }
 
 
     }
 
-    private String setCorrespondingHours(RestaurantPojo restaurantPojo) {
+    private String setCorrespondingHours(Restaurant restaurant) {
         String hours = null;
-        switch (Calendar.DAY_OF_WEEK) {
-            case Calendar.MONDAY:
-                break;
+        if (restaurant.getOpeningHours() == null)
+            return context.getString(R.string.item_restaurant_no_info);
+        else {
+            switch (Calendar.DAY_OF_WEEK) {
+                case Calendar.MONDAY:
+                    hours = restaurant.getOpeningHours().get(0);
+                    break;
+                case Calendar.TUESDAY:
+                    hours = restaurant.getOpeningHours().get(1);
+                    break;
+                case Calendar.WEDNESDAY:
+                    hours = restaurant.getOpeningHours().get(2);
+                    break;
+                case Calendar.THURSDAY:
+                    hours = restaurant.getOpeningHours().get(3);
+                    break;
+                case Calendar.FRIDAY:
+                    hours = restaurant.getOpeningHours().get(4);
+                    break;
+                case Calendar.SATURDAY:
+                    hours = restaurant.getOpeningHours().get(5);
+                    break;
+                case Calendar.SUNDAY:
+                    hours = restaurant.getOpeningHours().get(6);
+                    break;
+            }
         }
         return hours;
     }

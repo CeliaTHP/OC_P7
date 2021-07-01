@@ -10,8 +10,10 @@ import com.openclassrooms.oc_p7.MyApplication;
 import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.injections.Injection;
 import com.openclassrooms.oc_p7.models.Restaurant;
+import com.openclassrooms.oc_p7.models.pojo_models.details.DetailsPlaceResponse;
 import com.openclassrooms.oc_p7.models.pojo_models.details.RestaurantDetailsPojo;
 import com.openclassrooms.oc_p7.models.pojo_models.general.NearbyPlaceResponse;
+import com.openclassrooms.oc_p7.models.pojo_models.general.Photo;
 import com.openclassrooms.oc_p7.models.pojo_models.general.RestaurantPojo;
 import com.openclassrooms.oc_p7.services.apis.PlacesApi;
 
@@ -34,7 +36,7 @@ public class PlaceRepository {
 
 
     public MutableLiveData<List<Restaurant>> restaurantLiveData = new MutableLiveData<>();
-    public MutableLiveData<List<RestaurantPojo>> nearbyPlacesLiveData = new MutableLiveData<>();
+    // public MutableLiveData<List<RestaurantPojo>> nearbyPlacesLiveData = new MutableLiveData<>();
 
     public MutableLiveData<Location> currentLocationLiveData = new MutableLiveData<>();
 
@@ -58,7 +60,7 @@ public class PlaceRepository {
                     restaurantList.add(restaurant);
                     // getDetailsById(restaurantPojo);
                 }
-                nearbyPlacesLiveData.postValue(placeList);
+                // nearbyPlacesLiveData.postValue(placeList);
                 restaurantLiveData.postValue(restaurantList);
 
                 Log.d(TAG, "placeList : " + placeList.toString());
@@ -76,53 +78,61 @@ public class PlaceRepository {
 
     }
 
-    /*
-        public void getDetailsById(RestaurantPojo restaurantPojo) {
 
-            placesApi.getDetailsById(BuildConfig.GoogleMapApiKey, restaurantPojo.place_id).enqueue(new Callback<DetailsPlaceResponse>() {
-                @Override
-                public void onResponse(Call<DetailsPlaceResponse> call, Response<DetailsPlaceResponse> response) {
-                    Log.d(TAG, response.body().result.name);
-                   // Restaurant restaurant = createRestaurant(response.body().result);
-                    setRestaurantInfos(response.body().result, restaurant);
-                    restaurantList.add(restaurant);
-                    Log.d(TAG, "added : " + restaurant.getId() + " " + restaurant.getName() + " " + restaurant.getAddress() + " " + restaurant.getWebsite() + " " + restaurant.getRating() + " " + restaurant.getPhone() + " " + restaurant.getOpeningHours());
+    public void getRestaurantDetails(Restaurant restaurant) {
+        placesApi.getDetailsById(BuildConfig.GoogleMapApiKey, restaurant.getId()).enqueue(new Callback<DetailsPlaceResponse>() {
+            @Override
+            public void onResponse(Call<DetailsPlaceResponse> call, Response<DetailsPlaceResponse> response) {
+                setRestaurantInfos(response.body().result, restaurant);
+            }
 
-                }
+            @Override
+            public void onFailure(Call<DetailsPlaceResponse> call, Throwable t) {
+                Log.d(TAG, "onFailure: " + t.getMessage());
 
-                @Override
-                public void onFailure(Call<DetailsPlaceResponse> call, Throwable t) {
-                    Log.d(TAG, "onFailure: " + t.getMessage());
-                }
-            });
-        }
+            }
+        });
 
+        Log.d(TAG, "getRestaurantDetails for " + restaurant.getName());
+    }
 
-     */
     private Restaurant createRestaurant(RestaurantPojo restaurantPojo) {
         return new Restaurant(restaurantPojo.place_id, restaurantPojo.name, restaurantPojo.vicinity, restaurantPojo.geometry.location.lat, restaurantPojo.geometry.location.lng);
     }
 
-    /*
-        private Restaurant createRestaurant(RestaurantDetailsPojo restaurantDetailsPojo) {
-            return new Restaurant(restaurantDetailsPojo.place_id, restaurantDetailsPojo.name, restaurantDetailsPojo.formatted_address, restaurantDetailsPojo.geometry.location.lat, restaurantDetailsPojo.geometry.location.lng);
-        }
-
-
-     */
     private void setRestaurantInfos(RestaurantDetailsPojo restaurantDetailsPojo, Restaurant restaurant) {
 
-        restaurant.setRating(restaurantDetailsPojo.rating);
-        if (restaurantDetailsPojo.opening_hours != null)
-            restaurant.setOpeningHours(restaurantDetailsPojo.opening_hours.weekday_text);
-        if (restaurantDetailsPojo.international_phone_number != null)
-            restaurant.setPhone(restaurantDetailsPojo.international_phone_number);
-        if (restaurantDetailsPojo.website != null)
-            restaurant.setWebsite(restaurantDetailsPojo.website);
-        if (restaurantDetailsPojo.photos != null)
-            restaurant.setPhotoUrl(restaurantDetailsPojo.photos.get(0).photo_reference);
-    }
+        if (restaurantDetailsPojo != null) {
+            if (restaurantDetailsPojo.rating != 0.0)
+                restaurant.setRating(restaurantDetailsPojo.rating);
 
+            if (restaurantDetailsPojo.opening_hours != null)
+                restaurant.setOpeningHours(restaurantDetailsPojo.opening_hours.weekday_text);
+
+            if (restaurantDetailsPojo.international_phone_number != null)
+                restaurant.setPhone(restaurantDetailsPojo.international_phone_number);
+
+            if (restaurantDetailsPojo.website != null)
+                restaurant.setWebsite(restaurantDetailsPojo.website);
+
+            if (restaurantDetailsPojo.photos != null) {
+                List<String> photos = new ArrayList<>();
+                for (Photo photoUrl : restaurantDetailsPojo.photos) {
+                    photos.add(photoUrl.photo_reference);
+                }
+                Log.d(TAG, restaurant.getPhotoReferences() + " ");
+
+                restaurant.setPhotoReference(photos);
+            } else {
+                List<String> photos = new ArrayList<>();
+                photos.add("photo reference not found");
+                restaurant.setPhotoReference(photos);
+            }
+
+            Log.d(TAG, restaurant.getName() + " " + restaurant.getRating() + " " + restaurant.getOpeningHours() + " " + restaurant.getPhone() + " "
+                    + restaurant.getWebsite() + " " + restaurant.getPhotoReferences().size() + restaurant.getPhotoReferences() + " ");
+        }
+    }
 
 }
 

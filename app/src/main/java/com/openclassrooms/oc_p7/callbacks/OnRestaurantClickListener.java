@@ -1,7 +1,7 @@
 package com.openclassrooms.oc_p7.callbacks;
 
-import com.openclassrooms.oc_p7.models.pojo_models.general.RestaurantPojo;
+import com.openclassrooms.oc_p7.models.Restaurant;
 
 public interface OnRestaurantClickListener {
-    void onRestaurantClick(RestaurantPojo restaurant);
+    void onRestaurantClick(Restaurant restaurant);
 }
