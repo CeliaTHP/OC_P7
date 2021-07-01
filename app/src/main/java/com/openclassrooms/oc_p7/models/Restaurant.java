@@ -138,19 +138,19 @@ public class Restaurant implements Serializable {
         this.attendees = attendees;
     }
 
-    public Boolean getChosen() {
+    public Boolean getIsChosen() {
         return isChosen;
     }
 
-    public void setChosen(Boolean chosen) {
+    public void setIsChosen(Boolean chosen) {
         isChosen = chosen;
     }
 
-    public Boolean getLiked() {
+    public Boolean getIsLiked() {
         return isLiked;
     }
 
-    public void setLiked(Boolean liked) {
+    public void setIsLiked(Boolean liked) {
         isLiked = liked;
     }
 }

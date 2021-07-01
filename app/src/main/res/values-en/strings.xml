@@ -21,8 +21,12 @@
     <string name="drawer_login">LOG IN</string>
     <string name="drawer_logout">LOG OUT</string>
 
+    <!--DETAILS-->
+    <string name="list_workmates_empty">No one is eating here</string>
+
     <!--WORKMATES-->
     <string name="workmate_text">%1$s is eating %2$s (%3$s)</string>
+    <string name="workmate_text_details">%1$s is joining !</string>
     <string name="workmate_text_no_lunch">%1$s did not choose yet </string>
 
 

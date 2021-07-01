@@ -45,7 +45,6 @@ public class RestaurantListFragment extends Fragment implements OnRestaurantClic
         initViewModels();
         initPlaces();
         initObservers();
-        initRecyclerView();
 
         return fragmentListRestaurantsBinding.getRoot();
     }
@@ -78,7 +77,6 @@ public class RestaurantListFragment extends Fragment implements OnRestaurantClic
                     }
                 });
             }
-            adapter.notifyDataSetChanged();
 
         });
     }

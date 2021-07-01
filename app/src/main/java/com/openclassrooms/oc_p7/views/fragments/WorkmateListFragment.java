@@ -55,7 +55,7 @@ public class WorkmateListFragment extends Fragment {
 
     private void initRecyclerView(List<Workmate> workmateList) {
         Log.d(TAG, FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
-        fragmentListWorkmatesBinding.workmateRecyclerView.setAdapter(new WorkmateAdapter(workmateList));
+        fragmentListWorkmatesBinding.workmateRecyclerView.setAdapter(new WorkmateAdapter(workmateList, false));
         fragmentListWorkmatesBinding.workmateRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 

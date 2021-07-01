@@ -17,9 +17,11 @@ import java.util.List;
 public class WorkmateAdapter extends RecyclerView.Adapter<WorkmateViewHolder.ViewHolder> {
 
     private List<Workmate> workmateList;
+    private Boolean inDetails;
 
-    public WorkmateAdapter(List<Workmate> workmateList) {
+    public WorkmateAdapter(List<Workmate> workmateList, Boolean inDetails) {
         this.workmateList = workmateList;
+        this.inDetails = inDetails;
     }
 
     @NonNull
@@ -33,7 +35,12 @@ public class WorkmateAdapter extends RecyclerView.Adapter<WorkmateViewHolder.Vie
     public void onBindViewHolder(@NonNull WorkmateViewHolder.ViewHolder holder, int position) {
         Workmate workmate = workmateList.get(position);
         if (workmate.getRestaurantName() != null && workmate.getRestaurantType() != null) {
-            holder.itemLayoutWorkmatesBinding.workmateText.setText(holder.itemView.getContext().getString(R.string.workmate_text, workmate.getName(), workmate.getRestaurantName(), workmate.getRestaurantType()));
+            if (inDetails) {
+                holder.itemLayoutWorkmatesBinding.workmateText.setText(holder.itemView.getContext().getString(R.string.workmate_text_details, workmate.getName()));
+
+            } else {
+                holder.itemLayoutWorkmatesBinding.workmateText.setText(holder.itemView.getContext().getString(R.string.workmate_text, workmate.getName(), workmate.getRestaurantName(), workmate.getRestaurantType()));
+            }
         } else {
             holder.itemLayoutWorkmatesBinding.workmateText.setText(holder.itemView.getContext().getString(R.string.workmate_text_no_lunch, workmate.getName()));
             TextViewCompat.setTextAppearance(holder.itemLayoutWorkmatesBinding.workmateText, R.style.workmate_list_text_no_lunch);
