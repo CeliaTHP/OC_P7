@@ -54,6 +54,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="20sp"
             android:background="@drawable/round_background"
+            android:elevation="6dp"
             android:src="@drawable/ic_check"
             app:layout_constraintBottom_toBottomOf="@id/details_restaurant_pic"
             app:layout_constraintEnd_toEndOf="parent"
@@ -62,15 +63,22 @@
 
         <!-- VIEWGROUP FOR STARS !-->
 
-        <ImageView
+        <RatingBar
+            android:id="@+id/item_restaurant_rating"
+            style="@style/Widget.AppCompat.RatingBar.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:src="@drawable/ic_star"
-            app:layout_constraintBottom_toBottomOf="@id/details_restaurant_name"
-            app:layout_constraintStart_toEndOf="@id/details_restaurant_name"
-            app:layout_constraintTop_toTopOf="@id/details_restaurant_name"
-            app:tint="@color/yellow" />
+            android:layout_marginStart="20dp"
+            android:isIndicator="true"
+            android:numStars="3"
+            android:progressBackgroundTint="@color/yellow"
+            android:progressTint="@color/yellow"
+            android:rating="1"
+            android:secondaryProgressTint="@color/yellow"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/details_restaurant_address"
+
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -94,18 +102,19 @@
             android:drawableTint="@color/main_orange"
             android:text="CALL"
             android:textColor="@color/main_orange"
-            android:textSize="20dp"
+            android:textSize="16dp"
             android:textStyle="bold" />
 
 
         <TextView
+            android:id="@+id/details_restaurant_like"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableTop="@drawable/ic_star_details"
+            android:drawableTop="@drawable/ic_star_details_not_full"
             android:drawableTint="@color/main_orange"
             android:text="LIKE"
             android:textColor="@color/main_orange"
-            android:textSize="20dp"
+            android:textSize="16dp"
             android:textStyle="bold" />
 
 
@@ -117,7 +126,7 @@
             android:drawableTint="@color/main_orange"
             android:text="WEBSITE"
             android:textColor="@color/main_orange"
-            android:textSize="20dp"
+            android:textSize="16dp"
             android:textStyle="bold" />
 
     </LinearLayout>

@@ -87,7 +87,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
         if (restaurant.getOpeningHours() == null)
             return context.getString(R.string.item_restaurant_no_info);
         else {
-            switch (Calendar.DAY_OF_WEEK) {
+            switch (Calendar.getInstance().get(Calendar.DAY_OF_WEEK)) {
                 case Calendar.MONDAY:
                     hours = restaurant.getOpeningHours().get(0);
                     break;
