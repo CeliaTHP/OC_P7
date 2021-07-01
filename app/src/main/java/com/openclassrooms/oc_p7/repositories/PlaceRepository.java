@@ -5,6 +5,7 @@ import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.openclassrooms.oc_p7.BuildConfig;
 import com.openclassrooms.oc_p7.MyApplication;
 import com.openclassrooms.oc_p7.R;
@@ -63,9 +64,6 @@ public class PlaceRepository {
                 // nearbyPlacesLiveData.postValue(placeList);
                 restaurantLiveData.postValue(restaurantList);
 
-                Log.d(TAG, "placeList : " + placeList.toString());
-                Log.d(TAG, "restaurantList : " + restaurantList.toString());
-
             }
 
             @Override
@@ -79,11 +77,11 @@ public class PlaceRepository {
     }
 
 
-    public void getRestaurantDetails(Restaurant restaurant) {
+    public void getRestaurantDetails(Restaurant restaurant, OnSuccessListener onSuccessListener) {
         placesApi.getDetailsById(BuildConfig.GoogleMapApiKey, restaurant.getId()).enqueue(new Callback<DetailsPlaceResponse>() {
             @Override
             public void onResponse(Call<DetailsPlaceResponse> call, Response<DetailsPlaceResponse> response) {
-                setRestaurantInfos(response.body().result, restaurant);
+                setRestaurantInfos(response.body().result, restaurant, onSuccessListener);
             }
 
             @Override
@@ -100,8 +98,7 @@ public class PlaceRepository {
         return new Restaurant(restaurantPojo.place_id, restaurantPojo.name, restaurantPojo.vicinity, restaurantPojo.geometry.location.lat, restaurantPojo.geometry.location.lng);
     }
 
-    private void setRestaurantInfos(RestaurantDetailsPojo restaurantDetailsPojo, Restaurant restaurant) {
-
+    private void setRestaurantInfos(RestaurantDetailsPojo restaurantDetailsPojo, Restaurant restaurant, OnSuccessListener<Restaurant> onSuccessListener) {
         if (restaurantDetailsPojo != null) {
             if (restaurantDetailsPojo.rating != 0.0)
                 restaurant.setRating(restaurantDetailsPojo.rating);
@@ -120,17 +117,15 @@ public class PlaceRepository {
                 for (Photo photoUrl : restaurantDetailsPojo.photos) {
                     photos.add(photoUrl.photo_reference);
                 }
-                Log.d(TAG, restaurant.getPhotoReferences() + " ");
-
-                restaurant.setPhotoReference(photos);
-            } else {
-                List<String> photos = new ArrayList<>();
-                photos.add("photo reference not found");
+                Log.d(TAG, " photo reference : " + restaurant.getPhotoReferences() + " ");
                 restaurant.setPhotoReference(photos);
             }
-
+            onSuccessListener.onSuccess(restaurant);
+            /*
             Log.d(TAG, restaurant.getName() + " " + restaurant.getRating() + " " + restaurant.getOpeningHours() + " " + restaurant.getPhone() + " "
                     + restaurant.getWebsite() + " " + restaurant.getPhotoReferences().size() + restaurant.getPhotoReferences() + " ");
+
+             */
         }
     }
 

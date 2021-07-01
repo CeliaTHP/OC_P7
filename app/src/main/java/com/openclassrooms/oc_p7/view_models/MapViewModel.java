@@ -11,6 +11,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.openclassrooms.oc_p7.models.Restaurant;
 import com.openclassrooms.oc_p7.repositories.PlaceRepository;
@@ -58,8 +59,8 @@ public class MapViewModel extends ViewModel {
 
     }
 
-    public void getRestaurantDetails(Restaurant restaurant) {
-        placeRepository.getRestaurantDetails(restaurant);
+    public void getRestaurantDetails(Restaurant restaurant, OnSuccessListener onSuccessListener) {
+        placeRepository.getRestaurantDetails(restaurant, onSuccessListener);
 
     }
 

@@ -25,6 +25,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.databinding.FragmentMapBinding;
 import com.openclassrooms.oc_p7.injections.Injection;
@@ -133,7 +134,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             Log.d(TAG, "restaurantLiveData observer : " + restaurantList);
             for (Restaurant restaurant : restaurantList) {
                 //getDetails
-                mapViewModel.getRestaurantDetails(restaurant);
+                mapViewModel.getRestaurantDetails(restaurant, new OnSuccessListener() {
+                    @Override
+                    public void onSuccess(Object o) {
+                        Log.d(TAG, "onSuccess");
+                    }
+                });
                 if (googleMap != null) {
                     LatLng latLng = new LatLng(restaurant.getLat(), restaurant.getLng());
                     if (placeIdList.contains(restaurant.getId()))
