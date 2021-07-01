@@ -17,7 +17,10 @@ import com.openclassrooms.oc_p7.repositories.WorkmateRepository;
 import com.openclassrooms.oc_p7.services.apis.PlacesApi;
 import com.openclassrooms.oc_p7.services.factories.WorkmateViewModelFactory;
 import com.openclassrooms.oc_p7.view_models.WorkmateViewModel;
+import com.openclassrooms.oc_p7.views.adapters.SliderAdapter;
 import com.openclassrooms.oc_p7.views.adapters.WorkmateAdapter;
+import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
+import com.smarteist.autoimageslider.SliderAnimations;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +28,7 @@ import java.util.List;
 
 public class DetailsActivity extends BaseActivity {
 
+    private final static String TAG = "DetailsActivity";
     private Restaurant restaurant = null;
     private WorkmateRepository workmateRepository;
     private PlacesApi placesApi = Injection.provideApiClient();
@@ -63,6 +67,52 @@ public class DetailsActivity extends BaseActivity {
 
         activityDetailsBinding.detailsRestaurantName.setText(restaurant.getName());
         activityDetailsBinding.detailsRestaurantAddress.setText(restaurant.getAddress());
+
+        initSlider();
+
+        /*
+        if (restaurant.getPhotoReferences() != null) {
+            //TODO photo carousel
+
+            if (restaurant.getPhotoReferences().size() == 1) {
+
+                String picUrl = getString(R.string.place_photo_url, BuildConfig.GoogleMapApiKey, restaurant.getPhotoReferences().get(0));
+                Glide.with(this)
+                        .load(picUrl)
+                        .centerCrop()
+                        .into(activityDetailsBinding.detailsRestaurantPic);
+            } else {
+                Log.d(TAG, restaurant.getPhotoReferences().size() + "");
+                String picUrl = getString(R.string.place_photo_url, BuildConfig.GoogleMapApiKey, restaurant.getPhotoReferences().get(1));
+                Glide.with(this)
+                        .load(picUrl)
+                        .centerCrop()
+                        .into(activityDetailsBinding.detailsRestaurantPic);
+
+
+            }
+        }
+
+        */
+
+    }
+
+    private void initSlider() {
+
+        SliderAdapter sliderAdapter = new SliderAdapter(false);
+        if (restaurant.getPhotoReferences() != null) {
+            for (String picUrl : restaurant.getPhotoReferences())
+                sliderAdapter.addItem(picUrl);
+
+            activityDetailsBinding.detailsRestaurantPicSlider.setSliderAdapter(sliderAdapter);
+            activityDetailsBinding.detailsRestaurantPicSlider.setIndicatorEnabled(true);
+            activityDetailsBinding.detailsRestaurantPicSlider.setIndicatorAnimation(IndicatorAnimationType.COLOR);
+            activityDetailsBinding.detailsRestaurantPicSlider.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
+            activityDetailsBinding.detailsRestaurantPicSlider.startAutoCycle();
+        } else {
+            activityDetailsBinding.detailsRestaurantPicSlider.setSliderAdapter(new SliderAdapter(true));
+        }
+
 
     }
 

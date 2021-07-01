@@ -15,7 +15,30 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <com.smarteist.autoimageslider.SliderView
+            android:id="@+id/details_restaurant_pic_slider"
+            android:layout_width="wrap_content"
+            android:layout_height="300dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/restaurant"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:sliderAnimationDuration="600"
+            app:sliderAutoCycleDirection="back_and_forth"
+            app:sliderAutoCycleEnabled="true"
+            app:sliderIndicatorAnimationDuration="600"
+            app:sliderIndicatorGravity="center_horizontal|bottom"
+            app:sliderIndicatorMargin="15dp"
+            app:sliderIndicatorOrientation="horizontal"
+            app:sliderIndicatorPadding="3dp"
+            app:sliderIndicatorRadius="2dp"
+            app:sliderIndicatorSelectedColor="#5A5A5A"
+            app:sliderIndicatorUnselectedColor="#FFF"
+            app:sliderScrollTimeInSec="1"
+            app:sliderIndicatorEnabled="false"
+            app:sliderStartAutoCycle="true" />
 
+        <!--
         <ImageView
             android:id="@+id/details_restaurant_pic"
             android:layout_width="wrap_content"
@@ -24,7 +47,7 @@
             android:src="@drawable/restaurant"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
+-->
 
         <TextView
             android:id="@+id/details_restaurant_name"
@@ -32,11 +55,11 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
-            android:text="Nom Du Restaurant"
             android:textColor="@color/white"
             android:textSize="24sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/details_restaurant_pic" />
+            app:layout_constraintTop_toBottomOf="@id/details_restaurant_pic_slider"
+            tools:text="Nom Du Restaurant" />
 
         <TextView
             android:id="@+id/details_restaurant_address"
@@ -56,16 +79,16 @@
             android:background="@drawable/round_background"
             android:elevation="6dp"
             android:src="@drawable/ic_check"
-            app:layout_constraintBottom_toBottomOf="@id/details_restaurant_pic"
+            app:layout_constraintBottom_toBottomOf="@id/details_restaurant_pic_slider"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/details_restaurant_pic"
+            app:layout_constraintTop_toBottomOf="@id/details_restaurant_pic_slider"
             app:tint="@color/pastel_green" />
 
         <!-- VIEWGROUP FOR STARS !-->
 
         <RatingBar
             android:id="@+id/item_restaurant_rating"
-            style="@style/Widget.AppCompat.RatingBar.Small"
+            style="@style/Widget.AppCompat.RatingBar.Indicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
