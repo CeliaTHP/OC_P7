@@ -53,10 +53,4 @@ public class WorkmateHelper {
         return WorkmateHelper.getWorkmatesCollection().document(uid).delete();
     }
 
-    // DELETE ALL WORKMATES
-    public static void deleteAllWorkmate() {
-
-    }
-
-
 }

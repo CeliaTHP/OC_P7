@@ -4,6 +4,15 @@
     <string name="login_facebook">Connexion avec Facebook</string>
     <string name="login_google">Connexion avec Google</string>
     <string name="login_twitter">Connexion avec Twitter</string>
+    <string name="login_username">Connexion avec identifiant</string>
+
+
+    <!--LOGIN DIALOG-->
+    <string name="dialog_login_hint_username">Identifiant</string>
+    <string name="dialog_login_hint_password" translatable="false">*********</string>
+    <string name="dialog_login_title">Se connecter</string>
+    <string name="dialog_login_create_account"><u>Créer mon compte</u></string>
+
 
     <!--DASHBOARD-->
     <string name="app_name">Go4Lunch</string>
@@ -49,6 +58,9 @@
     <string name="query_radius" translatable="false">2000</string>
     <string name="query_restaurant" translatable="false">restaurant</string>
     <string name="place_photo_url" translatable="false">https://maps.googleapis.com/maps/api/place/photo?key=%1$s&amp;photoreference=%2$s&amp;maxwidth=500</string>
+
+    <!--CONTENT DESCRIPTION -->
+    <string name="cutlery_image">image de couverts</string>
 
 
 </resources>

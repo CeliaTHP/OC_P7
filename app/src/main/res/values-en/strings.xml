@@ -5,6 +5,13 @@
     <string name="login_facebook">Sign in with Facebook</string>
     <string name="login_google">Sign in with Google</string>
     <string name="login_twitter">Sign in with Twitter</string>
+    <string name="login_username">Sign in with username</string>
+
+    <!--LOGIN DIALOG-->
+    <string name="dialog_login_hint_username">Username</string>
+    <string name="dialog_login_title">Log in</string>
+    <string name="dialog_login_create_account"><u>Create my account</u></string>
+
 
     <!--DASHBOARD-->
     <string name="app_name">Go4Lunch</string>
@@ -33,6 +40,10 @@
     <!--LIST VIEW -->
     <string name="item_restaurant_hours">Open until %1$s</string>
     <string name="item_restaurant_no_info">Not specified</string>
+
+
+    <!--CONTENT DESCRIPTION -->
+    <string name="cutlery_image">cutlery image</string>
 
 
 </resources>

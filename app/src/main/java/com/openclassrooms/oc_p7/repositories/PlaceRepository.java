@@ -37,7 +37,6 @@ public class PlaceRepository {
 
 
     public MutableLiveData<List<Restaurant>> restaurantLiveData = new MutableLiveData<>();
-    // public MutableLiveData<List<RestaurantPojo>> nearbyPlacesLiveData = new MutableLiveData<>();
 
     public MutableLiveData<Location> currentLocationLiveData = new MutableLiveData<>();
 

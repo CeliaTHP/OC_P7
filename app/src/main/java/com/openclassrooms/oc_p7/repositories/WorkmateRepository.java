@@ -22,15 +22,6 @@ public class WorkmateRepository {
 
     private ArrayList<Workmate> workmateList = new ArrayList<>();
 
-/*
-    public void getWorkmates(OnSuccessListener onSuccessListener, OnFailureListener onFailureListener) {
-
-        WorkmateHelper.getWorkmatesCollection().get()
-                .addOnSuccessListener(onSuccessListener)
-                .addOnFailureListener(onFailureListener);
-    }
-
- */
 
     public void getWorkmateList() {
 

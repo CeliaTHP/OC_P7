@@ -1,5 +1,6 @@
 package com.openclassrooms.oc_p7.views.activities;
 
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,6 +23,7 @@ import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.databinding.ActivityLoginBinding;
 import com.openclassrooms.oc_p7.services.firestore_helpers.UserHelper;
 import com.openclassrooms.oc_p7.view_models.LoginViewModel;
+import com.openclassrooms.oc_p7.views.dialogs.LoginDialog;
 
 import java.util.Arrays;
 
@@ -77,6 +79,12 @@ public class LoginActivity extends BaseActivity {
                 signInWithTwitter();
             }
         });
+        activityLoginBinding.loginUsernameButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                signInWithUsername();
+            }
+        });
     }
 
 
@@ -104,6 +112,12 @@ public class LoginActivity extends BaseActivity {
 
     private void signInWithTwitter() {
         loginViewModel.getTwitterAccount(this);
+    }
+
+    private void signInWithUsername() {
+        //  loginViewModel.getUsernameAccount();
+        LoginDialog.showDialog(this, false).show();
+
     }
 
 

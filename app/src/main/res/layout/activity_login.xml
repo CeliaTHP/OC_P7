@@ -64,5 +64,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/loginGoogleButton" />
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/loginUsernameButton"
+        android:layout_width="300dp"
+        android:layout_height="60sp"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="@android:color/holo_purple"
+        android:drawableLeft="@drawable/ic_profile"
+        android:drawableTint="@color/white"
+        android:text="@string/login_username"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/loginTwitterButton" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -46,6 +46,7 @@ public class DetailsActivity extends BaseActivity {
         Intent intent = getIntent();
         restaurant = (Restaurant) intent.getSerializableExtra("restaurant");
 
+        //TODO : detailsViewModel to get workmate
         initViewModels();
         initUI(restaurant);
         initListeners();
@@ -70,49 +71,24 @@ public class DetailsActivity extends BaseActivity {
 
         initSlider();
 
-        /*
-        if (restaurant.getPhotoReferences() != null) {
-            //TODO photo carousel
-
-            if (restaurant.getPhotoReferences().size() == 1) {
-
-                String picUrl = getString(R.string.place_photo_url, BuildConfig.GoogleMapApiKey, restaurant.getPhotoReferences().get(0));
-                Glide.with(this)
-                        .load(picUrl)
-                        .centerCrop()
-                        .into(activityDetailsBinding.detailsRestaurantPic);
-            } else {
-                Log.d(TAG, restaurant.getPhotoReferences().size() + "");
-                String picUrl = getString(R.string.place_photo_url, BuildConfig.GoogleMapApiKey, restaurant.getPhotoReferences().get(1));
-                Glide.with(this)
-                        .load(picUrl)
-                        .centerCrop()
-                        .into(activityDetailsBinding.detailsRestaurantPic);
-
-
-            }
-        }
-
-        */
 
     }
 
     private void initSlider() {
 
-        SliderAdapter sliderAdapter = new SliderAdapter(false);
-        if (restaurant.getPhotoReferences() != null) {
+        SliderAdapter sliderAdapter = new SliderAdapter();
+        if (restaurant.getPhotoReferences() != null && !restaurant.getPhotoReferences().isEmpty()) {
             for (String picUrl : restaurant.getPhotoReferences())
                 sliderAdapter.addItem(picUrl);
 
-            activityDetailsBinding.detailsRestaurantPicSlider.setSliderAdapter(sliderAdapter);
-            activityDetailsBinding.detailsRestaurantPicSlider.setIndicatorEnabled(true);
-            activityDetailsBinding.detailsRestaurantPicSlider.setIndicatorAnimation(IndicatorAnimationType.COLOR);
-            activityDetailsBinding.detailsRestaurantPicSlider.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
-            activityDetailsBinding.detailsRestaurantPicSlider.startAutoCycle();
         } else {
-            activityDetailsBinding.detailsRestaurantPicSlider.setSliderAdapter(new SliderAdapter(true));
+            sliderAdapter.addItem(null);
         }
-
+        activityDetailsBinding.detailsRestaurantPicSlider.setSliderAdapter(sliderAdapter);
+        activityDetailsBinding.detailsRestaurantPicSlider.setIndicatorEnabled(true);
+        activityDetailsBinding.detailsRestaurantPicSlider.setIndicatorAnimation(IndicatorAnimationType.COLOR);
+        activityDetailsBinding.detailsRestaurantPicSlider.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
+        activityDetailsBinding.detailsRestaurantPicSlider.startAutoCycle();
 
     }
 

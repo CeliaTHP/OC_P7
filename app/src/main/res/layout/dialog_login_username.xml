@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/dialogLoginCardView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="50dp"
+    android:layout_margin="10dp"
+    android:minHeight="500dp"
+    app:cardBackgroundColor="@color/main_orange">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="20dp"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center_horizontal"
+            android:contentDescription="@string/cutlery_image"
+            android:src="@drawable/ic_cutlery"
+            app:tint="?attr/colorOnPrimary" />
+
+        <TextView
+            android:id="@+id/dialogLoginTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:text="@string/dialog_login_title"
+            android:textColor="?attr/colorOnPrimary"
+            android:textSize="36sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/dialogLoginUsernameField"
+            android:layout_width="220dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="40sp"
+            android:autofillHints="username"
+            android:background="@drawable/background_edit_text"
+            android:drawableStart="@drawable/ic_profile"
+            android:drawablePadding="10dp"
+            android:hint="@string/dialog_login_hint_username"
+            android:inputType="text"
+            android:textColorHint="@color/grey"
+            android:textCursorDrawable="@null"
+            app:drawableTint="@color/grey" />
+
+        <EditText
+            android:id="@+id/dialogLoginPasswordField"
+            android:layout_width="220dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:autofillHints="password"
+            android:background="@drawable/background_edit_text"
+            android:drawableStart="@drawable/ic_key"
+            android:drawablePadding="10dp"
+            android:hint="@string/dialog_login_hint_password"
+            android:inputType="textPassword"
+            android:textColorHint="@color/grey"
+            android:textCursorDrawable="@null"
+            app:drawableTint="@color/grey" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/dialogLoginLogButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:text="@string/dialog_login_title"
+            android:textSize="16sp"
+            app:backgroundTint="@color/dark_orange" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/dialogLoginCreateButton"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/dialog_login_create_account"
+            android:textAllCaps="false"
+            android:textColor="?attr/colorOnPrimary"
+            android:textSize="16sp"
+            android:textStyle="italic" />
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

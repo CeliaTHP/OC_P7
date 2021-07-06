@@ -132,6 +132,11 @@ public class LoginViewModel extends AndroidViewModel {
                 });
     }
 
+    public void getUsernameAccount() {
+        //auth.signInWithEmailAndPassword();
+
+    }
+
     public void getTwitterAccount(LoginActivity loginActivity) {
         provider = OAuthProvider.newBuilder("twitter.com");
         Task<AuthResult> pendingResultTask = auth.getPendingAuthResult();
