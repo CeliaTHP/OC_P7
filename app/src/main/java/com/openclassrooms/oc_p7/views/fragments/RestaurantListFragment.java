@@ -65,6 +65,7 @@ public class RestaurantListFragment extends Fragment implements OnRestaurantClic
 
     private void initObservers() {
         mapViewModel.restaurantLiveData.observe(getViewLifecycleOwner(), restaurantList -> {
+
             mRestaurantList = restaurantList;
             Log.d(TAG, "nearbyPlacesObserver from Restaurant");
 

@@ -32,7 +32,6 @@ public class MapViewModel extends ViewModel {
     public MapViewModel(PlaceRepository placeRepository, FusedLocationProviderClient fusedLocationProviderClient) {
         this.placeRepository = placeRepository;
         this.fusedLocationProviderClient = fusedLocationProviderClient;
-        //nearbyPlacesLiveData = placeRepository.nearbyPlacesLiveData;
         currentLocationLiveData = placeRepository.currentLocationLiveData;
         restaurantLiveData = placeRepository.restaurantLiveData;
     }

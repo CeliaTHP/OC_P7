@@ -28,9 +28,6 @@ public class SettingsActivity extends BaseActivity {
             logOut();
             goToLogin();
         });
-        activitySettingsBinding.settingsDeleteWorkmatesButton.setOnClickListener(v -> {
-            deleteWorkmates();
-        });
     }
 
     private void deleteUserFromFirebase() {
@@ -38,10 +35,6 @@ public class SettingsActivity extends BaseActivity {
             UserHelper.deleteUser(FirebaseAuth.getInstance().getUid()).addOnFailureListener(
                     this.onFailureListener());
         }
-    }
-
-    private void deleteWorkmates() {
-        //WorkmateHelper.deleteAllWorkmate();
     }
 
 

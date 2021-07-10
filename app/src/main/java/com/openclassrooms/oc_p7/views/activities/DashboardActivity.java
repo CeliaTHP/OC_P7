@@ -285,7 +285,7 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
                         startActivity(intent);
 
                     } else {
-                        Toast.makeText(this, getString(R.string.drawer_no_lunch), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, getString(R.string.drawer_no_lunch), Toast.LENGTH_LONG).show();
                     }
                 });
     }

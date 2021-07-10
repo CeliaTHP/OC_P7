@@ -33,6 +33,7 @@ public class DetailsActivity extends BaseActivity {
     private Restaurant restaurant = null;
     private DetailsViewModel detailsViewModel;
 
+
     ActivityDetailsBinding activityDetailsBinding;
 
     @Override
@@ -83,6 +84,7 @@ public class DetailsActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        Log.d(TAG, restaurant.getIsLiked() + " ");
         initUI(restaurant);
     }
 
@@ -91,6 +93,10 @@ public class DetailsActivity extends BaseActivity {
         activityDetailsBinding.detailsRestaurantName.setText(restaurant.getName());
         activityDetailsBinding.detailsRestaurantAddress.setText(restaurant.getAddress());
 
+        //Setting the corresponding star
+        if (restaurant.getIsLiked())
+            activityDetailsBinding.detailsRestaurantLikePic.setImageResource(R.drawable.ic_star_details);
+        //Setting the corresponding check
         UserHelper.getUser(FirebaseAuth.getInstance().getUid()).addOnSuccessListener(snapshot -> {
             if (snapshot.get("restaurantId") != null) {
                 Log.d(TAG, "restaurantId not null : " + snapshot.get("restaurantId").toString());
@@ -101,6 +107,7 @@ public class DetailsActivity extends BaseActivity {
                 }
             }
         });
+
 
         initSlider();
 
@@ -161,15 +168,20 @@ public class DetailsActivity extends BaseActivity {
                     restaurant.setIsChosen(false);
                     UserHelper.updateUserRestaurantId(null, FirebaseAuth.getInstance().getUid());
 
-
                 }
             }
         });
-        activityDetailsBinding.detailsRestaurantLike.setOnClickListener(new View.OnClickListener() {
+
+        activityDetailsBinding.detailsLikeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                //setFavorite
+                if (!restaurant.getIsLiked()) {
+                    restaurant.setIsLiked(true);
+                    activityDetailsBinding.detailsRestaurantLikePic.setImageResource(R.drawable.ic_star_details);
+                } else {
+                    restaurant.setIsLiked(false);
+                    activityDetailsBinding.detailsRestaurantLikePic.setImageResource(R.drawable.ic_star_details_not_full);
+                }
 
             }
         });

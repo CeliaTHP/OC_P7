@@ -51,6 +51,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
         Restaurant restaurant = restaurantList.get(position);
         if (restaurant != null) {
 
+
             Location location = new Location("");
             location.setLatitude(restaurant.getLat());
             location.setLongitude(restaurant.getLng());
