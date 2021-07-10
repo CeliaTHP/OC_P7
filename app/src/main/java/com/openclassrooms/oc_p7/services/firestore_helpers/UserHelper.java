@@ -32,6 +32,10 @@ public class UserHelper {
         return UserHelper.getUsersCollection().document(uid).update("name", name);
     }
 
+    public static Task<Void> updateUserRestaurantId(String restaurantId, String uid) {
+        return UserHelper.getUsersCollection().document(uid).update("restaurantId", restaurantId);
+    }
+
     public static Task<Void> updateUserRestaurantName(String restaurantName, String uid) {
         return UserHelper.getUsersCollection().document(uid).update("restaurantName", restaurantName);
     }

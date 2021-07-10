@@ -9,13 +9,16 @@ import android.view.View;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.databinding.ActivityDetailsBinding;
 import com.openclassrooms.oc_p7.injections.Injection;
 import com.openclassrooms.oc_p7.models.Restaurant;
 import com.openclassrooms.oc_p7.models.Workmate;
 import com.openclassrooms.oc_p7.services.factories.DetailViewModelFactory;
-import com.openclassrooms.oc_p7.view_models.DetailViewModel;
+import com.openclassrooms.oc_p7.services.firestore_helpers.UserHelper;
+import com.openclassrooms.oc_p7.view_models.DetailsViewModel;
 import com.openclassrooms.oc_p7.views.adapters.SliderAdapter;
 import com.openclassrooms.oc_p7.views.adapters.WorkmateAdapter;
 import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
@@ -28,7 +31,7 @@ public class DetailsActivity extends BaseActivity {
 
     private final static String TAG = "DetailsActivity";
     private Restaurant restaurant = null;
-    private DetailViewModel detailViewModel;
+    private DetailsViewModel detailsViewModel;
 
     ActivityDetailsBinding activityDetailsBinding;
 
@@ -37,31 +40,67 @@ public class DetailsActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         activityDetailsBinding = ActivityDetailsBinding.inflate(LayoutInflater.from(this), null, false);
+
+        initViewModels();
+
         Intent intent = getIntent();
-        restaurant = (Restaurant) intent.getSerializableExtra("restaurant");
+        initExtras(intent);
 
         //TODO : detailsViewModel to get workmate
-        initViewModels();
         initUI(restaurant);
         initListeners();
         initObservers();
 
-        detailViewModel.getWorkmateList();
+        detailsViewModel.getWorkmateList();
 
         setContentView(activityDetailsBinding.getRoot());
     }
 
+    private void initExtras(Intent intent) {
+        if (intent.getSerializableExtra("restaurant") != null)
+            restaurant = (Restaurant) intent.getSerializableExtra("restaurant");
+        else if (intent.getSerializableExtra("restaurantId") != null) {
+            restaurant = new Restaurant(intent.getSerializableExtra("restaurantId").toString(), null, null, 0.0, 0.0);
+            detailsViewModel.getRestaurantDetails(restaurant, new OnSuccessListener() {
+                @Override
+                public void onSuccess(Object o) {
+                    Log.d(TAG, "onSuccess initExtra");
+                    initUI((Restaurant) o);
+
+                }
+            });
+
+        }
+    }
+
     private void initViewModels() {
         DetailViewModelFactory detailViewModelFactory = Injection.provideDetailViewModelFactory(this);
-        detailViewModel =
-                ViewModelProviders.of(this, detailViewModelFactory).get(DetailViewModel.class);
+        detailsViewModel =
+                ViewModelProviders.of(this, detailViewModelFactory).get(DetailsViewModel.class);
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initUI(restaurant);
     }
 
     private void initUI(Restaurant restaurant) {
 
         activityDetailsBinding.detailsRestaurantName.setText(restaurant.getName());
         activityDetailsBinding.detailsRestaurantAddress.setText(restaurant.getAddress());
+
+        UserHelper.getUser(FirebaseAuth.getInstance().getUid()).addOnSuccessListener(snapshot -> {
+            if (snapshot.get("restaurantId") != null) {
+                Log.d(TAG, "restaurantId not null : " + snapshot.get("restaurantId").toString());
+                if (snapshot.get("restaurantId").toString().equals(restaurant.getId())) {
+                    activityDetailsBinding.detailsRestaurantCheck.setColorFilter(getResources().getColor(R.color.green));
+                    Log.d(TAG, "restaurant chosen by user");
+
+                }
+            }
+        });
 
         initSlider();
 
@@ -94,13 +133,13 @@ public class DetailsActivity extends BaseActivity {
     }
 
     private void initObservers() {
-        detailViewModel.workmateListLiveData.observe(this, workmateList -> {
+        detailsViewModel.workmateListLiveData.observe(this, workmateList -> {
             Log.d(TAG, "workmateListLiveData" + workmateList.size());
-            detailViewModel.getWorkmatesForRestaurant(workmateList, restaurant);
+            detailsViewModel.getWorkmatesForRestaurant(workmateList, restaurant);
 
         });
 
-        detailViewModel.workmateForRestaurantListLiveData.observe(this, workmateForRestaurantList -> {
+        detailsViewModel.workmateForRestaurantListLiveData.observe(this, workmateForRestaurantList -> {
             initRecyclerView(workmateForRestaurantList);
             Log.d(TAG, "workmateForRestaurantListLiveData" + workmateForRestaurantList.size());
         });
@@ -116,9 +155,12 @@ public class DetailsActivity extends BaseActivity {
                 if (!restaurant.getIsChosen()) {
                     activityDetailsBinding.detailsRestaurantCheck.setColorFilter(getResources().getColor(R.color.green));
                     restaurant.setIsChosen(true);
+                    UserHelper.updateUserRestaurantId(restaurant.getId(), FirebaseAuth.getInstance().getUid());
                 } else {
                     activityDetailsBinding.detailsRestaurantCheck.setColorFilter(getResources().getColor(R.color.pastel_green));
                     restaurant.setIsChosen(false);
+                    UserHelper.updateUserRestaurantId(null, FirebaseAuth.getInstance().getUid());
+
 
                 }
             }

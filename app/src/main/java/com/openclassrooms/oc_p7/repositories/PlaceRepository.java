@@ -99,6 +99,21 @@ public class PlaceRepository {
 
     private void setRestaurantInfos(RestaurantDetailsPojo restaurantDetailsPojo, Restaurant restaurant, OnSuccessListener<Restaurant> onSuccessListener) {
         if (restaurantDetailsPojo != null) {
+            if (restaurantDetailsPojo.name != null)
+                restaurant.setName(restaurantDetailsPojo.name);
+
+            if (restaurantDetailsPojo.formatted_address != null)
+                restaurant.setAddress(restaurantDetailsPojo.formatted_address);
+
+            if (restaurantDetailsPojo.geometry.location.lat != 0.0)
+                restaurant.setLat(restaurantDetailsPojo.geometry.location.lat);
+
+            if (restaurantDetailsPojo.geometry.location.lng != 0.0)
+                restaurant.setLng(restaurantDetailsPojo.geometry.location.lng);
+
+            if (restaurantDetailsPojo.place_id != null)
+                restaurant.setId(restaurantDetailsPojo.place_id);
+
             if (restaurantDetailsPojo.rating != 0.0)
                 restaurant.setRating(restaurantDetailsPojo.rating);
 

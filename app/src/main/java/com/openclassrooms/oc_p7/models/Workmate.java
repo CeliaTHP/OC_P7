@@ -8,7 +8,6 @@ public class Workmate {
     private String picUrl;
     private String restaurantId;
     private String restaurantName;
-    private String restaurantType;
 
 
     public Workmate(String uid, String name, String email, String picUrl) {
@@ -67,11 +66,5 @@ public class Workmate {
         this.restaurantName = restaurantName;
     }
 
-    public String getRestaurantType() {
-        return restaurantType;
-    }
 
-    public void setRestaurantType(String restaurantType) {
-        this.restaurantType = restaurantType;
-    }
 }

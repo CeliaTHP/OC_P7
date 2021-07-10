@@ -34,12 +34,12 @@ public class WorkmateAdapter extends RecyclerView.Adapter<WorkmateViewHolder.Vie
     @Override
     public void onBindViewHolder(@NonNull WorkmateViewHolder.ViewHolder holder, int position) {
         Workmate workmate = workmateList.get(position);
-        if (workmate.getRestaurantName() != null && workmate.getRestaurantType() != null) {
+        if (workmate.getRestaurantName() != null) {
             if (inDetails) {
                 holder.itemLayoutWorkmatesBinding.workmateText.setText(holder.itemView.getContext().getString(R.string.workmate_text_details, workmate.getName()));
 
             } else {
-                holder.itemLayoutWorkmatesBinding.workmateText.setText(holder.itemView.getContext().getString(R.string.workmate_text, workmate.getName(), workmate.getRestaurantName(), workmate.getRestaurantType()));
+                holder.itemLayoutWorkmatesBinding.workmateText.setText(holder.itemView.getContext().getString(R.string.workmate_text, workmate.getName(), workmate.getRestaurantName()));
             }
         } else {
             holder.itemLayoutWorkmatesBinding.workmateText.setText(holder.itemView.getContext().getString(R.string.workmate_text_no_lunch, workmate.getName()));

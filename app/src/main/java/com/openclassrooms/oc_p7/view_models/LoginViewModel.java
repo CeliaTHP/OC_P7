@@ -190,8 +190,6 @@ public class LoginViewModel extends AndroidViewModel {
                 WorkmateHelper.updateWorkmateRestaurantId(workmate.getRestaurantId(), workmate.getUid());
             if (workmate.getRestaurantName() != null)
                 WorkmateHelper.updateWorkmateRestaurantName(workmate.getRestaurantName(), workmate.getUid());
-            if (workmate.getRestaurantType() != null)
-                WorkmateHelper.updateWorkmateRestaurantType(workmate.getRestaurantType(), workmate.getUid());
         }
     }
 

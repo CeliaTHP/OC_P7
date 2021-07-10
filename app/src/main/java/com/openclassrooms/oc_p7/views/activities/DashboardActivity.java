@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,6 +29,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.databinding.ActivityDashboardBinding;
 import com.openclassrooms.oc_p7.databinding.DrawerHeaderBinding;
+import com.openclassrooms.oc_p7.services.firestore_helpers.UserHelper;
 
 import java.util.Arrays;
 import java.util.List;
@@ -242,6 +244,7 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
                 Log.d(TAG, "Home pressed");
                 break;
             case R.id.drawer_lunch:
+                goToLunch();
                 Log.d(TAG, "Lunch pressed");
                 break;
             case R.id.drawer_settings:
@@ -271,6 +274,22 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
         FirebaseAuth.getInstance().signOut();
         goToLogin();
     }
+
+    private void goToLunch() {
+        UserHelper.getUser(FirebaseAuth.getInstance().getUid())
+                .addOnSuccessListener(snapshot -> {
+                    Log.d(TAG, "onSuccess");
+                    if (snapshot.get("restaurantId") != null) {
+                        Intent intent = new Intent(this, DetailsActivity.class);
+                        intent.putExtra("restaurantId", snapshot.get("restaurantId").toString());
+                        startActivity(intent);
+
+                    } else {
+                        Toast.makeText(this, getString(R.string.drawer_no_lunch), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
 
     @Override
     protected void onResume() {

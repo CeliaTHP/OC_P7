@@ -36,7 +36,8 @@ public class Injection {
 
     public static DetailViewModelFactory provideDetailViewModelFactory(Context context) {
         WorkmateRepository workmateRepository = provideWorkmateRepository(context);
-        return new DetailViewModelFactory(workmateRepository);
+        PlaceRepository placeRepository = providePlaceRepository();
+        return new DetailViewModelFactory(workmateRepository, placeRepository);
     }
 
 

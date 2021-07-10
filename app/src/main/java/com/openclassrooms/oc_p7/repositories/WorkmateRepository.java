@@ -41,9 +41,8 @@ public class WorkmateRepository {
                                 snapshot.get("picUrl").toString()
                         );
 
-                        if (snapshot.get("restaurantName") != null && snapshot.get("restaurantType") != null && snapshot.get("restaurantId") != null) {
+                        if (snapshot.get("restaurantName") != null && snapshot.get("restaurantId") != null) {
                             workmate.setRestaurantName(snapshot.get("restaurantName").toString());
-                            workmate.setRestaurantType(snapshot.get("restaurantType").toString());
                             workmate.setRestaurantId(snapshot.get("restaurantId").toString());
                             workmatePlaceIdList.add(workmate.getRestaurantId());
                             Log.d(TAG, "restaurant : " + workmate.getRestaurantId());

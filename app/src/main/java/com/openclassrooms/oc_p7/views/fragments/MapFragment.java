@@ -137,14 +137,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 mapViewModel.getRestaurantDetails(restaurant, new OnSuccessListener() {
                     @Override
                     public void onSuccess(Object o) {
-                        Log.d(TAG, "onSuccess");
                     }
                 });
                 if (googleMap != null) {
                     LatLng latLng = new LatLng(restaurant.getLat(), restaurant.getLng());
-                    if (placeIdList.contains(restaurant.getId()))
+                    if (placeIdList.contains(restaurant.getId())) {
                         googleMap.addMarker(new MarkerOptions().position(latLng).title(restaurant.getName()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
-                    else
+                        Log.d(TAG, "a workmate chosed : " + restaurant.getName());
+                    } else
                         googleMap.addMarker(new MarkerOptions().position(latLng).title(restaurant.getName()));
 
                 }
@@ -174,6 +174,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
 
         workmateViewModel.workmatePlaceIdListLiveData.observe(getViewLifecycleOwner(), idList -> {
+            Log.d(TAG, "idList size : " + idList.size());
             placeIdList = idList;
             refreshMap();
         });

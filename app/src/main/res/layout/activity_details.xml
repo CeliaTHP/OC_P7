@@ -27,6 +27,7 @@
             app:sliderAutoCycleDirection="back_and_forth"
             app:sliderAutoCycleEnabled="true"
             app:sliderIndicatorAnimationDuration="600"
+            app:sliderIndicatorEnabled="false"
             app:sliderIndicatorGravity="center_horizontal|bottom"
             app:sliderIndicatorMargin="15dp"
             app:sliderIndicatorOrientation="horizontal"
@@ -35,7 +36,6 @@
             app:sliderIndicatorSelectedColor="#5A5A5A"
             app:sliderIndicatorUnselectedColor="#FFF"
             app:sliderScrollTimeInSec="1"
-            app:sliderIndicatorEnabled="false"
             app:sliderStartAutoCycle="true" />
 
         <!--
@@ -51,10 +51,9 @@
 
         <TextView
             android:id="@+id/details_restaurant_name"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_margin="10dp"
             android:textColor="@color/white"
             android:textSize="24sp"
             app:layout_constraintStart_toStartOf="parent"
@@ -63,7 +62,7 @@
 
         <TextView
             android:id="@+id/details_restaurant_address"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="999 Adresse du Restaurant"
             android:textColor="@color/white"
@@ -73,7 +72,7 @@
 
         <ImageView
             android:id="@+id/details_restaurant_check"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="20sp"
             android:background="@drawable/round_background"
@@ -91,7 +90,7 @@
             style="@style/Widget.AppCompat.RatingBar.Indicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="6dp"
+            android:layout_margin="10dp"
             android:isIndicator="true"
             android:numStars="3"
             android:progressBackgroundTint="@color/yellow"
