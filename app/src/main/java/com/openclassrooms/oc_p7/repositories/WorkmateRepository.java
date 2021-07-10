@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.openclassrooms.oc_p7.models.Restaurant;
 import com.openclassrooms.oc_p7.models.Workmate;
 import com.openclassrooms.oc_p7.services.firestore_helpers.WorkmateHelper;
 
@@ -17,10 +18,12 @@ public class WorkmateRepository {
 
     public MutableLiveData<List<Workmate>> workmateListLiveData = new MutableLiveData<>();
     public MutableLiveData<List<String>> workmatePlaceIdListLiveData = new MutableLiveData<>();
+    public MutableLiveData<List<Workmate>> workmateForRestaurantListLiveData = new MutableLiveData<>();
+
 
     private ArrayList<String> workmatePlaceIdList = new ArrayList<>();
-
     private ArrayList<Workmate> workmateList = new ArrayList<>();
+    private ArrayList<Workmate> workmateForRestaurantList = new ArrayList<>();
 
 
     public void getWorkmateList() {
@@ -56,5 +59,15 @@ public class WorkmateRepository {
                 .addOnFailureListener(e -> Log.d(TAG, "onFailure"));
     }
 
-
+    public void getWorkmatesForRestaurant(List<Workmate> workmateList, Restaurant restaurant) {
+        for (Workmate workmate : workmateList) {
+            if (workmate.getRestaurantId() != null) {
+                if (workmate.getRestaurantId().equals(restaurant.getId())) {
+                    workmateForRestaurantList.add(workmate);
+                    Log.d(TAG, workmate.getName() + "matches with restaurant :  " + restaurant.getName());
+                }
+            }
+        }
+        workmateForRestaurantListLiveData.postValue(workmateForRestaurantList);
+    }
 }

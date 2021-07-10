@@ -2,6 +2,7 @@ package com.openclassrooms.oc_p7.views.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -13,16 +14,13 @@ import com.openclassrooms.oc_p7.databinding.ActivityDetailsBinding;
 import com.openclassrooms.oc_p7.injections.Injection;
 import com.openclassrooms.oc_p7.models.Restaurant;
 import com.openclassrooms.oc_p7.models.Workmate;
-import com.openclassrooms.oc_p7.repositories.WorkmateRepository;
-import com.openclassrooms.oc_p7.services.apis.PlacesApi;
-import com.openclassrooms.oc_p7.services.factories.WorkmateViewModelFactory;
-import com.openclassrooms.oc_p7.view_models.WorkmateViewModel;
+import com.openclassrooms.oc_p7.services.factories.DetailViewModelFactory;
+import com.openclassrooms.oc_p7.view_models.DetailViewModel;
 import com.openclassrooms.oc_p7.views.adapters.SliderAdapter;
 import com.openclassrooms.oc_p7.views.adapters.WorkmateAdapter;
 import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
 import com.smarteist.autoimageslider.SliderAnimations;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -30,10 +28,7 @@ public class DetailsActivity extends BaseActivity {
 
     private final static String TAG = "DetailsActivity";
     private Restaurant restaurant = null;
-    private WorkmateRepository workmateRepository;
-    private PlacesApi placesApi = Injection.provideApiClient();
-    private WorkmateViewModel workmateViewModel;
-    private List<String> placeIdList = new ArrayList<>();
+    private DetailViewModel detailViewModel;
 
     ActivityDetailsBinding activityDetailsBinding;
 
@@ -42,7 +37,6 @@ public class DetailsActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         activityDetailsBinding = ActivityDetailsBinding.inflate(LayoutInflater.from(this), null, false);
-        workmateRepository = Injection.provideWorkmateRepository(this);
         Intent intent = getIntent();
         restaurant = (Restaurant) intent.getSerializableExtra("restaurant");
 
@@ -52,15 +46,15 @@ public class DetailsActivity extends BaseActivity {
         initListeners();
         initObservers();
 
-        workmateViewModel.getWorkmateList();
+        detailViewModel.getWorkmateList();
 
         setContentView(activityDetailsBinding.getRoot());
     }
 
     private void initViewModels() {
-        WorkmateViewModelFactory workmateViewModelFactory = Injection.provideWorkmateViewModelFactory(this);
-        workmateViewModel =
-                ViewModelProviders.of(this, workmateViewModelFactory).get(WorkmateViewModel.class);
+        DetailViewModelFactory detailViewModelFactory = Injection.provideDetailViewModelFactory(this);
+        detailViewModel =
+                ViewModelProviders.of(this, detailViewModelFactory).get(DetailViewModel.class);
 
     }
 
@@ -100,23 +94,19 @@ public class DetailsActivity extends BaseActivity {
     }
 
     private void initObservers() {
+        detailViewModel.workmateListLiveData.observe(this, workmateList -> {
+            Log.d(TAG, "workmateListLiveData" + workmateList.size());
+            detailViewModel.getWorkmatesForRestaurant(workmateList, restaurant);
 
-        workmateViewModel.workmateListLiveData.observe(this, workmates -> {
-            initRecyclerView(filterList(workmates));
+        });
+
+        detailViewModel.workmateForRestaurantListLiveData.observe(this, workmateForRestaurantList -> {
+            initRecyclerView(workmateForRestaurantList);
+            Log.d(TAG, "workmateForRestaurantListLiveData" + workmateForRestaurantList.size());
         });
 
     }
 
-    private List<Workmate> filterList(List<Workmate> workmateList) {
-        List<Workmate> filteredList = new ArrayList<>();
-        for (Workmate workmate : workmateList) {
-            if (workmate.getRestaurantId() != null) {
-                if (workmate.getRestaurantId().equals(restaurant.getId()))
-                    filteredList.add(workmate);
-            }
-        }
-        return filteredList;
-    }
 
     private void initListeners() {
 
