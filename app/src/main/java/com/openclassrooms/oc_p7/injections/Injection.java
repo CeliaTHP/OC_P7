@@ -7,6 +7,7 @@ import com.google.android.gms.location.LocationServices;
 import com.openclassrooms.oc_p7.repositories.PlaceRepository;
 import com.openclassrooms.oc_p7.repositories.WorkmateRepository;
 import com.openclassrooms.oc_p7.services.apis.PlacesApi;
+import com.openclassrooms.oc_p7.services.factories.DetailViewModelFactory;
 import com.openclassrooms.oc_p7.services.factories.MapViewModelFactory;
 import com.openclassrooms.oc_p7.services.factories.WorkmateViewModelFactory;
 
@@ -33,6 +34,11 @@ public class Injection {
         return new WorkmateViewModelFactory(workmateRepository);
     }
 
+    public static DetailViewModelFactory provideDetailViewModelFactory(Context context) {
+        WorkmateRepository workmateRepository = provideWorkmateRepository(context);
+        return new DetailViewModelFactory(workmateRepository);
+    }
+
 
     public static FusedLocationProviderClient provideFusedLocationProviderClient(Context context) {
         return LocationServices.getFusedLocationProviderClient(context);
@@ -48,7 +54,6 @@ public class Injection {
         return retrofit.create(PlacesApi.class);
 
     }
-
 
 
 }
