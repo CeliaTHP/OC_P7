@@ -35,7 +35,6 @@ public class DummyWorkmateGenerator {
         DUMMY_WORKMATES.get(5).setRestaurantId("ChIJZRd-EQRA5kcRnyzZQ1QWzVw");
         DUMMY_WORKMATES.get(5).setRestaurantName("KFC");
 
-
         DUMMY_WORKMATES.get(3).setRestaurantId("ChIJ0TTGVAFA5kcRb6VXirND0hg");
         DUMMY_WORKMATES.get(3).setRestaurantName("McDonalds");
 

@@ -19,8 +19,6 @@ public class DetailsViewModel extends ViewModel {
     private WorkmateRepository workmateRepository;
     private PlaceRepository placeRepository;
 
-    public MutableLiveData<List<Workmate>> workmateListLiveData;
-
     public MutableLiveData<List<Workmate>> workmateForRestaurantListLiveData;
 
 
@@ -28,19 +26,14 @@ public class DetailsViewModel extends ViewModel {
         this.workmateRepository = workmateRepository;
         this.placeRepository = placeRepository;
         workmateForRestaurantListLiveData = workmateRepository.workmateForRestaurantListLiveData;
-        workmateListLiveData = workmateRepository.workmateListLiveData;
     }
 
-    public void getWorkmateList() {
-        workmateRepository.getWorkmateList();
+    public void getWorkmatesForRestaurant(String restaurantId) {
+        workmateRepository.getWorkmatesForRestaurant(restaurantId);
     }
 
-    public void getWorkmatesForRestaurant(List<Workmate> workmateList, Restaurant restaurant) {
-        workmateRepository.getWorkmatesForRestaurant(workmateList, restaurant);
-    }
-
-    public void getRestaurantDetails(Restaurant restaurant, OnSuccessListener onSuccessListener) {
-        placeRepository.getRestaurantDetails(restaurant, onSuccessListener);
+    public void getRestaurantDetails(String restaurantId, OnSuccessListener onSuccessListener) {
+        placeRepository.getRestaurantDetails(new Restaurant(restaurantId, null, null, 0.0, 0.0), onSuccessListener);
     }
 
 

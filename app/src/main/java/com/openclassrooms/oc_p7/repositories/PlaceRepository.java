@@ -71,16 +71,14 @@ public class PlaceRepository {
 
             }
         });
-
-
     }
-
 
     public void getRestaurantDetails(Restaurant restaurant, OnSuccessListener onSuccessListener) {
         placesApi.getDetailsById(BuildConfig.GoogleMapApiKey, restaurant.getId()).enqueue(new Callback<DetailsPlaceResponse>() {
             @Override
             public void onResponse(Call<DetailsPlaceResponse> call, Response<DetailsPlaceResponse> response) {
                 setRestaurantInfos(response.body().result, restaurant, onSuccessListener);
+                //setAttendees with firebase count
             }
 
             @Override

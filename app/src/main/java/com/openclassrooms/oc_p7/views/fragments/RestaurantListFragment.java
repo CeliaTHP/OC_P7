@@ -95,7 +95,7 @@ public class RestaurantListFragment extends Fragment implements OnRestaurantClic
     public void onRestaurantClick(Restaurant restaurant) {
         Log.d(TAG, "click on : " + restaurant.getName());
         Intent intent = new Intent(this.getActivity(), DetailsActivity.class);
-        intent.putExtra("restaurant", restaurant);
+        intent.putExtra("restaurantId", restaurant.getId());
         startActivity(intent);
 
     }

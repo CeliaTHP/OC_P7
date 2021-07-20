@@ -32,6 +32,8 @@
 
     <!--DETAILS-->
     <string name="list_workmates_empty">No one is eating here</string>
+    <string name="details_no_info">This information is not available</string>
+
 
     <!--WORKMATES-->
     <string name="workmate_text">%1$s is eating %2$s</string>

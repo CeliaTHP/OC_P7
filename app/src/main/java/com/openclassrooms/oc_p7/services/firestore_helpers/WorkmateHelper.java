@@ -4,6 +4,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.openclassrooms.oc_p7.models.Workmate;
 
 
@@ -28,6 +29,10 @@ public class WorkmateHelper {
     // GET
     public static Task<DocumentSnapshot> getWorkmate(String uid) {
         return WorkmateHelper.getWorkmatesCollection().document(uid).get();
+    }
+
+    public static Task<QuerySnapshot> getWorkmatesForRestaurant(String restaurantId) {
+        return getWorkmatesCollection().whereEqualTo("restaurantId", restaurantId).get();
     }
 
     // UPDATE

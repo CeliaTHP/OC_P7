@@ -2,12 +2,18 @@ package com.openclassrooms.oc_p7.repositories;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.openclassrooms.oc_p7.models.Restaurant;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.openclassrooms.oc_p7.models.Workmate;
 import com.openclassrooms.oc_p7.services.firestore_helpers.WorkmateHelper;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +45,7 @@ public class WorkmateRepository {
                                 snapshot.get("name").toString(),
                                 snapshot.get("email").toString(),
                                 snapshot.get("picUrl").toString()
+                                //toObject instead ?
                         );
 
                         if (snapshot.get("restaurantName") != null && snapshot.get("restaurantId") != null) {
@@ -58,7 +65,25 @@ public class WorkmateRepository {
                 .addOnFailureListener(e -> Log.d(TAG, "onFailure"));
     }
 
-    public void getWorkmatesForRestaurant(List<Workmate> workmateList, Restaurant restaurant) {
+    public void getWorkmatesForRestaurant(String restaurantId) {
+        //FILTER VIA FIREBASE
+
+        List<Workmate> workmatesFiltered = new ArrayList<>();
+        WorkmateHelper.getWorkmatesForRestaurant(restaurantId).addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                        workmatesFiltered.add(documentSnapshot.toObject(Workmate.class));
+                        Log.d(TAG, "workmateForRestaurant : " + documentSnapshot.getData());
+                    }
+                    workmateForRestaurantListLiveData.postValue(workmatesFiltered);
+
+                }
+            }
+        });
+    }
+/*
         for (Workmate workmate : workmateList) {
             if (workmate.getRestaurantId() != null) {
                 if (workmate.getRestaurantId().equals(restaurant.getId())) {
@@ -69,4 +94,6 @@ public class WorkmateRepository {
         }
         workmateForRestaurantListLiveData.postValue(workmateForRestaurantList);
     }
+
+ */
 }

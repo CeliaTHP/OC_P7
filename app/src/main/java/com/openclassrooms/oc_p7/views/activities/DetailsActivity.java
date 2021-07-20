@@ -1,10 +1,12 @@
 package com.openclassrooms.oc_p7.views.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -33,7 +35,6 @@ public class DetailsActivity extends BaseActivity {
     private Restaurant restaurant = null;
     private DetailsViewModel detailsViewModel;
 
-
     ActivityDetailsBinding activityDetailsBinding;
 
     @Override
@@ -48,29 +49,26 @@ public class DetailsActivity extends BaseActivity {
         initExtras(intent);
 
         //TODO : detailsViewModel to get workmate
-        initUI(restaurant);
         initListeners();
         initObservers();
 
-        detailsViewModel.getWorkmateList();
+        //detailsViewModel.getWorkmateList();
 
         setContentView(activityDetailsBinding.getRoot());
     }
 
     private void initExtras(Intent intent) {
-        if (intent.getSerializableExtra("restaurant") != null)
-            restaurant = (Restaurant) intent.getSerializableExtra("restaurant");
-        else if (intent.getSerializableExtra("restaurantId") != null) {
-            restaurant = new Restaurant(intent.getSerializableExtra("restaurantId").toString(), null, null, 0.0, 0.0);
-            detailsViewModel.getRestaurantDetails(restaurant, new OnSuccessListener() {
+        if (intent.getStringExtra("restaurantId") != null) {
+            detailsViewModel.getWorkmatesForRestaurant(intent.getStringExtra("restaurantId"));
+            detailsViewModel.getRestaurantDetails(intent.getStringExtra("restaurantId"), new OnSuccessListener() {
                 @Override
                 public void onSuccess(Object o) {
                     Log.d(TAG, "onSuccess initExtra");
+                    restaurant = (Restaurant) o;
                     initUI((Restaurant) o);
 
                 }
             });
-
         }
     }
 
@@ -79,13 +77,6 @@ public class DetailsActivity extends BaseActivity {
         detailsViewModel =
                 ViewModelProviders.of(this, detailViewModelFactory).get(DetailsViewModel.class);
 
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.d(TAG, restaurant.getIsLiked() + " ");
-        initUI(restaurant);
     }
 
     private void initUI(Restaurant restaurant) {
@@ -107,7 +98,6 @@ public class DetailsActivity extends BaseActivity {
                 }
             }
         });
-
 
         initSlider();
 
@@ -140,11 +130,6 @@ public class DetailsActivity extends BaseActivity {
     }
 
     private void initObservers() {
-        detailsViewModel.workmateListLiveData.observe(this, workmateList -> {
-            Log.d(TAG, "workmateListLiveData" + workmateList.size());
-            detailsViewModel.getWorkmatesForRestaurant(workmateList, restaurant);
-
-        });
 
         detailsViewModel.workmateForRestaurantListLiveData.observe(this, workmateForRestaurantList -> {
             initRecyclerView(workmateForRestaurantList);
@@ -171,6 +156,18 @@ public class DetailsActivity extends BaseActivity {
                 }
             }
         });
+        activityDetailsBinding.detailsPhoneLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (restaurant.getPhone() != null) {
+                    Intent intent = new Intent(Intent.ACTION_DIAL);
+                    intent.setData(Uri.parse("tel:" + restaurant.getPhone()));
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(getParent(), getString(R.string.details_no_info), Toast.LENGTH_LONG).show();
+                }
+            }
+        });
 
         activityDetailsBinding.detailsLikeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -183,6 +180,20 @@ public class DetailsActivity extends BaseActivity {
                     activityDetailsBinding.detailsRestaurantLikePic.setImageResource(R.drawable.ic_star_details_not_full);
                 }
 
+            }
+        });
+
+        activityDetailsBinding.detailsWebsiteLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (restaurant.getWebsite() != null) {
+                    Uri uriUrl = Uri.parse(restaurant.getWebsite());
+                    Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
+                    startActivity(launchBrowser);
+                } else {
+                    Toast.makeText(getParent(), getString(R.string.details_no_info), Toast.LENGTH_LONG).show();
+
+                }
             }
         });
     }

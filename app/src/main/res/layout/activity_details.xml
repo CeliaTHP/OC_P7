@@ -121,7 +121,7 @@
             android:layout_marginEnd="50dp">
 
             <LinearLayout
-                android:id="@+id/details_call_layout"
+                android:id="@+id/details_phone_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:elevation="5dp"

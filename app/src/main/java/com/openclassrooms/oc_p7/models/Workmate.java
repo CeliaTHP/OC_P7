@@ -9,6 +9,8 @@ public class Workmate {
     private String restaurantId;
     private String restaurantName;
 
+    public Workmate() {
+    }
 
     public Workmate(String uid, String name, String email, String picUrl) {
         this.uid = uid;

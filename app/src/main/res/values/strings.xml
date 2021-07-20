@@ -41,6 +41,8 @@
 
     <!--DETAILS-->
     <string name="list_workmates_empty">Personne ne mange ici</string>
+    <string name="details_no_info">Cette information n\'est pas renseignée</string>
+
 
     <!--WORKMATES-->
     <string name="workmate_text">%1$s mange %2$s</string>
