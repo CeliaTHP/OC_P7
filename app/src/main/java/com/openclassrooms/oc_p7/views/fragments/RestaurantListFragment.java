@@ -51,7 +51,7 @@ public class RestaurantListFragment extends Fragment implements OnRestaurantClic
 
     private void initViewModels() {
 
-        MapViewModelFactory mapViewModelFactory = Injection.provideMapViewModelFactory(getContext());
+        MapViewModelFactory mapViewModelFactory = Injection.provideMapViewModelFactory(getContext(), this);
         mapViewModel = ViewModelProviders.of(this, mapViewModelFactory).get(MapViewModel.class);
 
         WorkmateViewModelFactory workmateViewModelFactory = Injection.provideWorkmateViewModelFactory(getContext());

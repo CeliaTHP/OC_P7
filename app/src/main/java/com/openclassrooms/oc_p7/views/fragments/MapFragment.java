@@ -94,7 +94,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private void initViewModels() {
         loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
 
-        MapViewModelFactory mapViewModelFactory = Injection.provideMapViewModelFactory(getContext());
+        MapViewModelFactory mapViewModelFactory = Injection.provideMapViewModelFactory(getContext(), this);
         mapViewModel =
                 ViewModelProviders.of(this, mapViewModelFactory).get(MapViewModel.class);
 
@@ -125,7 +125,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(currentLatLng));
             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 14));
             if (googleMap != null) {
-                googleMap.addMarker(new MarkerOptions().position(currentLatLng).title("YOU").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))).showInfoWindow();
+                googleMap.addMarker(new MarkerOptions().position(currentLatLng).title(getString(R.string.map_here)).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))).showInfoWindow();
 
             }
         });

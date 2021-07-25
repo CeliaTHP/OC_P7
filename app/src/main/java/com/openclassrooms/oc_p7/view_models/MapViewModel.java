@@ -7,6 +7,7 @@ import android.location.Location;
 import android.util.Log;
 
 import androidx.core.app.ActivityCompat;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -23,17 +24,27 @@ public class MapViewModel extends ViewModel {
     private static final String TAG = "MapViewModel";
     private PlaceRepository placeRepository;
     private FusedLocationProviderClient fusedLocationProviderClient;
+    private LifecycleOwner lifecycleOwner;
 
 
     public MutableLiveData<List<Restaurant>> restaurantLiveData;
-   // public MutableLiveData<List<RestaurantPojo>> nearbyPlacesLiveData;
+    // public MutableLiveData<List<RestaurantPojo>> nearbyPlacesLiveData;
     public MutableLiveData<Location> currentLocationLiveData;
 
-    public MapViewModel(PlaceRepository placeRepository, FusedLocationProviderClient fusedLocationProviderClient) {
+    public MapViewModel(PlaceRepository placeRepository, FusedLocationProviderClient fusedLocationProviderClient, LifecycleOwner lifecycleOwner) {
         this.placeRepository = placeRepository;
         this.fusedLocationProviderClient = fusedLocationProviderClient;
+        this.lifecycleOwner = lifecycleOwner;
+        this.restaurantLiveData = placeRepository.restaurantLiveData;
+
         currentLocationLiveData = placeRepository.currentLocationLiveData;
-        restaurantLiveData = placeRepository.restaurantLiveData;
+
+        placeRepository.restaurantLiveData.observe(lifecycleOwner, restaurantList -> {
+            for (Restaurant restaurant : restaurantList)
+                Log.d(TAG, "observer : " + restaurant.toString());
+
+
+        });
     }
 
     public void getLocationInformations(Context context) {

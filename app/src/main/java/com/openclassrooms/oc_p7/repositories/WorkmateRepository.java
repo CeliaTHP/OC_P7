@@ -10,6 +10,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.openclassrooms.oc_p7.models.Restaurant;
 import com.openclassrooms.oc_p7.models.Workmate;
 import com.openclassrooms.oc_p7.services.firestore_helpers.WorkmateHelper;
 
@@ -65,11 +66,11 @@ public class WorkmateRepository {
                 .addOnFailureListener(e -> Log.d(TAG, "onFailure"));
     }
 
-    public void getWorkmatesForRestaurant(String restaurantId) {
+    public void getWorkmatesForRestaurant(Restaurant restaurant) {
         //FILTER VIA FIREBASE
 
         List<Workmate> workmatesFiltered = new ArrayList<>();
-        WorkmateHelper.getWorkmatesForRestaurant(restaurantId).addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        WorkmateHelper.getWorkmatesForRestaurant(restaurant.getId()).addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {

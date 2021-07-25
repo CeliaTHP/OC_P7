@@ -2,6 +2,8 @@ package com.openclassrooms.oc_p7.injections;
 
 import android.content.Context;
 
+import androidx.lifecycle.LifecycleOwner;
+
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.openclassrooms.oc_p7.repositories.PlaceRepository;
@@ -24,9 +26,9 @@ public class Injection {
         return new WorkmateRepository();
     }
 
-    public static MapViewModelFactory provideMapViewModelFactory(Context context) {
+    public static MapViewModelFactory provideMapViewModelFactory(Context context, LifecycleOwner lifecycleOwner) {
         PlaceRepository placeRepository = providePlaceRepository();
-        return new MapViewModelFactory(placeRepository, Injection.provideFusedLocationProviderClient(context));
+        return new MapViewModelFactory(placeRepository, Injection.provideFusedLocationProviderClient(context), lifecycleOwner);
     }
 
     public static WorkmateViewModelFactory provideWorkmateViewModelFactory(Context context) {

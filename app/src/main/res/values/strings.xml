@@ -39,6 +39,9 @@
     <string name="drawer_no_lunch">Tu n\'as pas encore choisi de restaurant !</string>
 
 
+    <!--MAP-->
+    <string name="map_here">VOUS ÊTES ICI</string>
+
     <!--DETAILS-->
     <string name="list_workmates_empty">Personne ne mange ici</string>
     <string name="details_no_info">Cette information n\'est pas renseignée</string>

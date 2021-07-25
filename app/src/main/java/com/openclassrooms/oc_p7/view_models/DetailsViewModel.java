@@ -28,8 +28,8 @@ public class DetailsViewModel extends ViewModel {
         workmateForRestaurantListLiveData = workmateRepository.workmateForRestaurantListLiveData;
     }
 
-    public void getWorkmatesForRestaurant(String restaurantId) {
-        workmateRepository.getWorkmatesForRestaurant(restaurantId);
+    public void getWorkmatesForRestaurant(Restaurant restaurant) {
+        workmateRepository.getWorkmatesForRestaurant(restaurant);
     }
 
     public void getRestaurantDetails(String restaurantId, OnSuccessListener onSuccessListener) {

@@ -29,6 +29,8 @@
     <string name="drawer_logout">LOG OUT</string>
     <string name="drawer_no_lunch">You haven\'t chosen a restaurant yet</string>
 
+    <!--MAP-->
+    <string name="map_here">YOU ARE HERE</string>
 
     <!--DETAILS-->
     <string name="list_workmates_empty">No one is eating here</string>

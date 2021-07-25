@@ -34,6 +34,10 @@ public class Restaurant implements Serializable {
         isLiked = false;
     }
 
+    public String toString() {
+        return id + " " + name + " " + attendees + " " + address + " " + distance + " " + rating + " " + isChosen + " " + isLiked;
+    }
+
     public double getLat() {
         return lat;
     }
