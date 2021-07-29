@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.openclassrooms.oc_p7.callbacks.OnRestaurantClickListener;
 import com.openclassrooms.oc_p7.databinding.FragmentListRestaurantsBinding;
 import com.openclassrooms.oc_p7.injections.Injection;
@@ -24,7 +23,6 @@ import com.openclassrooms.oc_p7.view_models.WorkmateViewModel;
 import com.openclassrooms.oc_p7.views.activities.DetailsActivity;
 import com.openclassrooms.oc_p7.views.adapters.RestaurantAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class RestaurantListFragment extends Fragment implements OnRestaurantClickListener {
@@ -35,7 +33,6 @@ public class RestaurantListFragment extends Fragment implements OnRestaurantClic
     private FragmentListRestaurantsBinding fragmentListRestaurantsBinding;
     private RestaurantAdapter adapter;
 
-    private List<Restaurant> mRestaurantList = new ArrayList<>();
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -66,25 +63,15 @@ public class RestaurantListFragment extends Fragment implements OnRestaurantClic
     private void initObservers() {
         mapViewModel.restaurantLiveData.observe(getViewLifecycleOwner(), restaurantList -> {
 
-            mRestaurantList = restaurantList;
             Log.d(TAG, "nearbyPlacesObserver from Restaurant");
-
-            for (Restaurant restaurant : restaurantList) {
-                mapViewModel.getRestaurantDetails(restaurant, new OnSuccessListener() {
-                    @Override
-                    public void onSuccess(Object o) {
-                        Log.d(TAG, " onSuccess");
-                        initRecyclerView();
-                    }
-                });
-            }
+            initRecyclerView(restaurantList);
 
         });
     }
 
 
-    private void initRecyclerView() {
-        adapter = new RestaurantAdapter(mRestaurantList, mapViewModel.currentLocationLiveData.getValue(), this);
+    private void initRecyclerView(List<Restaurant> restaurantList) {
+        adapter = new RestaurantAdapter(restaurantList, mapViewModel.currentLocationLiveData.getValue(), this);
         fragmentListRestaurantsBinding.restaurantRecyclerView.setAdapter(adapter);
         fragmentListRestaurantsBinding.restaurantRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 

@@ -8,7 +8,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
 
-
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
@@ -17,7 +16,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.OC_P7">
-        <activity android:name=".views.activities.SettingsActivity"></activity>
+        <activity android:name=".views.activities.LoginWithUsernameActivity"></activity>
+        <activity android:name=".views.activities.SettingsActivity" />
         <activity android:name=".views.activities.DetailsActivity" />
 
         <meta-data

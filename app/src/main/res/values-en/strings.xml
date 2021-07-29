@@ -7,10 +7,16 @@
     <string name="login_twitter">Sign in with Twitter</string>
     <string name="login_username">Sign in with username</string>
 
-    <!--LOGIN DIALOG-->
-    <string name="dialog_login_hint_username">Username</string>
-    <string name="dialog_login_title">Log in</string>
-    <string name="dialog_login_create_account"><u>Create my account</u></string>
+    <!--LOGIN WITH EMAIL-->
+    <string name="login_hint_email">email@address.com</string>
+    <string name="login_create_account"><u>Create my account</u></string>
+    <string name="login_title">Log in</string>
+    <string name="login_title_italic"><u>Log in</u></string>
+    <string name="signup_title">Register</string>
+    <string name="signup_title_italic"><u>Register</u></string>
+    <string name="login_missing_field">Please enter a correct address email and password</string>
+    <string name="login_fail">Incorrect combination</string>
+    <string name="login_fail_creation">Can\'t create account, this email address might be already used or your password is less than 6 characters</string>
 
 
     <!--DASHBOARD-->

@@ -64,6 +64,8 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
             holder.itemLayoutRestaurantBinding.itemRestaurantRating.invalidate();
             holder.itemLayoutRestaurantBinding.itemRestaurantDistance.setText(holder.itemView.getContext().getString(R.string.item_restaurant_distance, location.distanceTo(currentLocation)));
             holder.itemLayoutRestaurantBinding.itemRestaurantHours.setText(setCorrespondingHours(restaurant));
+            // if(restaurant.getAttendees() != null)
+            // holder.itemLayoutRestaurantBinding.itemRestaurantAttendees.setText(restaurant.getAttendees().size());
 
             if (restaurant.getPhotoReferences() != null) {
                 String picUrl = holder.itemView.getContext().getString(R.string.place_photo_url, BuildConfig.GoogleMapApiKey, restaurant.getPhotoReferences().get(0));

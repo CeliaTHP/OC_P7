@@ -39,8 +39,12 @@ public class PlaceRepository {
     public MutableLiveData<List<Restaurant>> restaurantLiveData = new MutableLiveData<>();
 
     public MutableLiveData<Location> currentLocationLiveData = new MutableLiveData<>();
+    private int count = 0;
+
 
     public void getNearbyPlaces(Location location) {
+        Log.d("COUNT", count + " ");
+        count++;
         //String fakeLocation = "49.024979226793775,2.463881854135891";
 //        String location = currentLocationLiveData.getValue().getLatitude() + "," + currentLocationLiveData.getValue().getLongitude();
 
@@ -56,11 +60,11 @@ public class PlaceRepository {
                 placeList.addAll(response.body().restaurantPojos);
                 for (RestaurantPojo restaurantPojo : placeList) {
                     Restaurant restaurant = createRestaurant(restaurantPojo);
-                    // setRestaurantInfos(response.body().result, restaurant);
+                    Log.d(TAG, restaurant.toString());
                     restaurantList.add(restaurant);
-                    // getDetailsById(restaurantPojo);
                 }
                 // nearbyPlacesLiveData.postValue(placeList);
+                Log.d(TAG, "size : " + restaurantList.size());
                 restaurantLiveData.postValue(restaurantList);
 
             }
@@ -74,6 +78,8 @@ public class PlaceRepository {
     }
 
     public void getRestaurantDetails(Restaurant restaurant, OnSuccessListener onSuccessListener) {
+        Log.d("COUNT", count + " ");
+        count++;
         placesApi.getDetailsById(BuildConfig.GoogleMapApiKey, restaurant.getId()).enqueue(new Callback<DetailsPlaceResponse>() {
             @Override
             public void onResponse(Call<DetailsPlaceResponse> call, Response<DetailsPlaceResponse> response) {
@@ -96,6 +102,7 @@ public class PlaceRepository {
     }
 
     private void setRestaurantInfos(RestaurantDetailsPojo restaurantDetailsPojo, Restaurant restaurant, OnSuccessListener<Restaurant> onSuccessListener) {
+
         if (restaurantDetailsPojo != null) {
             if (restaurantDetailsPojo.name != null)
                 restaurant.setName(restaurantDetailsPojo.name);
@@ -129,7 +136,6 @@ public class PlaceRepository {
                 for (Photo photoUrl : restaurantDetailsPojo.photos) {
                     photos.add(photoUrl.photo_reference);
                 }
-                Log.d(TAG, " photo reference : " + restaurant.getPhotoReferences() + " ");
                 restaurant.setPhotoReference(photos);
             }
             onSuccessListener.onSuccess(restaurant);

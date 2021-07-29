@@ -28,7 +28,8 @@ public class Injection {
 
     public static MapViewModelFactory provideMapViewModelFactory(Context context, LifecycleOwner lifecycleOwner) {
         PlaceRepository placeRepository = providePlaceRepository();
-        return new MapViewModelFactory(placeRepository, Injection.provideFusedLocationProviderClient(context), lifecycleOwner);
+        WorkmateRepository workmateRepository = provideWorkmateRepository(context);
+        return new MapViewModelFactory(placeRepository, workmateRepository, Injection.provideFusedLocationProviderClient(context), lifecycleOwner);
     }
 
     public static WorkmateViewModelFactory provideWorkmateViewModelFactory(Context context) {

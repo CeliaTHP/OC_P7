@@ -4,14 +4,20 @@
     <string name="login_facebook">Connexion avec Facebook</string>
     <string name="login_google">Connexion avec Google</string>
     <string name="login_twitter">Connexion avec Twitter</string>
-    <string name="login_username">Connexion avec identifiant</string>
+    <string name="login_username">Connexion avec identifiants</string>
 
 
-    <!--LOGIN DIALOG-->
-    <string name="dialog_login_hint_username">Identifiant</string>
-    <string name="dialog_login_hint_password" translatable="false">*********</string>
-    <string name="dialog_login_title">Se connecter</string>
-    <string name="dialog_login_create_account"><u>Créer mon compte</u></string>
+    <!--LOGIN WITH EMAIL-->
+    <string name="login_hint_email">adresse@mail.com</string>
+    <string name="login_hint_password" translatable="false">*********</string>
+    <string name="login_title">Se connecter</string>
+    <string name="login_title_italic"><u>Se connecter</u></string>
+    <string name="signup_title">S\'inscrire</string>
+    <string name="signup_title_italic"><u>S\'inscrire</u></string>
+    <string name="login_create_account"><u>Créer mon compte</u></string>
+    <string name="login_missing_field">Veuillez renseignez une adresse mail et un mot de passe correct</string>
+    <string name="login_fail">Combinaison incorrect</string>
+    <string name="login_fail_creation">Creation de compte impossible, cette adresse email est peut-être déjà utilisée ou votre mot de passe contient moins de 6 caractères</string>
 
 
     <!--DASHBOARD-->

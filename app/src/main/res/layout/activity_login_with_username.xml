@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:orientation="vertical"
+    tools:context=".views.activities.LoginWithUsernameActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="50dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center_horizontal"
+            android:contentDescription="@string/cutlery_image"
+            android:src="@drawable/ic_cutlery" />
+
+        <TextSwitcher
+            android:id="@+id/loginTextSwitcher"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inAnimation="@android:anim/slide_in_left"
+            android:outAnimation="@android:anim/slide_out_right">
+
+            <TextView
+                android:id="@+id/textSwitcherLogin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/login_title"
+                android:textSize="38sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textswitcherRegister"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/login_title"
+                android:textSize="38sp"
+                android:textStyle="bold" />
+
+
+        </TextSwitcher>
+
+        <EditText
+            android:id="@+id/loginEmailField"
+            android:layout_width="220dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="80sp"
+            android:autofillHints="username"
+            android:drawableStart="@drawable/ic_profile"
+            android:drawablePadding="10dp"
+            android:hint="@string/login_hint_email"
+            android:inputType="textEmailAddress"
+            android:isScrollContainer="false"
+            android:textColorHint="@color/grey"
+            android:textCursorDrawable="@null"
+            app:drawableTint="@color/grey" />
+
+        <EditText
+            android:id="@+id/loginPasswordField"
+            android:layout_width="220dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:autofillHints="password"
+            android:drawableStart="@drawable/ic_key"
+            android:drawablePadding="10dp"
+            android:hint="@string/login_hint_password"
+            android:inputType="textPassword"
+            android:isScrollContainer="false"
+            android:textColorHint="@color/grey"
+            android:textCursorDrawable="@null"
+            app:drawableTint="@color/grey" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/loginLogButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="40dp"
+            android:text="@string/login_title"
+            android:textSize="16sp"
+            app:backgroundTint="@color/dark_orange" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/loginCreateButton"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/login_create_account"
+            android:textAllCaps="false"
+            android:textSize="16sp"
+            android:textStyle="italic" />
+
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

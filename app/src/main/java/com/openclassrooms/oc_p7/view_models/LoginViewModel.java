@@ -29,10 +29,12 @@ import com.openclassrooms.oc_p7.services.dummies.DummyWorkmateGenerator;
 import com.openclassrooms.oc_p7.services.firestore_helpers.WorkmateHelper;
 import com.openclassrooms.oc_p7.views.activities.LoginActivity;
 
+import org.jetbrains.annotations.NotNull;
+
 public class LoginViewModel extends AndroidViewModel {
 
     public MutableLiveData<FirebaseUser> authenticatedUserLiveData = new MutableLiveData<>();
-    public FirebaseAuth auth;
+    public FirebaseAuth auth = FirebaseAuth.getInstance();
     private OAuthProvider.Builder provider;
 
     private static String TAG = "LoginViewModel";
@@ -41,6 +43,40 @@ public class LoginViewModel extends AndroidViewModel {
         super(application);
     }
 
+
+    public void createFirebaseAccountWithEmailAndPassword(String email, String password, OnFailureListener onFailureListener) {
+        auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    authenticatedUserLiveData.postValue(task.getResult().getUser());
+                    Log.d(TAG, "firebaseAuth Success");
+                } else {
+                    onFailureListener.onFailure(task.getException());
+                    // If sign in fails, display a message to the user.
+                    Log.w(TAG, "createAccountWithCredential:failure", task.getException());
+                }
+            }
+        });
+
+    }
+
+    public void signInWithEmailAndPassword(String email, String password, OnFailureListener onFailureListener) {
+        auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    authenticatedUserLiveData.postValue(task.getResult().getUser());
+                    Log.d(TAG, "firebaseAuth Success");
+                } else {
+                    onFailureListener.onFailure(task.getException());
+                    // If sign in fails, display a message to the user.
+                    Log.w(TAG, "signInWithCredential:failure", task.getException());
+                }
+            }
+        });
+
+    }
 
     private void firebaseAuthWithFacebook(AccessToken token) {
         Log.d(TAG, "handleFacebookAccessToken:" + token);

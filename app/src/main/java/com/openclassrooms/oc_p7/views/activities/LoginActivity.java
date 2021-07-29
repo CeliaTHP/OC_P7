@@ -23,7 +23,6 @@ import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.databinding.ActivityLoginBinding;
 import com.openclassrooms.oc_p7.services.firestore_helpers.UserHelper;
 import com.openclassrooms.oc_p7.view_models.LoginViewModel;
-import com.openclassrooms.oc_p7.views.dialogs.LoginDialog;
 
 import java.util.Arrays;
 
@@ -115,9 +114,9 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void signInWithUsername() {
-        //  loginViewModel.getUsernameAccount();
-        LoginDialog.showDialog(this, false).show();
-
+        // loginViewModel.getUsernameAccount();
+        Intent intent = new Intent(LoginActivity.this, LoginWithUsernameActivity.class);
+        startActivity(intent);
     }
 
 

@@ -16,6 +16,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.openclassrooms.oc_p7.models.Restaurant;
 import com.openclassrooms.oc_p7.repositories.PlaceRepository;
+import com.openclassrooms.oc_p7.repositories.WorkmateRepository;
 
 import java.util.List;
 
@@ -25,23 +26,43 @@ public class MapViewModel extends ViewModel {
     private PlaceRepository placeRepository;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private LifecycleOwner lifecycleOwner;
+    private WorkmateRepository workmateRepository;
 
 
     public MutableLiveData<List<Restaurant>> restaurantLiveData;
     // public MutableLiveData<List<RestaurantPojo>> nearbyPlacesLiveData;
     public MutableLiveData<Location> currentLocationLiveData;
 
-    public MapViewModel(PlaceRepository placeRepository, FusedLocationProviderClient fusedLocationProviderClient, LifecycleOwner lifecycleOwner) {
+    public MapViewModel(PlaceRepository placeRepository, WorkmateRepository workmateRepository, FusedLocationProviderClient fusedLocationProviderClient, LifecycleOwner lifecycleOwner) {
         this.placeRepository = placeRepository;
         this.fusedLocationProviderClient = fusedLocationProviderClient;
         this.lifecycleOwner = lifecycleOwner;
-        this.restaurantLiveData = placeRepository.restaurantLiveData;
+        this.restaurantLiveData = new MutableLiveData();
 
         currentLocationLiveData = placeRepository.currentLocationLiveData;
 
-        placeRepository.restaurantLiveData.observe(lifecycleOwner, restaurantList -> {
-            for (Restaurant restaurant : restaurantList)
-                Log.d(TAG, "observer : " + restaurant.toString());
+        placeRepository.restaurantLiveData.observe(this.lifecycleOwner, restaurantList -> {
+            restaurantLiveData.postValue(restaurantList);
+            Log.d(TAG, restaurantList + " ");
+            for (Restaurant restaurant : restaurantList) {
+                placeRepository.getRestaurantDetails(restaurant, new OnSuccessListener() {
+                    @Override
+                    public void onSuccess(Object o) {
+                        //causes loop ?
+                        restaurantLiveData.postValue(restaurantList);
+
+                    }
+                });
+                workmateRepository.getWorkmatesForRestaurant(restaurant, new OnSuccessListener() {
+                    @Override
+                    public void onSuccess(Object o) {
+                        //causes loop ?
+                        restaurantLiveData.postValue(restaurantList);
+
+                    }
+                });
+
+            }
 
 
         });
@@ -66,11 +87,6 @@ public class MapViewModel extends ViewModel {
                 placeRepository.getNearbyPlaces(location);
             }
         });
-
-    }
-
-    public void getRestaurantDetails(Restaurant restaurant, OnSuccessListener onSuccessListener) {
-        placeRepository.getRestaurantDetails(restaurant, onSuccessListener);
 
     }
 

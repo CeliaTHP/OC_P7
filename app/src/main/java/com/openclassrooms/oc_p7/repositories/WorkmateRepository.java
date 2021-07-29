@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -66,9 +67,8 @@ public class WorkmateRepository {
                 .addOnFailureListener(e -> Log.d(TAG, "onFailure"));
     }
 
-    public void getWorkmatesForRestaurant(Restaurant restaurant) {
+    public void getWorkmatesForRestaurant(Restaurant restaurant, OnSuccessListener onSuccessListener) {
         //FILTER VIA FIREBASE
-
         List<Workmate> workmatesFiltered = new ArrayList<>();
         WorkmateHelper.getWorkmatesForRestaurant(restaurant.getId()).addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -78,7 +78,9 @@ public class WorkmateRepository {
                         workmatesFiltered.add(documentSnapshot.toObject(Workmate.class));
                         Log.d(TAG, "workmateForRestaurant : " + documentSnapshot.getData());
                     }
-                    workmateForRestaurantListLiveData.postValue(workmatesFiltered);
+                    //UPDATE RESTAURANTLIVEDATA
+                    restaurant.setAttendees(workmatesFiltered);
+                    onSuccessListener.onSuccess(workmatesFiltered);
 
                 }
             }

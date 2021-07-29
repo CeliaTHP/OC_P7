@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -73,12 +74,22 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
     public void setHeaderInfos() {
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             Log.d(TAG, "email " + FirebaseAuth.getInstance().getCurrentUser().getEmail());
-            drawerHeaderBinding.sideMenuName.setText(getString(R.string.drawer_header_name, FirebaseAuth.getInstance().getCurrentUser().getDisplayName()));
-            drawerHeaderBinding.sideMenuEmail.setText(getString(R.string.drawer_header_email, FirebaseAuth.getInstance().getCurrentUser().getEmail()));
-            Glide.with(this)
-                    .load(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl())
-                    .centerCrop()
-                    .into(drawerHeaderBinding.sideMenuPicture);
+            if (FirebaseAuth.getInstance().getCurrentUser().getDisplayName() != null) {
+                drawerHeaderBinding.sideMenuName.setVisibility(View.VISIBLE);
+                drawerHeaderBinding.sideMenuName.setText(getString(R.string.drawer_header_name, FirebaseAuth.getInstance().getCurrentUser().getDisplayName()));
+
+            }
+            if (FirebaseAuth.getInstance().getCurrentUser().getEmail() != null) {
+                drawerHeaderBinding.sideMenuEmail.setVisibility(View.VISIBLE);
+                drawerHeaderBinding.sideMenuEmail.setText(getString(R.string.drawer_header_email, FirebaseAuth.getInstance().getCurrentUser().getEmail()));
+
+            }
+            if (FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl() != null) {
+                Glide.with(this)
+                        .load(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl())
+                        .centerCrop()
+                        .into(drawerHeaderBinding.sideMenuPicture);
+            }
         } else {
             Log.d(TAG, "User null");
         }
