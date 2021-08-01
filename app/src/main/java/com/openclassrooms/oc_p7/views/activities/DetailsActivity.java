@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.openclassrooms.oc_p7.R;
+import com.openclassrooms.oc_p7.callbacks.OnWorkmateClickListener;
 import com.openclassrooms.oc_p7.databinding.ActivityDetailsBinding;
 import com.openclassrooms.oc_p7.injections.Injection;
 import com.openclassrooms.oc_p7.models.Restaurant;
@@ -135,7 +136,12 @@ public class DetailsActivity extends BaseActivity {
 
     private void initRecyclerView(List<Workmate> workmateList) {
         if (workmateList != null) {
-            activityDetailsBinding.detailsRestaurantWorkmatesRv.setAdapter(new WorkmateAdapter(workmateList, true));
+            activityDetailsBinding.detailsRestaurantWorkmatesRv.setAdapter(new WorkmateAdapter(workmateList, true, new OnWorkmateClickListener() {
+                @Override
+                public void onWorkmateClick(Workmate workmate) {
+
+                }
+            }));
             activityDetailsBinding.detailsRestaurantWorkmatesRv.setLayoutManager(new LinearLayoutManager(this));
             if (activityDetailsBinding.detailsRestaurantWorkmatesRv.getAdapter().getItemCount() < 1)
                 activityDetailsBinding.detailsEmptyList.setVisibility(View.VISIBLE);

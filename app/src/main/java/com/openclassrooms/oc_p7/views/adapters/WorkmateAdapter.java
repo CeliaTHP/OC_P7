@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.openclassrooms.oc_p7.R;
+import com.openclassrooms.oc_p7.callbacks.OnWorkmateClickListener;
 import com.openclassrooms.oc_p7.databinding.ItemLayoutWorkmatesBinding;
 import com.openclassrooms.oc_p7.models.Workmate;
 
@@ -18,10 +19,13 @@ public class WorkmateAdapter extends RecyclerView.Adapter<WorkmateViewHolder.Vie
 
     private List<Workmate> workmateList;
     private Boolean inDetails;
+    private final OnWorkmateClickListener onWorkmateClickListener;
 
-    public WorkmateAdapter(List<Workmate> workmateList, Boolean inDetails) {
+
+    public WorkmateAdapter(List<Workmate> workmateList, Boolean inDetails, OnWorkmateClickListener onWorkmateClickListener) {
         this.workmateList = workmateList;
         this.inDetails = inDetails;
+        this.onWorkmateClickListener = onWorkmateClickListener;
     }
 
     @NonNull
@@ -53,7 +57,11 @@ public class WorkmateAdapter extends RecyclerView.Adapter<WorkmateViewHolder.Vie
                     .into(holder.itemLayoutWorkmatesBinding.workmatePic);
         }
 
+        holder.itemLayoutWorkmatesBinding.getRoot().setOnClickListener(v -> onWorkmateClickListener.onWorkmateClick(workmate));
+
+
     }
+
 
     @Override
     public int getItemCount() {
