@@ -67,7 +67,7 @@ public class WorkmateRepository {
                 .addOnFailureListener(e -> Log.d(TAG, "onFailure"));
     }
 
-    public void getWorkmatesForRestaurant(Restaurant restaurant, OnSuccessListener onSuccessListener) {
+    public void getWorkmatesForRestaurant(Restaurant restaurant, OnSuccessListener<Restaurant> onSuccessListener) {
         //FILTER VIA FIREBASE
         List<Workmate> workmatesFiltered = new ArrayList<>();
         WorkmateHelper.getWorkmatesForRestaurant(restaurant.getId()).addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -75,17 +75,52 @@ public class WorkmateRepository {
             public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                        workmatesFiltered.add(documentSnapshot.toObject(Workmate.class));
-                        Log.d(TAG, "workmateForRestaurant : " + documentSnapshot.getData());
+                        Workmate workmateToAdd = documentSnapshot.toObject(Workmate.class);
+                        workmatesFiltered.add(workmateToAdd);
+                        Log.d(TAG, "added : " + workmateToAdd.getName() + " to " + restaurant.getName());
                     }
                     //UPDATE RESTAURANTLIVEDATA
+                    Log.d(TAG, "workmateForRestaurant  : " + restaurant.getName() + "=" + workmatesFiltered);
+
                     restaurant.setAttendees(workmatesFiltered);
-                    onSuccessListener.onSuccess(workmatesFiltered);
+                    onSuccessListener.onSuccess(restaurant);
+
+                    Log.d(TAG, restaurant.toString());
 
                 }
             }
+
         });
+
     }
+
+    public void getWorkmatesForRestaurantsList(List<Restaurant> restaurantList, OnSuccessListener<List<Restaurant>> onSuccessListener) {
+        //FILTER VIA FIREBASE
+        for (Restaurant restaurant : restaurantList) {
+            List<Workmate> workmatesFiltered = new ArrayList<>();
+            WorkmateHelper.getWorkmatesForRestaurant(restaurant.getId()).addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                            Workmate workmateToAdd = documentSnapshot.toObject(Workmate.class);
+                            workmatesFiltered.add(workmateToAdd);
+                            Log.d(TAG, "withList added : " + workmateToAdd.getName() + " to " + restaurant.getName());
+                        }
+                        //UPDATE RESTAURANTLIVEDATA
+                        Log.d(TAG, "withList workmateForRestaurant : " + workmatesFiltered);
+
+                        restaurant.setAttendees(workmatesFiltered);
+                        onSuccessListener.onSuccess(restaurantList);
+
+                    }
+                }
+
+            });
+        }
+    }
+
+
 /*
         for (Workmate workmate : workmateList) {
             if (workmate.getRestaurantId() != null) {

@@ -59,21 +59,26 @@ public class DetailsActivity extends BaseActivity {
 
     private void initExtras(Intent intent) {
         if (intent.getStringExtra("restaurantId") != null) {
-            detailsViewModel.getWorkmatesForRestaurant(new Restaurant(intent.getStringExtra("restaurantId"), null, null, 0.0, 0.0), new OnSuccessListener() {
-                @Override
-                public void onSuccess(Object o) {
+            restaurant = new Restaurant(intent.getStringExtra("restaurantId"), null, null, 0.0, 0.0);
 
-                }
-            });
-            detailsViewModel.getRestaurantDetails(intent.getStringExtra("restaurantId"), new OnSuccessListener() {
+            detailsViewModel.getRestaurantDetails(restaurant.getId(), new OnSuccessListener() {
                 @Override
                 public void onSuccess(Object o) {
                     Log.d(TAG, "onSuccess initExtra");
                     restaurant = (Restaurant) o;
-                    initUI((Restaurant) o);
+                    detailsViewModel.getWorkmatesForRestaurant(restaurant, new OnSuccessListener() {
+                        @Override
+                        public void onSuccess(Object o) {
+                            restaurant = (Restaurant) o;
+                            Log.d(TAG, restaurant.toString());
+                            initUI(restaurant);
 
+                        }
+                    });
                 }
             });
+
+
         }
     }
 
@@ -104,6 +109,7 @@ public class DetailsActivity extends BaseActivity {
             }
         });
 
+        initRecyclerView(restaurant.getAttendees());
         initSlider();
 
 
@@ -128,18 +134,18 @@ public class DetailsActivity extends BaseActivity {
     }
 
     private void initRecyclerView(List<Workmate> workmateList) {
-        activityDetailsBinding.detailsRestaurantWorkmatesRv.setAdapter(new WorkmateAdapter(workmateList, true));
-        activityDetailsBinding.detailsRestaurantWorkmatesRv.setLayoutManager(new LinearLayoutManager(this));
-        if (activityDetailsBinding.detailsRestaurantWorkmatesRv.getAdapter().getItemCount() < 1)
-            activityDetailsBinding.detailsEmptyList.setVisibility(View.VISIBLE);
+        if (workmateList != null) {
+            activityDetailsBinding.detailsRestaurantWorkmatesRv.setAdapter(new WorkmateAdapter(workmateList, true));
+            activityDetailsBinding.detailsRestaurantWorkmatesRv.setLayoutManager(new LinearLayoutManager(this));
+            if (activityDetailsBinding.detailsRestaurantWorkmatesRv.getAdapter().getItemCount() < 1)
+                activityDetailsBinding.detailsEmptyList.setVisibility(View.VISIBLE);
+        } else {
+            Log.d(TAG, "emptyWorkmateList");
+        }
     }
 
     private void initObservers() {
 
-        detailsViewModel.workmateForRestaurantListLiveData.observe(this, workmateForRestaurantList -> {
-            initRecyclerView(workmateForRestaurantList);
-            Log.d(TAG, "workmateForRestaurantListLiveData" + workmateForRestaurantList.size());
-        });
 
     }
 

@@ -40,7 +40,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
 
@@ -51,7 +50,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private WorkmateViewModel workmateViewModel;
 
     private ArrayList<RestaurantPojo> nearbyPlaceList = new ArrayList<>();
-    private List<String> placeIdList = new ArrayList<>();
 
     private FragmentMapBinding fragmentMapBinding;
     private MapView mapView;
@@ -135,7 +133,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 //getDetails
                 if (googleMap != null) {
                     LatLng latLng = new LatLng(restaurant.getLat(), restaurant.getLng());
-                    if (placeIdList.contains(restaurant.getId())) {
+                    if (restaurant.getAttendees() != null && restaurant.getAttendees().size() >= 1) {
                         googleMap.addMarker(new MarkerOptions().position(latLng).title(restaurant.getName()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
                         Log.d(TAG, "a workmate chosed : " + restaurant.getName());
                     } else

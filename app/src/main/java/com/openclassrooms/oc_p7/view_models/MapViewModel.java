@@ -49,10 +49,12 @@ public class MapViewModel extends ViewModel {
                     @Override
                     public void onSuccess(Object o) {
                         //causes loop ?
+                        Log.d(TAG, o.toString());
                         restaurantLiveData.postValue(restaurantList);
 
                     }
                 });
+                /*
                 workmateRepository.getWorkmatesForRestaurant(restaurant, new OnSuccessListener() {
                     @Override
                     public void onSuccess(Object o) {
@@ -61,8 +63,15 @@ public class MapViewModel extends ViewModel {
 
                     }
                 });
+                 */
 
             }
+            workmateRepository.getWorkmatesForRestaurantsList(restaurantList, new OnSuccessListener<List<Restaurant>>() {
+                @Override
+                public void onSuccess(List<Restaurant> restaurantList) {
+                    restaurantLiveData.postValue(restaurantList);
+                }
+            });
 
 
         });
