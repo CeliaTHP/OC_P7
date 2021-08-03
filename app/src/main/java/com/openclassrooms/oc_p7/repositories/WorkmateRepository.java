@@ -25,7 +25,6 @@ public class WorkmateRepository {
     private String TAG = "WorkmateRepository";
 
     public MutableLiveData<List<Workmate>> workmateListLiveData = new MutableLiveData<>();
-    public MutableLiveData<List<String>> workmatePlaceIdListLiveData = new MutableLiveData<>();
     public MutableLiveData<List<Workmate>> workmateForRestaurantListLiveData = new MutableLiveData<>();
 
 
@@ -62,7 +61,6 @@ public class WorkmateRepository {
                     Log.d(TAG, "workmatePlaceIdList  : " + workmatePlaceIdList + "");
 
                     workmateListLiveData.postValue(workmateList);
-                    workmatePlaceIdListLiveData.postValue(workmatePlaceIdList);
                 })
                 .addOnFailureListener(e -> Log.d(TAG, "onFailure"));
     }

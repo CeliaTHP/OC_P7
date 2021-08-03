@@ -54,16 +54,6 @@ public class MapViewModel extends ViewModel {
 
                     }
                 });
-                /*
-                workmateRepository.getWorkmatesForRestaurant(restaurant, new OnSuccessListener() {
-                    @Override
-                    public void onSuccess(Object o) {
-                        //causes loop ?
-                        restaurantLiveData.postValue(restaurantList);
-
-                    }
-                });
-                 */
 
             }
             workmateRepository.getWorkmatesForRestaurantsList(restaurantList, new OnSuccessListener<List<Restaurant>>() {

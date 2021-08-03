@@ -50,7 +50,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
-                android:textSize="16sp"
+                android:textSize="18sp"
                 android:visibility="gone"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@id/side_menu_picture"
@@ -65,7 +65,7 @@
                 android:visibility="gone"
                 android:text="@string/drawer_header_email"
                 android:textColor="@color/white"
-                android:textSize="12sp"
+                android:textSize="16sp"
                 app:layout_constraintStart_toEndOf="@id/side_menu_picture"
                 app:layout_constraintTop_toBottomOf="@id/side_menu_name" />
 
