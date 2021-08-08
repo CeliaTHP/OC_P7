@@ -108,8 +108,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick locationButton");
-                LatLng currentLatLng = new LatLng(mapViewModel.currentLocationLiveData.getValue().getLatitude(), mapViewModel.currentLocationLiveData.getValue().getLongitude());
-                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 14));
+                if (mapViewModel.currentLocationLiveData.getValue() != null) {
+                    LatLng currentLatLng = new LatLng(mapViewModel.currentLocationLiveData.getValue().getLatitude(), mapViewModel.currentLocationLiveData.getValue().getLongitude());
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 14));
+                }
+
             }
         });
 

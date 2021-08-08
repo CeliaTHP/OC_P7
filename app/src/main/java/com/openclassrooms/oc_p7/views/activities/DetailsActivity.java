@@ -20,6 +20,7 @@ import com.openclassrooms.oc_p7.injections.Injection;
 import com.openclassrooms.oc_p7.models.Restaurant;
 import com.openclassrooms.oc_p7.models.Workmate;
 import com.openclassrooms.oc_p7.services.factories.DetailViewModelFactory;
+import com.openclassrooms.oc_p7.services.firestore_helpers.FavoriteHelper;
 import com.openclassrooms.oc_p7.services.firestore_helpers.UserHelper;
 import com.openclassrooms.oc_p7.view_models.DetailsViewModel;
 import com.openclassrooms.oc_p7.views.adapters.SliderAdapter;
@@ -96,8 +97,17 @@ public class DetailsActivity extends BaseActivity {
         activityDetailsBinding.detailsRestaurantAddress.setText(restaurant.getAddress());
 
         //Setting the corresponding star
-        if (restaurant.getIsLiked())
-            activityDetailsBinding.detailsRestaurantLikePic.setImageResource(R.drawable.ic_star_details);
+        FavoriteHelper.getFavorite(restaurant).addOnSuccessListener(snapshot -> {
+            Log.d(TAG, snapshot.get("id") + " ");
+            if (snapshot.get("id") != null && snapshot.get("id").toString().equals(restaurant.getId())) {
+                restaurant.setIsLiked(true);
+                activityDetailsBinding.detailsRestaurantLikePic.setImageResource(R.drawable.ic_star_details);
+                Log.d(TAG, snapshot.get("id") + " is Fav ");
+            }
+
+        });
+
+
         //Setting the corresponding check
         UserHelper.getUser(FirebaseAuth.getInstance().getUid()).addOnSuccessListener(snapshot -> {
             if (snapshot.get("restaurantId") != null) {
@@ -192,9 +202,11 @@ public class DetailsActivity extends BaseActivity {
                 if (!restaurant.getIsLiked()) {
                     restaurant.setIsLiked(true);
                     activityDetailsBinding.detailsRestaurantLikePic.setImageResource(R.drawable.ic_star_details);
+                    FavoriteHelper.addFavorite(restaurant);
                 } else {
                     restaurant.setIsLiked(false);
                     activityDetailsBinding.detailsRestaurantLikePic.setImageResource(R.drawable.ic_star_details_not_full);
+                    FavoriteHelper.deleteFavorite(restaurant);
                 }
 
             }
