@@ -16,7 +16,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 public class DetailsViewModelTests {
 
-    //https://www.eclemma.org/jacoco/
     private DetailsViewModel detailsViewModel;
 
     private WorkmateRepository workmateRepositoryMock = Mockito.mock(WorkmateRepository.class);
@@ -39,8 +38,15 @@ public class DetailsViewModelTests {
     }
 
     @Test
-    public void constructorTest() {
+    public void getRestaurantDetails() {
+        Restaurant expectedRestaurant = Mockito.mock(Restaurant.class);
+        OnSuccessListener<Restaurant> expectedOnSuccessListener = Mockito.mock(OnSuccessListener.class);
 
+        detailsViewModel.getRestaurantDetails(expectedRestaurant.getId(), expectedOnSuccessListener);
+
+        Mockito.verify(placeRepositoryMock).getRestaurantDetails(expectedRestaurant, expectedOnSuccessListener);
+        Mockito.verifyNoMoreInteractions(placeRepositoryMock);
     }
+
 
 }

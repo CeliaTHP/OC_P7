@@ -30,28 +30,30 @@ public class MapViewModel extends ViewModel {
 
 
     public MutableLiveData<List<Restaurant>> restaurantLiveData;
-    // public MutableLiveData<List<RestaurantPojo>> nearbyPlacesLiveData;
     public MutableLiveData<Location> currentLocationLiveData;
 
     public MapViewModel(PlaceRepository placeRepository, WorkmateRepository workmateRepository, FusedLocationProviderClient fusedLocationProviderClient, LifecycleOwner lifecycleOwner) {
         this.placeRepository = placeRepository;
+        this.workmateRepository = workmateRepository;
         this.fusedLocationProviderClient = fusedLocationProviderClient;
         this.lifecycleOwner = lifecycleOwner;
         this.restaurantLiveData = new MutableLiveData();
+        this.currentLocationLiveData = placeRepository.currentLocationLiveData;
 
-        currentLocationLiveData = placeRepository.currentLocationLiveData;
+        loadMap();
 
-        placeRepository.restaurantLiveData.observe(this.lifecycleOwner, restaurantList -> {
+    }
+
+    public void loadMap() {
+
+        placeRepository.getRestaurantLiveData().observe(this.lifecycleOwner, restaurantList -> {
             restaurantLiveData.postValue(restaurantList);
-            Log.d(TAG, restaurantList + " ");
             for (Restaurant restaurant : restaurantList) {
                 placeRepository.getRestaurantDetails(restaurant, new OnSuccessListener() {
                     @Override
                     public void onSuccess(Object o) {
-                        //causes loop ?
                         Log.d(TAG, o.toString());
                         restaurantLiveData.postValue(restaurantList);
-
                     }
                 });
 
@@ -65,6 +67,7 @@ public class MapViewModel extends ViewModel {
 
 
         });
+
     }
 
     public void getLocationInformations(Context context) {

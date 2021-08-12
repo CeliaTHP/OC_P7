@@ -105,6 +105,7 @@ public class DetailsActivity extends BaseActivity {
                 Log.d(TAG, snapshot.get("id") + " is Fav ");
             }
 
+
         });
 
 

@@ -3,6 +3,7 @@ package com.openclassrooms.oc_p7.repositories;
 import android.location.Location;
 import android.util.Log;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -36,18 +37,17 @@ public class PlaceRepository {
     private ArrayList<Restaurant> restaurantList = new ArrayList<>();
 
 
-    public MutableLiveData<List<Restaurant>> restaurantLiveData = new MutableLiveData<>();
+    private MutableLiveData<List<Restaurant>> restaurantLiveData = new MutableLiveData<>();
 
     public MutableLiveData<Location> currentLocationLiveData = new MutableLiveData<>();
     private int count = 0;
 
 
-    public void getNearbyPlaces(Location location) {
-        Log.d("COUNT", count + " ");
-        count++;
-        //String fakeLocation = "49.024979226793775,2.463881854135891";
-//        String location = currentLocationLiveData.getValue().getLatitude() + "," + currentLocationLiveData.getValue().getLongitude();
+    public LiveData<List<Restaurant>> getRestaurantLiveData() {
+        return restaurantLiveData;
+    }
 
+    public void getNearbyPlaces(Location location) {
         String radiusQuery = MyApplication.getInstance().getApplicationContext().getString(R.string.query_radius);
         String restaurantQuery = MyApplication.getInstance().getApplicationContext().getString(R.string.query_restaurant);
 
@@ -60,11 +60,8 @@ public class PlaceRepository {
                 placeList.addAll(response.body().restaurantPojos);
                 for (RestaurantPojo restaurantPojo : placeList) {
                     Restaurant restaurant = createRestaurant(restaurantPojo);
-                    Log.d(TAG, restaurant.toString());
                     restaurantList.add(restaurant);
                 }
-                // nearbyPlacesLiveData.postValue(placeList);
-                Log.d(TAG, "size : " + restaurantList.size());
                 restaurantLiveData.postValue(restaurantList);
 
             }
@@ -84,7 +81,6 @@ public class PlaceRepository {
             @Override
             public void onResponse(Call<DetailsPlaceResponse> call, Response<DetailsPlaceResponse> response) {
                 setRestaurantInfos(response.body().result, restaurant, onSuccessListener);
-                //setAttendees with firebase count
             }
 
             @Override

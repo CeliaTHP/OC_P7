@@ -25,12 +25,8 @@ public class WorkmateRepository {
     private String TAG = "WorkmateRepository";
 
     public MutableLiveData<List<Workmate>> workmateListLiveData = new MutableLiveData<>();
-    public MutableLiveData<List<Workmate>> workmateForRestaurantListLiveData = new MutableLiveData<>();
 
-
-    private ArrayList<String> workmatePlaceIdList = new ArrayList<>();
     private ArrayList<Workmate> workmateList = new ArrayList<>();
-    private ArrayList<Workmate> workmateForRestaurantList = new ArrayList<>();
 
 
     public void getWorkmateList() {
@@ -52,13 +48,11 @@ public class WorkmateRepository {
                         if (snapshot.get("restaurantName") != null && snapshot.get("restaurantId") != null) {
                             workmate.setRestaurantName(snapshot.get("restaurantName").toString());
                             workmate.setRestaurantId(snapshot.get("restaurantId").toString());
-                            workmatePlaceIdList.add(workmate.getRestaurantId());
                             Log.d(TAG, "restaurant : " + workmate.getRestaurantId());
                         }
                         workmateList.add(workmate);
                     }
                     Log.d(TAG, "workmateList  : " + workmateList + "");
-                    Log.d(TAG, "workmatePlaceIdList  : " + workmatePlaceIdList + "");
 
                     workmateListLiveData.postValue(workmateList);
                 })
