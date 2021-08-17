@@ -63,7 +63,7 @@ public class DetailsActivity extends BaseActivity {
         if (intent.getStringExtra("restaurantId") != null) {
             restaurant = new Restaurant(intent.getStringExtra("restaurantId"), null, null, 0.0, 0.0);
 
-            detailsViewModel.getRestaurantDetails(restaurant.getId(), new OnSuccessListener() {
+            detailsViewModel.getRestaurantDetails(restaurant.getId(), restaurant, new OnSuccessListener() {
                 @Override
                 public void onSuccess(Object o) {
                     Log.d(TAG, "onSuccess initExtra");

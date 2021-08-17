@@ -45,11 +45,14 @@ public class MapViewModel extends ViewModel {
     }
 
     public void loadMap() {
+        Log.d(TAG, "loadMap " + placeRepository.getRestaurantLiveData().getValue());
 
         placeRepository.getRestaurantLiveData().observe(this.lifecycleOwner, restaurantList -> {
+            Log.d(TAG, "restaurantLiveData = " + restaurantList);
             restaurantLiveData.postValue(restaurantList);
+
             for (Restaurant restaurant : restaurantList) {
-                placeRepository.getRestaurantDetails(restaurant, new OnSuccessListener() {
+                placeRepository.getRestaurantDetails(restaurant.getId(), restaurant, new OnSuccessListener() {
                     @Override
                     public void onSuccess(Object o) {
                         Log.d(TAG, o.toString());

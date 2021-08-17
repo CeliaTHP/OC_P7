@@ -17,7 +17,6 @@ public class DetailsViewModel extends ViewModel {
     private PlaceRepository placeRepository;
 
 
-
     public DetailsViewModel(WorkmateRepository workmateRepository, PlaceRepository placeRepository) {
         this.workmateRepository = workmateRepository;
         this.placeRepository = placeRepository;
@@ -27,8 +26,8 @@ public class DetailsViewModel extends ViewModel {
         workmateRepository.getWorkmatesForRestaurant(restaurant, onSuccessListener);
     }
 
-    public void getRestaurantDetails(String restaurantId, OnSuccessListener onSuccessListener) {
-        placeRepository.getRestaurantDetails(new Restaurant(restaurantId, null, null, 0.0, 0.0), onSuccessListener);
+    public void getRestaurantDetails(String restaurantId, Restaurant restaurant, OnSuccessListener onSuccessListener) {
+        placeRepository.getRestaurantDetails(restaurantId, restaurant, onSuccessListener);
     }
 
 

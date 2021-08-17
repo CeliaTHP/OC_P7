@@ -51,7 +51,7 @@ public class PlaceRepository {
         String radiusQuery = MyApplication.getInstance().getApplicationContext().getString(R.string.query_radius);
         String restaurantQuery = MyApplication.getInstance().getApplicationContext().getString(R.string.query_restaurant);
 
-        String locationStringQuery = String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude());
+        String locationStringQuery = location.getLatitude() + "," + location.getLongitude();
 
         Call<NearbyPlaceResponse> call = placesApi.getNearbyPlaces(BuildConfig.GoogleMapApiKey, locationStringQuery, radiusQuery, restaurantQuery);
         call.enqueue(new Callback<NearbyPlaceResponse>() {
@@ -62,6 +62,8 @@ public class PlaceRepository {
                     Restaurant restaurant = createRestaurant(restaurantPojo);
                     restaurantList.add(restaurant);
                 }
+                Log.d(TAG, "getNearbyPlaces restaurantList =  " + restaurantList);
+
                 restaurantLiveData.postValue(restaurantList);
 
             }
@@ -74,10 +76,10 @@ public class PlaceRepository {
         });
     }
 
-    public void getRestaurantDetails(Restaurant restaurant, OnSuccessListener onSuccessListener) {
+    public void getRestaurantDetails(String restaurantId, Restaurant restaurant, OnSuccessListener onSuccessListener) {
         Log.d("COUNT", count + " ");
         count++;
-        placesApi.getDetailsById(BuildConfig.GoogleMapApiKey, restaurant.getId()).enqueue(new Callback<DetailsPlaceResponse>() {
+        placesApi.getDetailsById(BuildConfig.GoogleMapApiKey, restaurantId).enqueue(new Callback<DetailsPlaceResponse>() {
             @Override
             public void onResponse(Call<DetailsPlaceResponse> call, Response<DetailsPlaceResponse> response) {
                 setRestaurantInfos(response.body().result, restaurant, onSuccessListener);
@@ -88,9 +90,9 @@ public class PlaceRepository {
                 Log.d(TAG, "onFailure: " + t.getMessage());
 
             }
+
         });
 
-        Log.d(TAG, "getRestaurantDetails for " + restaurant.getName());
     }
 
     private Restaurant createRestaurant(RestaurantPojo restaurantPojo) {

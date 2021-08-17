@@ -42,9 +42,9 @@ public class DetailsViewModelTests {
         Restaurant expectedRestaurant = Mockito.mock(Restaurant.class);
         OnSuccessListener<Restaurant> expectedOnSuccessListener = Mockito.mock(OnSuccessListener.class);
 
-        detailsViewModel.getRestaurantDetails(expectedRestaurant.getId(), expectedOnSuccessListener);
+        detailsViewModel.getRestaurantDetails(expectedRestaurant.getId(), expectedRestaurant, expectedOnSuccessListener);
 
-        Mockito.verify(placeRepositoryMock).getRestaurantDetails(expectedRestaurant, expectedOnSuccessListener);
+        Mockito.verify(placeRepositoryMock).getRestaurantDetails(expectedRestaurant.getId(), expectedRestaurant, expectedOnSuccessListener);
         Mockito.verifyNoMoreInteractions(placeRepositoryMock);
     }
 
