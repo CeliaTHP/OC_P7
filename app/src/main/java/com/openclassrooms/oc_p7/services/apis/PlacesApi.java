@@ -23,8 +23,5 @@ public interface PlacesApi {
             @Query("place_id") String placeId
     );
 
-    //get details with id from workmate_table
-    //save workmate
-
 
 }

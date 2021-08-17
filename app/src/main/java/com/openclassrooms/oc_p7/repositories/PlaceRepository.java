@@ -10,7 +10,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.openclassrooms.oc_p7.BuildConfig;
 import com.openclassrooms.oc_p7.MyApplication;
 import com.openclassrooms.oc_p7.R;
-import com.openclassrooms.oc_p7.injections.Injection;
 import com.openclassrooms.oc_p7.models.Restaurant;
 import com.openclassrooms.oc_p7.models.pojo_models.details.DetailsPlaceResponse;
 import com.openclassrooms.oc_p7.models.pojo_models.details.RestaurantDetailsPojo;
@@ -28,7 +27,12 @@ import retrofit2.Response;
 
 public class PlaceRepository {
 
-    private PlacesApi placesApi = Injection.provideApiClient();
+    private PlacesApi placesApi;
+
+
+    public PlaceRepository(PlacesApi placesApi) {
+        this.placesApi = placesApi;
+    }
 
 
     private String TAG = "PlaceRepository";

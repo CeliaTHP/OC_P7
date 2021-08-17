@@ -19,7 +19,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class Injection {
 
     public static PlaceRepository providePlaceRepository() {
-        return new PlaceRepository();
+        return new PlaceRepository(Injection.provideApiClient());
     }
 
     public static WorkmateRepository provideWorkmateRepository(Context context) {

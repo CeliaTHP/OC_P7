@@ -128,6 +128,15 @@ dependencies {
         exclude group: 'org.mockito', module: 'mockito-core'
     }
 
+    //for retrofit.
+    implementation 'com.squareup.retrofit2:retrofit:2.7.1'
+    implementation 'com.squareup.retrofit2:converter-gson:2.7.1'
+    implementation 'android.arch.lifecycle:extensions:1.1.1'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
+
+    //for testing retrofit.
+    testImplementation("com.squareup.okhttp3:mockwebserver:4.7.2")
+
     /*
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'

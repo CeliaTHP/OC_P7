@@ -40,12 +40,10 @@ public class MapViewModel extends ViewModel {
         this.restaurantLiveData = new MutableLiveData();
         this.currentLocationLiveData = placeRepository.currentLocationLiveData;
 
-        loadMap();
 
     }
 
     public void loadMap() {
-        Log.d(TAG, "loadMap " + placeRepository.getRestaurantLiveData().getValue());
 
         placeRepository.getRestaurantLiveData().observe(this.lifecycleOwner, restaurantList -> {
             Log.d(TAG, "restaurantLiveData = " + restaurantList);
@@ -74,6 +72,7 @@ public class MapViewModel extends ViewModel {
     }
 
     public void getLocationInformations(Context context) {
+        loadMap();
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
