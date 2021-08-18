@@ -60,8 +60,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private GoogleMap googleMap;
 
-    private Boolean shouldReload = false;
-
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -131,14 +129,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         });
 
         mapViewModel.restaurantLiveData.observe(getViewLifecycleOwner(), restaurantList -> {
-            Log.d(TAG, "restaurantLiveData observer : " + restaurantList);
+            Log.d(TAG, "NEW_FRAGMENT : " + restaurantList.size() + restaurantList);
             for (Restaurant restaurant : restaurantList) {
+                Log.d(TAG, "NEW_FRAGMENT : " + restaurant.toString());
+
                 //getDetails
                 if (googleMap != null) {
                     LatLng latLng = new LatLng(restaurant.getLat(), restaurant.getLng());
                     if (restaurant.getAttendees() != null && restaurant.getAttendees().size() >= 1) {
                         googleMap.addMarker(new MarkerOptions().position(latLng).title(restaurant.getName()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
-                        Log.d(TAG, "a workmate chosed : " + restaurant.getName());
+                        Log.d("NEW_FRAGMENT ", "a workmate chosed : " + restaurant.getName());
                     } else
                         googleMap.addMarker(new MarkerOptions().position(latLng).title(restaurant.getName()));
 
@@ -260,7 +260,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         Log.d(TAG, "Code : " + requestCode + " Permissions : " + Arrays.toString(permissions) + " result :" + Arrays.toString(grantResults));
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            shouldReload = true;
+            //called on Resume
         }
 
 
@@ -286,18 +286,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void onResume() {
         super.onResume();
         if (mapView != null) mapView.onResume();
-        verifyMapState();
         Log.d(TAG, "onResume");
-    }
-
-    public void verifyMapState() {
-        // if(shouldShowPermissionDialog) Dialog if user denied gps access
-
-        if (shouldReload) {
-            Log.d(TAG, "shouldReload");
-            refreshMap();
-            shouldReload = false;
-        }
     }
 
     @Override

@@ -74,7 +74,7 @@ public class MapViewModelTests {
         Mockito.verify(placeRepositoryMock.getRestaurantLiveData()).observe(lifecycleOwnerMock, Mockito.any());
 
  */
-        mapViewModel.loadMap();
+        mapViewModel.initObservers();
 
         //Mockito.verify(placeRepositoryMock.getRestaurantLiveData()).observe(lifecycleOwnerMock, Mockito.any());
 

@@ -59,8 +59,9 @@ public class WorkmateRepository {
                 .addOnFailureListener(e -> Log.d(TAG, "onFailure"));
     }
 
-    public void getWorkmatesForRestaurant(Restaurant restaurant, OnSuccessListener<Restaurant> onSuccessListener) {
+    public void setWorkmatesForRestaurant(Restaurant restaurant) {
         //FILTER VIA FIREBASE
+        Log.d("NEW_WK_REPO", "setWorkmatesForRestaurant : " + restaurant.toString());
         List<Workmate> workmatesFiltered = new ArrayList<>();
         WorkmateHelper.getWorkmatesForRestaurant(restaurant.getId()).addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -69,19 +70,16 @@ public class WorkmateRepository {
                     for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                         Workmate workmateToAdd = documentSnapshot.toObject(Workmate.class);
                         workmatesFiltered.add(workmateToAdd);
-                        Log.d(TAG, "added : " + workmateToAdd.getName() + " to " + restaurant.getName());
+                        Log.d("NEW_WK_REPO", "ADDED : " + workmateToAdd.getName() + " TO " + restaurant.getName());
                     }
                     //UPDATE RESTAURANTLIVEDATA
-                    Log.d(TAG, "workmateForRestaurant  : " + restaurant.getName() + "=" + workmatesFiltered);
+                    Log.d("NEW_WK_REPO", "workmateForRestaurant  : " + restaurant.getName() + "=" + workmatesFiltered);
 
                     restaurant.setAttendees(workmatesFiltered);
-                    onSuccessListener.onSuccess(restaurant);
-
-                    Log.d(TAG, restaurant.toString());
+                    Log.d("NEW_WK_REPO", "END  : " + restaurant.toString());
 
                 }
             }
-
         });
 
     }

@@ -31,7 +31,6 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
     private Location currentLocation;
     private Context context;
 
-    //TODO : RESTAURANT LIST !
     public RestaurantAdapter(List<Restaurant> restaurantList, Location currentLocation, OnRestaurantClickListener onRestaurantClickListener) {
         this.restaurantList = restaurantList;
         this.currentLocation = currentLocation;

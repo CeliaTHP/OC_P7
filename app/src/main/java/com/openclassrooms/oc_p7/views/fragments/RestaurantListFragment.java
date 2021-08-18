@@ -80,7 +80,7 @@ public class RestaurantListFragment extends Fragment implements OnRestaurantClic
 
     @Override
     public void onRestaurantClick(Restaurant restaurant) {
-        Log.d(TAG, "click on : " + restaurant.getName());
+        Log.d(TAG, "click on : " + restaurant.toString());
         Intent intent = new Intent(this.getActivity(), DetailsActivity.class);
         intent.putExtra("restaurantId", restaurant.getId());
         startActivity(intent);

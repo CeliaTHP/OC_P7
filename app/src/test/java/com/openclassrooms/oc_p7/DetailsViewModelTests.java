@@ -27,13 +27,12 @@ public class DetailsViewModelTests {
     }
 
     @Test
-    public void getWorkmateForRestaurantTests() {
+    public void setWorkmateForRestaurantTests() {
         Restaurant expectedRestaurant = Mockito.mock(Restaurant.class);
-        OnSuccessListener<Restaurant> expectedOnSuccessListener = Mockito.mock(OnSuccessListener.class);
 
-        detailsViewModel.getWorkmatesForRestaurant(expectedRestaurant, expectedOnSuccessListener);
+        detailsViewModel.setWorkmatesForRestaurant(expectedRestaurant);
 
-        Mockito.verify(workmateRepositoryMock).getWorkmatesForRestaurant(expectedRestaurant, expectedOnSuccessListener);
+        Mockito.verify(workmateRepositoryMock).setWorkmatesForRestaurant(expectedRestaurant);
         Mockito.verifyNoMoreInteractions(workmateRepositoryMock);
     }
 
@@ -43,9 +42,9 @@ public class DetailsViewModelTests {
         Restaurant expectedRestaurant = Mockito.mock(Restaurant.class);
         OnSuccessListener<Restaurant> expectedOnSuccessListener = Mockito.mock(OnSuccessListener.class);
 
-        detailsViewModel.getRestaurantDetails(expectedRestaurantId, expectedRestaurant, expectedOnSuccessListener);
+        // detailsViewModel.getRestaurantDetails(expectedRestaurantId, expectedRestaurant, expectedOnSuccessListener);
 
-        Mockito.verify(placeRepositoryMock).getRestaurantDetails(expectedRestaurantId, expectedRestaurant, expectedOnSuccessListener);
+        //  Mockito.verify(placeRepositoryMock).getRestaurantDetails(expectedRestaurantId, expectedRestaurant, expectedOnSuccessListener);
         Mockito.verifyNoMoreInteractions(placeRepositoryMock);
     }
 

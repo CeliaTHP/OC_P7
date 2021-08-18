@@ -17,6 +17,7 @@ import com.openclassrooms.oc_p7.models.pojo_models.general.NearbyPlaceResponse;
 import com.openclassrooms.oc_p7.models.pojo_models.general.Photo;
 import com.openclassrooms.oc_p7.models.pojo_models.general.RestaurantPojo;
 import com.openclassrooms.oc_p7.services.apis.PlacesApi;
+import com.openclassrooms.oc_p7.services.utils.RestaurantConverter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,8 +38,13 @@ public class PlaceRepository {
 
     private String TAG = "PlaceRepository";
 
+
     private ArrayList<RestaurantPojo> placeList = new ArrayList<>();
     private ArrayList<Restaurant> restaurantList = new ArrayList<>();
+
+    private ArrayList<RestaurantPojo> newPlaceList = new ArrayList<>();
+
+    private MutableLiveData<List<Restaurant>> newRestaurantLiveData = new MutableLiveData<>();
 
 
     private MutableLiveData<List<Restaurant>> restaurantLiveData = new MutableLiveData<>();
@@ -49,6 +55,38 @@ public class PlaceRepository {
 
     public LiveData<List<Restaurant>> getRestaurantLiveData() {
         return restaurantLiveData;
+    }
+
+    public LiveData<List<Restaurant>> getNewRestaurantLiveData() {
+        return newRestaurantLiveData;
+    }
+
+
+    public void getPlacesAsRestaurants(Location location) {
+        Log.d("NEW_REPO", "getPlacesAsRestaurants ");
+        String radiusQuery = MyApplication.getInstance().getApplicationContext().getString(R.string.query_radius);
+        String restaurantQuery = MyApplication.getInstance().getApplicationContext().getString(R.string.query_restaurant);
+
+        String locationStringQuery = location.getLatitude() + "," + location.getLongitude();
+
+        Call<NearbyPlaceResponse> call = placesApi.getNearbyPlaces(BuildConfig.GoogleMapApiKey, locationStringQuery, radiusQuery, restaurantQuery);
+        call.enqueue(new Callback<NearbyPlaceResponse>() {
+
+            @Override
+            public void onResponse(Call<NearbyPlaceResponse> call, Response<NearbyPlaceResponse> response) {
+                newPlaceList.clear();
+                newPlaceList.addAll(response.body().restaurantPojos);
+                newRestaurantLiveData.postValue(RestaurantConverter.transformToRestaurants(newPlaceList, location));
+
+            }
+
+            @Override
+            public void onFailure(Call<NearbyPlaceResponse> call, Throwable t) {
+
+            }
+
+        });
+
     }
 
     public void getNearbyPlaces(Location location) {
@@ -80,6 +118,28 @@ public class PlaceRepository {
         });
     }
 
+    public void setRestaurantDetails(Restaurant restaurant, OnSuccessListener<Restaurant> onSuccessListener) {
+        placesApi.getDetailsById(BuildConfig.GoogleMapApiKey, restaurant.getId()).enqueue(new Callback<DetailsPlaceResponse>() {
+
+            @Override
+            public void onResponse(Call<DetailsPlaceResponse> call, Response<DetailsPlaceResponse> response) {
+                setRestaurantInfos(response.body().result, restaurant);
+                if (onSuccessListener != null)
+                    onSuccessListener.onSuccess(restaurant);
+                Log.d("NEW_REPO_RESPONSE", restaurant.toString());
+            }
+
+            @Override
+            public void onFailure(Call<DetailsPlaceResponse> call, Throwable t) {
+                Log.d(TAG, "onFailure: " + t.getMessage());
+
+            }
+        });
+        Log.d("NEW_REPO_AFTER_SET", restaurant.toString());
+    }
+
+
+/*
     public void getRestaurantDetails(String restaurantId, Restaurant restaurant, OnSuccessListener onSuccessListener) {
         Log.d("COUNT", count + " ");
         count++;
@@ -99,11 +159,15 @@ public class PlaceRepository {
 
     }
 
+
+
+ */
+
     private Restaurant createRestaurant(RestaurantPojo restaurantPojo) {
         return new Restaurant(restaurantPojo.place_id, restaurantPojo.name, restaurantPojo.vicinity, restaurantPojo.geometry.location.lat, restaurantPojo.geometry.location.lng);
     }
 
-    private void setRestaurantInfos(RestaurantDetailsPojo restaurantDetailsPojo, Restaurant restaurant, OnSuccessListener<Restaurant> onSuccessListener) {
+    private void setRestaurantInfos(RestaurantDetailsPojo restaurantDetailsPojo, Restaurant restaurant) {
 
         if (restaurantDetailsPojo != null) {
             if (restaurantDetailsPojo.name != null)
@@ -140,12 +204,9 @@ public class PlaceRepository {
                 }
                 restaurant.setPhotoReference(photos);
             }
-            onSuccessListener.onSuccess(restaurant);
-            /*
-            Log.d(TAG, restaurant.getName() + " " + restaurant.getRating() + " " + restaurant.getOpeningHours() + " " + restaurant.getPhone() + " "
-                    + restaurant.getWebsite() + " " + restaurant.getPhotoReferences().size() + restaurant.getPhotoReferences() + " ");
 
-             */
+            Log.d("NEW_REPO_AFTER", restaurant.toString());
+
         }
     }
 

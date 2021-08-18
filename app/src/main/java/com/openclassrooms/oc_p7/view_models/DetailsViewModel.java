@@ -22,12 +22,12 @@ public class DetailsViewModel extends ViewModel {
         this.placeRepository = placeRepository;
     }
 
-    public void getWorkmatesForRestaurant(Restaurant restaurant, OnSuccessListener onSuccessListener) {
-        workmateRepository.getWorkmatesForRestaurant(restaurant, onSuccessListener);
+    public void setWorkmatesForRestaurant(Restaurant restaurant) {
+        workmateRepository.setWorkmatesForRestaurant(restaurant);
     }
 
-    public void getRestaurantDetails(String restaurantId, Restaurant restaurant, OnSuccessListener onSuccessListener) {
-        placeRepository.getRestaurantDetails(restaurantId, restaurant, onSuccessListener);
+    public void setRestaurantDetails(Restaurant restaurant, OnSuccessListener<Restaurant> onSuccessListener) {
+        placeRepository.setRestaurantDetails(restaurant, onSuccessListener);
     }
 
 

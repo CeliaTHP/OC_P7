@@ -40,25 +40,12 @@ public class MapViewModel extends ViewModel {
         this.restaurantLiveData = new MutableLiveData();
         this.currentLocationLiveData = placeRepository.currentLocationLiveData;
 
+        initObservers();
 
     }
 
-    public void loadMap() {
-
-        placeRepository.getRestaurantLiveData().observe(this.lifecycleOwner, restaurantList -> {
-            Log.d(TAG, "restaurantLiveData = " + restaurantList);
-            restaurantLiveData.postValue(restaurantList);
-
-            for (Restaurant restaurant : restaurantList) {
-                placeRepository.getRestaurantDetails(restaurant.getId(), restaurant, new OnSuccessListener() {
-                    @Override
-                    public void onSuccess(Object o) {
-                        Log.d(TAG, o.toString());
-                        restaurantLiveData.postValue(restaurantList);
-                    }
-                });
-
-            }
+    public void initObservers() {
+        placeRepository.getNewRestaurantLiveData().observe(this.lifecycleOwner, restaurantList -> {
             workmateRepository.getWorkmatesForRestaurantsList(restaurantList, new OnSuccessListener<List<Restaurant>>() {
                 @Override
                 public void onSuccess(List<Restaurant> restaurantList) {
@@ -66,13 +53,18 @@ public class MapViewModel extends ViewModel {
                 }
             });
 
+            for (Restaurant restaurant : restaurantList) {
+                placeRepository.setRestaurantDetails(restaurant, null);
+                Log.d("NEW_VM_LOG_AFTER", restaurant.toString());
+            }
+            restaurantLiveData.postValue(restaurantList);
+
 
         });
-
     }
 
+
     public void getLocationInformations(Context context) {
-        loadMap();
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -88,7 +80,8 @@ public class MapViewModel extends ViewModel {
             if (location != null) {
                 Log.d(TAG, location + "");
                 currentLocationLiveData.postValue(location);
-                placeRepository.getNearbyPlaces(location);
+                //placeRepository.getNearbyPlaces(location);
+                placeRepository.getPlacesAsRestaurants(location);
             }
         });
 

@@ -61,22 +61,17 @@ public class DetailsActivity extends BaseActivity {
 
     private void initExtras(Intent intent) {
         if (intent.getStringExtra("restaurantId") != null) {
+            Log.d(TAG, "restaurantId Extra");
             restaurant = new Restaurant(intent.getStringExtra("restaurantId"), null, null, 0.0, 0.0);
+            detailsViewModel.setWorkmatesForRestaurant(restaurant);
+            detailsViewModel.setRestaurantDetails(restaurant, new OnSuccessListener() {
 
-            detailsViewModel.getRestaurantDetails(restaurant.getId(), restaurant, new OnSuccessListener() {
                 @Override
                 public void onSuccess(Object o) {
-                    Log.d(TAG, "onSuccess initExtra");
                     restaurant = (Restaurant) o;
-                    detailsViewModel.getWorkmatesForRestaurant(restaurant, new OnSuccessListener() {
-                        @Override
-                        public void onSuccess(Object o) {
-                            restaurant = (Restaurant) o;
-                            Log.d(TAG, restaurant.toString());
-                            initUI(restaurant);
+                    initUI(restaurant);
+                    Log.d("NEW_DETAILS", restaurant.toString());
 
-                        }
-                    });
                 }
             });
 
@@ -107,7 +102,6 @@ public class DetailsActivity extends BaseActivity {
 
 
         });
-
 
         //Setting the corresponding check
         UserHelper.getUser(FirebaseAuth.getInstance().getUid()).addOnSuccessListener(snapshot -> {
