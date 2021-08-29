@@ -18,8 +18,10 @@ import com.openclassrooms.oc_p7.models.pojo_models.general.Photo;
 import com.openclassrooms.oc_p7.models.pojo_models.general.RestaurantPojo;
 import com.openclassrooms.oc_p7.services.apis.PlacesApi;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executor;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -28,20 +30,25 @@ import retrofit2.Response;
 public class PlaceRepository {
 
     private PlacesApi placesApi;
+    private Executor executor;
+    private String radiusQuery;
+    private String restaurantQuery ;
 
-
-    public PlaceRepository(PlacesApi placesApi) {
+    public PlaceRepository(PlacesApi placesApi,
+                           Executor executor,
+                           MutableLiveData<List<Restaurant>> restaurantLiveData,
+                           String radiusQuery,
+                           String restaurantQuery) {
         this.placesApi = placesApi;
+        this.executor = executor;
+        this.restaurantLiveData = restaurantLiveData;
+        this.radiusQuery = radiusQuery;
+        this.restaurantQuery = restaurantQuery;
     }
-
 
     private String TAG = "PlaceRepository";
 
-    private ArrayList<RestaurantPojo> placeList = new ArrayList<>();
-    private ArrayList<Restaurant> restaurantList = new ArrayList<>();
-
-
-    private MutableLiveData<List<Restaurant>> restaurantLiveData = new MutableLiveData<>();
+    public MutableLiveData<List<Restaurant>> restaurantLiveData;
 
     public MutableLiveData<Location> currentLocationLiveData = new MutableLiveData<>();
     private int count = 0;
@@ -52,30 +59,24 @@ public class PlaceRepository {
     }
 
     public void getNearbyPlaces(Location location) {
-        String radiusQuery = MyApplication.getInstance().getApplicationContext().getString(R.string.query_radius);
-        String restaurantQuery = MyApplication.getInstance().getApplicationContext().getString(R.string.query_restaurant);
 
         String locationStringQuery = location.getLatitude() + "," + location.getLongitude();
 
-        Call<NearbyPlaceResponse> call = placesApi.getNearbyPlaces(BuildConfig.GoogleMapApiKey, locationStringQuery, radiusQuery, restaurantQuery);
-        call.enqueue(new Callback<NearbyPlaceResponse>() {
-            @Override
-            public void onResponse(Call<NearbyPlaceResponse> call, Response<NearbyPlaceResponse> response) {
-                placeList.addAll(response.body().restaurantPojos);
-                for (RestaurantPojo restaurantPojo : placeList) {
-                    Restaurant restaurant = createRestaurant(restaurantPojo);
-                    restaurantList.add(restaurant);
+        executor.execute(() -> {
+            Call<NearbyPlaceResponse> call = placesApi.getNearbyPlaces(BuildConfig.GoogleMapApiKey, locationStringQuery, radiusQuery, restaurantQuery);
+            try {
+                Response<NearbyPlaceResponse> response = call.execute();
+                if(response.isSuccessful()) {
+                    NearbyPlaceResponse nearbyPlaceResponse = response.body();
+                    if(nearbyPlaceResponse != null && nearbyPlaceResponse.restaurantPojos != null) {
+                        List<Restaurant> restaurantList = getRestaurantList(nearbyPlaceResponse.restaurantPojos);
+                        restaurantLiveData.postValue(restaurantList);
+                    }
+                } else {
+                    //TODO postValue error
                 }
-                Log.d(TAG, "getNearbyPlaces restaurantList =  " + restaurantList);
-
-                restaurantLiveData.postValue(restaurantList);
-
-            }
-
-            @Override
-            public void onFailure(Call<NearbyPlaceResponse> call, Throwable t) {
-                Log.d(TAG, "onFailure: " + t.getMessage());
-
+            } catch (IOException e) {
+                //TODO postValue error
             }
         });
     }
@@ -92,14 +93,24 @@ public class PlaceRepository {
             @Override
             public void onFailure(Call<DetailsPlaceResponse> call, Throwable t) {
                 Log.d(TAG, "onFailure: " + t.getMessage());
-
+                //TODO postValue error
             }
 
         });
 
     }
 
-    private Restaurant createRestaurant(RestaurantPojo restaurantPojo) {
+    //TODO static function
+    static public List<Restaurant> getRestaurantList(List<RestaurantPojo> restaurantPojoList) {
+        List<Restaurant> restaurantList = new ArrayList<>();
+        for (RestaurantPojo restaurantPojo : restaurantPojoList) {
+            Restaurant restaurant = createRestaurant(restaurantPojo);
+            restaurantList.add(restaurant);
+        }
+        return restaurantList;
+    }
+
+    static private Restaurant createRestaurant(RestaurantPojo restaurantPojo) {
         return new Restaurant(restaurantPojo.place_id, restaurantPojo.name, restaurantPojo.vicinity, restaurantPojo.geometry.location.lat, restaurantPojo.geometry.location.lng);
     }
 
