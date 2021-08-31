@@ -140,6 +140,7 @@ public class LoginViewModel extends AndroidViewModel {
                             @Override
                             public void onFailure(@NonNull Exception e) {
                                 // Handle failure.
+                                //TODO : Error dialog if no internet
                                 Log.d(TAG, "Twitter Sign in failure " + e.getMessage());
                             }
                         });

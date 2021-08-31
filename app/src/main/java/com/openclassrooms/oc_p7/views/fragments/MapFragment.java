@@ -147,6 +147,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         });
 
 
+
  /*
 
         mapViewModel.nearbyPlacesLiveData.observe(getViewLifecycleOwner(), placeList -> {

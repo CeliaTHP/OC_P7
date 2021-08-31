@@ -2,6 +2,7 @@ package com.openclassrooms.oc_p7.models;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 public class Restaurant implements Serializable {
 
@@ -156,6 +157,33 @@ public class Restaurant implements Serializable {
 
     public void setIsLiked(Boolean liked) {
         isLiked = liked;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Restaurant that = (Restaurant) o;
+        return Double.compare(that.lat, lat) == 0 &&
+                Double.compare(that.lng, lng) == 0 &&
+                Double.compare(that.distance, distance) == 0 &&
+                Double.compare(that.rating, rating) == 0 &&
+                Objects.equals(id, that.id) &&
+                Objects.equals(name, that.name) &&
+                Objects.equals(address, that.address) &&
+                Objects.equals(type, that.type) &&
+                Objects.equals(phone, that.phone) &&
+                Objects.equals(website, that.website) &&
+                Objects.equals(photoReferences, that.photoReferences) &&
+                Objects.equals(openingHours, that.openingHours) &&
+                Objects.equals(attendees, that.attendees) &&
+                Objects.equals(isChosen, that.isChosen) &&
+                Objects.equals(isLiked, that.isLiked);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, address, lat, lng, type, phone, website, photoReferences, distance, rating, openingHours, attendees, isChosen, isLiked);
     }
 }
 

@@ -50,7 +50,6 @@ public class DetailsActivity extends BaseActivity {
         Intent intent = getIntent();
         initExtras(intent);
 
-        //TODO : detailsViewModel to get workmate
         initListeners();
         initObservers();
 

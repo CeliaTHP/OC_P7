@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -19,44 +20,65 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
 
 public class WorkmateRepository {
+
+    private Executor executor;
+
+    public WorkmateRepository(Executor executor) {
+        this.executor = executor;
+
+    }
 
     private String TAG = "WorkmateRepository";
 
     public MutableLiveData<List<Workmate>> workmateListLiveData = new MutableLiveData<>();
+    public MutableLiveData<Boolean> hasError = new MutableLiveData<>();
 
     private ArrayList<Workmate> workmateList = new ArrayList<>();
 
 
     public void getWorkmateList() {
 
-        WorkmateHelper.getWorkmatesCollection().get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
+        executor.execute(() -> {
+            Task<QuerySnapshot> task = WorkmateHelper.getWorkmatesCollection().get();
+            try {
+                Tasks.await(task);
+                QuerySnapshot queryDocumentSnapshots = task.getResult();
 
-                    Log.d(TAG, "onSuccess");
-                    List<DocumentSnapshot> snapshotList = queryDocumentSnapshots.getDocuments();
-                    for (DocumentSnapshot snapshot : snapshotList) {
-                        Workmate workmate = new Workmate(
-                                snapshot.get("uid").toString(),
-                                snapshot.get("name").toString(),
-                                snapshot.get("email").toString(),
-                                snapshot.get("picUrl").toString()
-                                //toObject instead ?
-                        );
+                List<DocumentSnapshot> snapshotList = queryDocumentSnapshots.getDocuments();
+                for (DocumentSnapshot snapshot : snapshotList) {
+                    Workmate workmate = new Workmate(
+                            snapshot.get("uid").toString(),
+                            snapshot.get("name").toString(),
+                            snapshot.get("email").toString(),
+                            snapshot.get("picUrl").toString()
+                            //toObject instead ?
+                    );
 
-                        if (snapshot.get("restaurantName") != null && snapshot.get("restaurantId") != null) {
-                            workmate.setRestaurantName(snapshot.get("restaurantName").toString());
-                            workmate.setRestaurantId(snapshot.get("restaurantId").toString());
-                            Log.d(TAG, "restaurant : " + workmate.getRestaurantId());
-                        }
-                        workmateList.add(workmate);
+                    if (snapshot.get("restaurantName") != null && snapshot.get("restaurantId") != null) {
+                        workmate.setRestaurantName(snapshot.get("restaurantName").toString());
+                        workmate.setRestaurantId(snapshot.get("restaurantId").toString());
+                        Log.d(TAG, "restaurant : " + workmate.getRestaurantId());
                     }
-                    Log.d(TAG, "workmateList  : " + workmateList + "");
+                    workmateList.add(workmate);
+                }
+                Log.d(TAG, "workmateList  : " + workmateList + "");
 
-                    workmateListLiveData.postValue(workmateList);
-                })
-                .addOnFailureListener(e -> Log.d(TAG, "onFailure"));
+                workmateListLiveData.postValue(workmateList);
+            } catch (ExecutionException e) {
+                Log.d(TAG, "ExecutionException while getting workmateList : " + e.getLocalizedMessage());
+
+
+            } catch (InterruptedException e) {
+                Log.d(TAG, "InterruptedException while getting workmateList : " + e.getMessage());
+
+
+            }
+        });
+
     }
 
     public void getWorkmatesForRestaurant(Restaurant restaurant, OnSuccessListener<Restaurant> onSuccessListener) {
@@ -100,7 +122,6 @@ public class WorkmateRepository {
                             Log.d(TAG, "withList added : " + workmateToAdd.getName() + " to " + restaurant.getName());
                         }
                         //UPDATE RESTAURANTLIVEDATA
-                        Log.d(TAG, "withList workmateForRestaurant : " + workmatesFiltered);
 
                         restaurant.setAttendees(workmatesFiltered);
                         onSuccessListener.onSuccess(restaurantList);

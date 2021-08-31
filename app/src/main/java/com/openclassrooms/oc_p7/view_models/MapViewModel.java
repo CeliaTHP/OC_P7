@@ -40,10 +40,10 @@ public class MapViewModel extends ViewModel {
         this.restaurantLiveData = new MutableLiveData();
         this.currentLocationLiveData = placeRepository.currentLocationLiveData;
 
-
     }
 
     public void loadMap() {
+
 
         placeRepository.getRestaurantLiveData().observe(this.lifecycleOwner, restaurantList -> {
             Log.d(TAG, "restaurantLiveData = " + restaurantList);

@@ -3,9 +3,12 @@ package com.openclassrooms.oc_p7.injections;
 import android.content.Context;
 
 import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.openclassrooms.oc_p7.MyApplication;
+import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.repositories.PlaceRepository;
 import com.openclassrooms.oc_p7.repositories.WorkmateRepository;
 import com.openclassrooms.oc_p7.services.apis.PlacesApi;
@@ -13,17 +16,21 @@ import com.openclassrooms.oc_p7.services.factories.DetailViewModelFactory;
 import com.openclassrooms.oc_p7.services.factories.MapViewModelFactory;
 import com.openclassrooms.oc_p7.services.factories.WorkmateViewModelFactory;
 
+import java.util.concurrent.Executors;
+
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Injection {
 
     public static PlaceRepository providePlaceRepository() {
-        return new PlaceRepository(Injection.provideApiClient());
+        String radiusQuery = MyApplication.getInstance().getApplicationContext().getString(R.string.query_radius);
+        String restaurantQuery = MyApplication.getInstance().getApplicationContext().getString(R.string.query_restaurant);
+        return new PlaceRepository(Injection.provideApiClient(), Executors.newSingleThreadExecutor(), new MutableLiveData<>(), radiusQuery, restaurantQuery);
     }
 
     public static WorkmateRepository provideWorkmateRepository(Context context) {
-        return new WorkmateRepository();
+        return new WorkmateRepository(Executors.newSingleThreadExecutor());
     }
 
     public static MapViewModelFactory provideMapViewModelFactory(Context context, LifecycleOwner lifecycleOwner) {

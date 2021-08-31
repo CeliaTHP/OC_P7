@@ -16,7 +16,7 @@
     <string name="signup_title_italic"><u>S\'inscrire</u></string>
     <string name="login_create_account"><u>Créer mon compte</u></string>
     <string name="login_missing_field">Veuillez renseignez une adresse mail et un mot de passe correct</string>
-    <string name="login_fail">Combinaison incorrect</string>
+    <string name="login_fail">Combinaison incorrect (Connexion internet requise)</string>
     <string name="login_fail_creation">Creation de compte impossible, cette adresse email est peut-être déjà utilisée ou votre mot de passe contient moins de 6 caractères</string>
 
 

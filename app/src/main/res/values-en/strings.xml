@@ -15,7 +15,7 @@
     <string name="signup_title">Register</string>
     <string name="signup_title_italic"><u>Register</u></string>
     <string name="login_missing_field">Please enter a correct address email and password</string>
-    <string name="login_fail">Incorrect combination</string>
+    <string name="login_fail">Incorrect combination (An internet connection is required)</string>
     <string name="login_fail_creation">Can\'t create account, this email address might be already used or your password is less than 6 characters</string>
 
 

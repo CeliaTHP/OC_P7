@@ -1,0 +1,50 @@
+package com.openclassrooms.oc_p7;
+
+import com.openclassrooms.oc_p7.models.pojo_models.general.Geometry;
+import com.openclassrooms.oc_p7.models.pojo_models.general.Location;
+import com.openclassrooms.oc_p7.models.pojo_models.general.NearbyPlaceResponse;
+import com.openclassrooms.oc_p7.models.pojo_models.general.RestaurantPojo;
+
+import org.mockito.Mockito;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Response;
+
+public class APIUtils {
+
+    @SuppressWarnings("unchecked")
+    public static <T> Call<T> getCallMock(Boolean isSuccessFull, T response) throws IOException {
+        Call<T> callMock = Mockito.mock(Call.class);
+        Response<T> responseMock = Mockito.mock(Response.class);
+        Mockito.when(callMock.execute()).thenReturn(responseMock);
+        Mockito.when(responseMock.isSuccessful()).thenReturn(isSuccessFull);
+        Mockito.when(responseMock.body()).thenReturn(response);
+        return callMock;
+    }
+
+    public static NearbyPlaceResponse getNearbyPlaceResponse() {
+        NearbyPlaceResponse nearByPlaceResponse = new NearbyPlaceResponse();
+        nearByPlaceResponse.restaurantPojos = getRestaurantPojoList();
+        return nearByPlaceResponse;
+    }
+
+    public static List<RestaurantPojo> getRestaurantPojoList() {
+        List<RestaurantPojo> restaurantPojoList = new ArrayList<>();
+        RestaurantPojo restaurantPojo = new RestaurantPojo();
+        restaurantPojo.place_id = "place_id";
+        restaurantPojo.name = "name";
+        restaurantPojo.vicinity = "vicinity";
+        Location location = new Location();
+        location.lat = 1.0;
+        location.lng = 1.0;
+        Geometry geometry = new Geometry();
+        geometry.location = location;
+        restaurantPojo.geometry = geometry;
+        restaurantPojoList.add(restaurantPojo);
+        return restaurantPojoList;
+    }
+}
