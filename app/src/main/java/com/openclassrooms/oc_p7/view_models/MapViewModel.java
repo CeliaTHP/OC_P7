@@ -44,28 +44,36 @@ public class MapViewModel extends ViewModel {
 
     public void loadMap() {
 
-
         placeRepository.getRestaurantLiveData().observe(this.lifecycleOwner, restaurantList -> {
-            Log.d(TAG, "restaurantLiveData = " + restaurantList);
+            Log.d(TAG, "loadMap");
             restaurantLiveData.postValue(restaurantList);
-
             for (Restaurant restaurant : restaurantList) {
+
+                workmateRepository.getWorkmatesForRestaurant(restaurant, new OnSuccessListener<Restaurant>() {
+                    @Override
+                    public void onSuccess(Restaurant restaurant) {
+                    }
+                });
+
                 placeRepository.getRestaurantDetails(restaurant.getId(), restaurant, new OnSuccessListener() {
                     @Override
                     public void onSuccess(Object o) {
                         Log.d(TAG, o.toString());
+
                         restaurantLiveData.postValue(restaurantList);
                     }
                 });
 
+
             }
+            /*
             workmateRepository.getWorkmatesForRestaurantsList(restaurantList, new OnSuccessListener<List<Restaurant>>() {
                 @Override
                 public void onSuccess(List<Restaurant> restaurantList) {
                     restaurantLiveData.postValue(restaurantList);
                 }
             });
-
+            */
 
         });
 

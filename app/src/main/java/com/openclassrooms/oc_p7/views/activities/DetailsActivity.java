@@ -48,12 +48,13 @@ public class DetailsActivity extends BaseActivity {
         initViewModels();
 
         Intent intent = getIntent();
-        initExtras(intent);
 
         initListeners();
         initObservers();
 
-        //detailsViewModel.getWorkmateList();
+
+        initExtras(intent);
+
 
         setContentView(activityDetailsBinding.getRoot());
     }
@@ -72,7 +73,13 @@ public class DetailsActivity extends BaseActivity {
                         public void onSuccess(Object o) {
                             restaurant = (Restaurant) o;
                             Log.d(TAG, restaurant.toString());
-                            initUI(restaurant);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    initUI(restaurant);
+                                }
+                            });
+
 
                         }
                     });
@@ -91,6 +98,7 @@ public class DetailsActivity extends BaseActivity {
     }
 
     private void initUI(Restaurant restaurant) {
+
 
         activityDetailsBinding.detailsRestaurantName.setText(restaurant.getName());
         activityDetailsBinding.detailsRestaurantAddress.setText(restaurant.getAddress());

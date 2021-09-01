@@ -84,7 +84,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        checkAndRequestPermissions();
+        requestPermissions();
 
     }
 
@@ -244,14 +244,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void getCurrentLocation() {
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             Log.d(TAG, "shouldRequestPermissions");
-            checkAndRequestPermissions();
+            requestPermissions();
         } else {
+            Log.d(TAG, "shouldNotRequestPermissions");
+
             mapViewModel.getLocationInformations(getContext());
         }
     }
 
-    private void checkAndRequestPermissions() {
+
+    private void requestPermissions() {
         Log.d(TAG, "FINE LOCATION PERMISSION : " + ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION));
+
         requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 19);
     }
 
@@ -293,7 +297,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     public void verifyMapState() {
         // if(shouldShowPermissionDialog) Dialog if user denied gps access
-
+        Log.d(TAG, "verifyMapState");
         if (shouldReload) {
             Log.d(TAG, "shouldReload");
             refreshMap();
