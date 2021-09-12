@@ -11,7 +11,6 @@ import android.widget.Toast;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.callbacks.OnWorkmateClickListener;
@@ -63,28 +62,7 @@ public class DetailsActivity extends BaseActivity {
         if (intent.getStringExtra("restaurantId") != null) {
             restaurant = new Restaurant(intent.getStringExtra("restaurantId"), null, null, 0.0, 0.0);
 
-            detailsViewModel.getRestaurantDetails(restaurant.getId(), restaurant, new OnSuccessListener() {
-                @Override
-                public void onSuccess(Object o) {
-                    Log.d(TAG, "onSuccess initExtra");
-                    restaurant = (Restaurant) o;
-                    detailsViewModel.getWorkmatesForRestaurant(restaurant, new OnSuccessListener() {
-                        @Override
-                        public void onSuccess(Object o) {
-                            restaurant = (Restaurant) o;
-                            Log.d(TAG, restaurant.toString());
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    initUI(restaurant);
-                                }
-                            });
-
-
-                        }
-                    });
-                }
-            });
+            detailsViewModel.getRestaurantDetails(restaurant.getId());
 
 
         }
@@ -170,6 +148,7 @@ public class DetailsActivity extends BaseActivity {
 
     private void initObservers() {
 
+        //observe list to initui with restaurant
 
     }
 

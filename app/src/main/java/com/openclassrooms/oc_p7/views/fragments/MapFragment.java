@@ -60,7 +60,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private GoogleMap googleMap;
 
-    private Boolean shouldReload = false;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -265,11 +264,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         Log.d(TAG, "Code : " + requestCode + " Permissions : " + Arrays.toString(permissions) + " result :" + Arrays.toString(grantResults));
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            shouldReload = true;
+            //refreshMap();
+            //TODO : force refresh on RequestResult
         }
-
-
     }
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -291,19 +290,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void onResume() {
         super.onResume();
         if (mapView != null) mapView.onResume();
-        verifyMapState();
         Log.d(TAG, "onResume");
     }
 
-    public void verifyMapState() {
-        // if(shouldShowPermissionDialog) Dialog if user denied gps access
-        Log.d(TAG, "verifyMapState");
-        if (shouldReload) {
-            Log.d(TAG, "shouldReload");
-            refreshMap();
-            shouldReload = false;
-        }
-    }
 
     @Override
     public void onPause() {

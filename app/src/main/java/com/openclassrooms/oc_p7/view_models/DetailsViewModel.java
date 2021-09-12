@@ -3,7 +3,6 @@ package com.openclassrooms.oc_p7.view_models;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.openclassrooms.oc_p7.models.Restaurant;
 import com.openclassrooms.oc_p7.repositories.PlaceRepository;
 import com.openclassrooms.oc_p7.repositories.WorkmateRepository;
@@ -15,19 +14,21 @@ public class DetailsViewModel extends ViewModel {
 
     private WorkmateRepository workmateRepository;
     private PlaceRepository placeRepository;
+    private MutableLiveData<Restaurant> restaurantMutableLiveData;
 
 
     public DetailsViewModel(WorkmateRepository workmateRepository, PlaceRepository placeRepository) {
         this.workmateRepository = workmateRepository;
         this.placeRepository = placeRepository;
+
     }
 
-    public void getWorkmatesForRestaurant(Restaurant restaurant, OnSuccessListener onSuccessListener) {
-        workmateRepository.getWorkmatesForRestaurant(restaurant, onSuccessListener);
+    public void getWorkmatesForRestaurant(Restaurant restaurant) {
+        workmateRepository.getWorkmatesForRestaurant(restaurant);
     }
 
-    public void getRestaurantDetails(String restaurantId, Restaurant restaurant, OnSuccessListener onSuccessListener) {
-        placeRepository.getRestaurantDetails(restaurantId, restaurant, onSuccessListener);
+    public void getRestaurantDetails(String restaurantId) {
+        placeRepository.getRestaurantDetails(restaurantId);
     }
 
 

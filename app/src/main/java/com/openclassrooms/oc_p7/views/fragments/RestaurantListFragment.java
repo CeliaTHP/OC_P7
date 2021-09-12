@@ -62,7 +62,6 @@ public class RestaurantListFragment extends Fragment implements OnRestaurantClic
 
     private void initObservers() {
         mapViewModel.restaurantLiveData.observe(getViewLifecycleOwner(), restaurantList -> {
-
             Log.d(TAG, "nearbyPlacesObserver from Restaurant");
             initRecyclerView(restaurantList);
 
@@ -71,10 +70,9 @@ public class RestaurantListFragment extends Fragment implements OnRestaurantClic
 
 
     private void initRecyclerView(List<Restaurant> restaurantList) {
-        adapter = new RestaurantAdapter(restaurantList, mapViewModel.currentLocationLiveData.getValue(), this);
+        adapter = new RestaurantAdapter(restaurantList, mapViewModel.currentLocationLiveData.getValue(), this, mapViewModel);
         fragmentListRestaurantsBinding.restaurantRecyclerView.setAdapter(adapter);
         fragmentListRestaurantsBinding.restaurantRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
     }
 
 

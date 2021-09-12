@@ -31,9 +31,11 @@ public class PlaceRepositoryTests {
     private PlaceRepository placeRepository;
     private final Location expectedLocation = Mockito.mock(Location.class);
 
+    private final MutableLiveData<PlaceRepository.ErrorCode> errorCodeMutableLiveDataMock = (MutableLiveData<PlaceRepository.ErrorCode>) Mockito.mock(MutableLiveData.class);
+
     @Before
     public void setUp() {
-        placeRepository = new PlaceRepository(placesApiMock, executor, restaurantLiveDataMock, expectedRadiusQuery, expectedRestaurantQuery);
+        placeRepository = new PlaceRepository(placesApiMock, executor, restaurantLiveDataMock, expectedRadiusQuery, expectedRestaurantQuery, errorCodeMutableLiveDataMock);
         Mockito.when(expectedLocation.getLatitude()).thenReturn(49.0249d);
         Mockito.when(expectedLocation.getLongitude()).thenReturn(2.4640d);
     }
@@ -66,6 +68,9 @@ public class PlaceRepositoryTests {
 
         Mockito.verify(placesApiMock).getNearbyPlaces(BuildConfig.GoogleMapApiKey, expectedLocationStringQuery, expectedRadiusQuery, expectedRestaurantQuery);
         Mockito.verify(call).execute();
+        Mockito.verify(errorCodeMutableLiveDataMock).postValue(PlaceRepository.ErrorCode.UNSUCCESSFUL_RESPONSE);
+
+
         //TODO check postValue error
     }
 }

@@ -6,7 +6,6 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.openclassrooms.oc_p7.BuildConfig;
 import com.openclassrooms.oc_p7.models.Restaurant;
 import com.openclassrooms.oc_p7.models.pojo_models.details.DetailsPlaceResponse;
@@ -26,31 +25,37 @@ import retrofit2.Response;
 
 public class PlaceRepository {
 
-    private PlacesApi placesApi;
-    private Executor executor;
-    private String radiusQuery;
-    private String restaurantQuery;
+    private final String TAG = "PlaceRepository";
+
+    private final PlacesApi placesApi;
+    private final Executor executor;
+    private final String radiusQuery;
+    private final String restaurantQuery;
+    private MutableLiveData<ErrorCode> errorCode;
+    private Boolean shouldPostValue = true;
 
     public PlaceRepository(PlacesApi placesApi,
                            Executor executor,
                            MutableLiveData<List<Restaurant>> restaurantLiveData,
                            String radiusQuery,
-                           String restaurantQuery) {
+                           String restaurantQuery, MutableLiveData<ErrorCode> errorCode) {
         this.placesApi = placesApi;
         this.executor = executor;
         this.restaurantLiveData = restaurantLiveData;
         this.radiusQuery = radiusQuery;
         this.restaurantQuery = restaurantQuery;
+        this.errorCode = errorCode;
     }
 
-
-    private String TAG = "PlaceRepository";
-
     public MutableLiveData<List<Restaurant>> restaurantLiveData;
-    public MutableLiveData<Boolean> hasError;
 
     public MutableLiveData<Location> currentLocationLiveData = new MutableLiveData<>();
 
+    public enum ErrorCode {
+        UNSUCCESSFUL_RESPONSE,
+        DATA_FORMAT_ERROR,
+
+    }
 
     public LiveData<List<Restaurant>> getRestaurantLiveData() {
         return restaurantLiveData;
@@ -72,17 +77,20 @@ public class PlaceRepository {
                         restaurantLiveData.postValue(restaurantList);
                     }
                 } else {
-                    //TODO POST VALUE ERROR
+                    errorCode.postValue(ErrorCode.UNSUCCESSFUL_RESPONSE);
                 }
             } catch (IOException e) {
-                //TODO POST VALUE ERROR
+                errorCode.postValue(ErrorCode.DATA_FORMAT_ERROR);
+
             }
         });
     }
 
-    public void getRestaurantDetails(String restaurantId, Restaurant restaurant, OnSuccessListener onSuccessListener) {
+    public void getRestaurantDetails(String restaurantId) {
 
         //Executor to execute the following code in the same thread (easier for tests)
+        Log.d(TAG, "getRestaurantDetails " + restaurantId);
+        List<Restaurant> restaurantList = restaurantLiveData.getValue();
 
         executor.execute(() -> {
             Call<DetailsPlaceResponse> call =
@@ -90,9 +98,31 @@ public class PlaceRepository {
             try {
                 Response<DetailsPlaceResponse> response = call.execute();
                 if (response.isSuccessful()) {
-                    setRestaurantInfos(response.body().result, restaurant, onSuccessListener);
+                    if (response.body() != null) {
+                        if (restaurantList != null && !restaurantList.isEmpty()) {
+                            Log.d(TAG, "list case");
+                            for (Restaurant restaurant : restaurantList) {
+                                if (restaurant.getId().equals(restaurantId)) {
+                                    setRestaurantInfos(response.body().result, restaurant);
+
+                                }
+
+                            }
+
+
+                        } else {
+                            Log.d(TAG, "details case");
+                            setRestaurantInfos(response.body().result, new Restaurant(restaurantId, null, null, 0.0, 0.0));
+
+                            // TODO
+                            // get restaurant and post it
+
+                        }
+
+
+                    }
                 } else {
-                    //TODO POST VALUE ERROR
+                    errorCode.postValue(ErrorCode.UNSUCCESSFUL_RESPONSE);
                     Log.d(TAG, "onFailure: " + response.errorBody());
 
                 }
@@ -100,8 +130,7 @@ public class PlaceRepository {
 
             } catch (IOException e) {
                 Log.d(TAG, "onFailure: " + e.getMessage());
-
-                //TODO POST VALUE ERROR
+                errorCode.postValue(ErrorCode.DATA_FORMAT_ERROR);
             }
 
 
@@ -121,7 +150,11 @@ public class PlaceRepository {
         return new Restaurant(restaurantPojo.place_id, restaurantPojo.name, restaurantPojo.vicinity, restaurantPojo.geometry.location.lat, restaurantPojo.geometry.location.lng);
     }
 
-    private void setRestaurantInfos(RestaurantDetailsPojo restaurantDetailsPojo, Restaurant restaurant, OnSuccessListener<Restaurant> onSuccessListener) {
+    private void setRestaurantInfos(RestaurantDetailsPojo restaurantDetailsPojo, Restaurant restaurant) {
+
+        Log.d(TAG, "setRestaurantInfos for " + restaurant.getName());
+
+        List<String> photos = new ArrayList<>();
 
         if (restaurantDetailsPojo != null) {
             if (restaurantDetailsPojo.name != null)
@@ -152,19 +185,20 @@ public class PlaceRepository {
                 restaurant.setWebsite(restaurantDetailsPojo.website);
 
             if (restaurantDetailsPojo.photos != null) {
-                List<String> photos = new ArrayList<>();
                 for (Photo photoUrl : restaurantDetailsPojo.photos) {
                     photos.add(photoUrl.photo_reference);
                 }
                 restaurant.setPhotoReference(photos);
-            }
-            onSuccessListener.onSuccess(restaurant);
+            } else
+                restaurant.setPhotoReference(null);
             /*
             Log.d(TAG, restaurant.getName() + " " + restaurant.getRating() + " " + restaurant.getOpeningHours() + " " + restaurant.getPhone() + " "
                     + restaurant.getWebsite() + " " + restaurant.getPhotoReferences().size() + restaurant.getPhotoReferences() + " ");
 
              */
         }
+        Log.d(TAG, "has setRestaurantInfos : " + restaurant.getName());
+
     }
 
 }

@@ -4,7 +4,6 @@ import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -76,7 +75,7 @@ public class WorkmateRepository {
 
     }
 
-    public void getWorkmatesForRestaurant(Restaurant restaurant, OnSuccessListener<Restaurant> onSuccessListener) {
+    public void getWorkmatesForRestaurant(Restaurant restaurant) {
         //FILTER VIA FIREBASE
         Log.d(TAG, "getWorkmatesForRestaurant");
 
@@ -98,8 +97,6 @@ public class WorkmateRepository {
                 //UPDATE RESTAURANTLIVEDATA
 
                 restaurant.setAttendees(workmatesFiltered);
-
-                onSuccessListener.onSuccess(restaurant);
 
                 Log.d(TAG, restaurant.toString());
 

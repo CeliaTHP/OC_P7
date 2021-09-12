@@ -12,7 +12,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.openclassrooms.oc_p7.models.Restaurant;
 import com.openclassrooms.oc_p7.repositories.PlaceRepository;
@@ -32,6 +31,9 @@ public class MapViewModel extends ViewModel {
     public MutableLiveData<List<Restaurant>> restaurantLiveData;
     public MutableLiveData<Location> currentLocationLiveData;
 
+    public MutableLiveData<PlaceRepository.ErrorCode> errorCodeMutableLiveData;
+    //TODO : observe and handle error
+
     public MapViewModel(PlaceRepository placeRepository, WorkmateRepository workmateRepository, FusedLocationProviderClient fusedLocationProviderClient, LifecycleOwner lifecycleOwner) {
         this.placeRepository = placeRepository;
         this.workmateRepository = workmateRepository;
@@ -43,9 +45,14 @@ public class MapViewModel extends ViewModel {
     }
 
     public void loadMap() {
-
+        Log.d(TAG, "loadMap");
         placeRepository.getRestaurantLiveData().observe(this.lifecycleOwner, restaurantList -> {
-            Log.d(TAG, "loadMap");
+            Log.d(TAG, " getRestaurantLiveData observer ");
+            restaurantLiveData.postValue(restaurantList);
+
+
+
+            /*
             restaurantLiveData.postValue(restaurantList);
             for (Restaurant restaurant : restaurantList) {
 
@@ -55,17 +62,12 @@ public class MapViewModel extends ViewModel {
                     }
                 });
 
-                placeRepository.getRestaurantDetails(restaurant.getId(), restaurant, new OnSuccessListener() {
-                    @Override
-                    public void onSuccess(Object o) {
-                        Log.d(TAG, o.toString());
-
-                        restaurantLiveData.postValue(restaurantList);
-                    }
-                });
+                placeRepository.getRestaurantDetails(restaurant.getId());
 
 
             }
+             */
+
             /*
             workmateRepository.getWorkmatesForRestaurantsList(restaurantList, new OnSuccessListener<List<Restaurant>>() {
                 @Override
@@ -77,6 +79,10 @@ public class MapViewModel extends ViewModel {
 
         });
 
+    }
+
+    public void getRestaurantDetails(Restaurant restaurant) {
+        placeRepository.getRestaurantDetails(restaurant.getId());
     }
 
     public void getLocationInformations(Context context) {

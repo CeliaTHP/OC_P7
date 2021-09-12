@@ -15,6 +15,7 @@ import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.callbacks.OnRestaurantClickListener;
 import com.openclassrooms.oc_p7.databinding.ItemLayoutRestaurantBinding;
 import com.openclassrooms.oc_p7.models.Restaurant;
+import com.openclassrooms.oc_p7.view_models.MapViewModel;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -30,12 +31,14 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
     private List<Restaurant> restaurantList;
     private Location currentLocation;
     private Context context;
+    private MapViewModel mapViewModel;
 
-    //TODO : RESTAURANT LIST !
-    public RestaurantAdapter(List<Restaurant> restaurantList, Location currentLocation, OnRestaurantClickListener onRestaurantClickListener) {
+    public RestaurantAdapter(List<Restaurant> restaurantList, Location currentLocation, OnRestaurantClickListener onRestaurantClickListener, MapViewModel mapViewModel) {
         this.restaurantList = restaurantList;
         this.currentLocation = currentLocation;
         this.onRestaurantClickListener = onRestaurantClickListener;
+        this.mapViewModel = mapViewModel;
+
     }
 
     @NonNull
@@ -49,38 +52,39 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
     @Override
     public void onBindViewHolder(@NonNull @NotNull RestaurantViewHolder.ViewHolder holder, int position) {
         Restaurant restaurant = restaurantList.get(position);
-        if (restaurant != null) {
+        Log.d(TAG, "onBind :  " + restaurant.toString());
+        //TODO getDetails here
+
+        mapViewModel.getRestaurantDetails(restaurant);
 
 
-            Location location = new Location("");
-            location.setLatitude(restaurant.getLat());
-            location.setLongitude(restaurant.getLng());
+        Location location = new Location("");
+        location.setLatitude(restaurant.getLat());
+        location.setLongitude(restaurant.getLng());
 
-            holder.itemLayoutRestaurantBinding.itemRestaurantName.setText(restaurant.getName());
-            holder.itemLayoutRestaurantBinding.itemRestaurantTypeAndAddress.setText(holder.itemView.getContext().getString(R.string.item_restaurant_address, restaurant.getAddress()));
+        holder.itemLayoutRestaurantBinding.itemRestaurantName.setText(restaurant.getName());
+        holder.itemLayoutRestaurantBinding.itemRestaurantTypeAndAddress.setText(holder.itemView.getContext().getString(R.string.item_restaurant_address, restaurant.getAddress()));
 
-            holder.itemLayoutRestaurantBinding.itemRestaurantRating.setStepSize(0.01f);
-            holder.itemLayoutRestaurantBinding.itemRestaurantRating.setRating((float) (restaurant.getRating() * 3.0 / 5.0));
-            holder.itemLayoutRestaurantBinding.itemRestaurantRating.invalidate();
-            holder.itemLayoutRestaurantBinding.itemRestaurantDistance.setText(holder.itemView.getContext().getString(R.string.item_restaurant_distance, location.distanceTo(currentLocation)));
-            holder.itemLayoutRestaurantBinding.itemRestaurantHours.setText(setCorrespondingHours(restaurant));
-            if (restaurant.getAttendees() != null)
-                holder.itemLayoutRestaurantBinding.itemRestaurantAttendees.setText(holder.itemView.getContext().getString(R.string.item_restaurant_attendees, restaurant.getAttendees().size()));
+        holder.itemLayoutRestaurantBinding.itemRestaurantRating.setStepSize(0.01f);
+        holder.itemLayoutRestaurantBinding.itemRestaurantRating.setRating((float) (restaurant.getRating() * 3.0 / 5.0));
+        holder.itemLayoutRestaurantBinding.itemRestaurantRating.invalidate();
+        holder.itemLayoutRestaurantBinding.itemRestaurantDistance.setText(holder.itemView.getContext().getString(R.string.item_restaurant_distance, location.distanceTo(currentLocation)));
+        holder.itemLayoutRestaurantBinding.itemRestaurantHours.setText(setCorrespondingHours(restaurant));
+        if (restaurant.getAttendees() != null)
+            holder.itemLayoutRestaurantBinding.itemRestaurantAttendees.setText(holder.itemView.getContext().getString(R.string.item_restaurant_attendees, restaurant.getAttendees().size()));
 
-            if (restaurant.getPhotoReferences() != null) {
-                String picUrl = holder.itemView.getContext().getString(R.string.place_photo_url, BuildConfig.GoogleMapApiKey, restaurant.getPhotoReferences().get(0));
-                Log.d(TAG, picUrl);
-                Glide.with(holder.itemView.getContext())
-                        .load(picUrl)
-                        .centerCrop()
-                        .into(holder.itemLayoutRestaurantBinding.itemRestaurantPic);
+        if (restaurant.getPhotoReferences() != null) {
+            String picUrl = holder.itemView.getContext().getString(R.string.place_photo_url, BuildConfig.GoogleMapApiKey, restaurant.getPhotoReferences().get(0));
+            Glide.with(holder.itemView.getContext())
+                    .load(picUrl)
+                    .centerCrop()
+                    .into(holder.itemLayoutRestaurantBinding.itemRestaurantPic);
 
-            } else {
-                holder.itemLayoutRestaurantBinding.itemRestaurantPic.setImageResource(R.drawable.ic_cutlery);
-            }
-
-            holder.itemLayoutRestaurantBinding.getRoot().setOnClickListener(v -> onRestaurantClickListener.onRestaurantClick(restaurant));
+        } else {
+            holder.itemLayoutRestaurantBinding.itemRestaurantPic.setImageResource(R.drawable.ic_cutlery);
         }
+
+        holder.itemLayoutRestaurantBinding.getRoot().setOnClickListener(v -> onRestaurantClickListener.onRestaurantClick(restaurant));
 
 
     }

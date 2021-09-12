@@ -26,7 +26,7 @@ public class Injection {
     public static PlaceRepository providePlaceRepository() {
         String radiusQuery = MyApplication.getInstance().getApplicationContext().getString(R.string.query_radius);
         String restaurantQuery = MyApplication.getInstance().getApplicationContext().getString(R.string.query_restaurant);
-        return new PlaceRepository(Injection.provideApiClient(), Executors.newSingleThreadExecutor(), new MutableLiveData<>(), radiusQuery, restaurantQuery);
+        return new PlaceRepository(Injection.provideApiClient(), Executors.newSingleThreadExecutor(), new MutableLiveData<>(), radiusQuery, restaurantQuery, new MutableLiveData<>());
     }
 
     public static WorkmateRepository provideWorkmateRepository(Context context) {

@@ -29,11 +29,10 @@ public class DetailsViewModelTests {
     @Test
     public void getWorkmateForRestaurantTests() {
         Restaurant expectedRestaurant = Mockito.mock(Restaurant.class);
-        OnSuccessListener<Restaurant> expectedOnSuccessListener = Mockito.mock(OnSuccessListener.class);
 
-        detailsViewModel.getWorkmatesForRestaurant(expectedRestaurant, expectedOnSuccessListener);
+        detailsViewModel.getWorkmatesForRestaurant(expectedRestaurant);
 
-        Mockito.verify(workmateRepositoryMock).getWorkmatesForRestaurant(expectedRestaurant, expectedOnSuccessListener);
+        Mockito.verify(workmateRepositoryMock).getWorkmatesForRestaurant(expectedRestaurant);
         Mockito.verifyNoMoreInteractions(workmateRepositoryMock);
     }
 
@@ -43,9 +42,9 @@ public class DetailsViewModelTests {
         Restaurant expectedRestaurant = Mockito.mock(Restaurant.class);
         OnSuccessListener<Restaurant> expectedOnSuccessListener = Mockito.mock(OnSuccessListener.class);
 
-        detailsViewModel.getRestaurantDetails(expectedRestaurantId, expectedRestaurant, expectedOnSuccessListener);
+        detailsViewModel.getRestaurantDetails(expectedRestaurantId);
 
-        Mockito.verify(placeRepositoryMock).getRestaurantDetails(expectedRestaurantId, expectedRestaurant, expectedOnSuccessListener);
+        Mockito.verify(placeRepositoryMock).getRestaurantDetails(expectedRestaurantId);
         Mockito.verifyNoMoreInteractions(placeRepositoryMock);
     }
 
