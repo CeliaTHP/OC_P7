@@ -34,20 +34,24 @@ public class PlaceRepository {
     private MutableLiveData<ErrorCode> errorCode;
     private Boolean shouldPostValue = true;
 
+
     public PlaceRepository(PlacesApi placesApi,
                            Executor executor,
-                           MutableLiveData<List<Restaurant>> restaurantLiveData,
+                           MutableLiveData<List<Restaurant>> restaurantListMutableLiveData,
+                           MutableLiveData<Restaurant> restaurantMutableLiveData,
                            String radiusQuery,
                            String restaurantQuery, MutableLiveData<ErrorCode> errorCode) {
         this.placesApi = placesApi;
         this.executor = executor;
-        this.restaurantLiveData = restaurantLiveData;
+        this.restaurantListMutableLiveData = restaurantListMutableLiveData;
+        this.restaurantMutableLiveData = restaurantMutableLiveData;
         this.radiusQuery = radiusQuery;
         this.restaurantQuery = restaurantQuery;
         this.errorCode = errorCode;
     }
 
-    public MutableLiveData<List<Restaurant>> restaurantLiveData;
+    public MutableLiveData<List<Restaurant>> restaurantListMutableLiveData;
+    public MutableLiveData<Restaurant> restaurantMutableLiveData;
 
     public MutableLiveData<Location> currentLocationLiveData = new MutableLiveData<>();
 
@@ -57,8 +61,8 @@ public class PlaceRepository {
 
     }
 
-    public LiveData<List<Restaurant>> getRestaurantLiveData() {
-        return restaurantLiveData;
+    public LiveData<List<Restaurant>> getRestaurantListMutableLiveData() {
+        return restaurantListMutableLiveData;
     }
 
     public void getNearbyPlaces(Location location) {
@@ -74,7 +78,7 @@ public class PlaceRepository {
                     NearbyPlaceResponse nearbyPlaceResponse = response.body();
                     if (nearbyPlaceResponse != null && nearbyPlaceResponse.restaurantPojos != null) {
                         List<Restaurant> restaurantList = getRestaurantList(nearbyPlaceResponse.restaurantPojos);
-                        restaurantLiveData.postValue(restaurantList);
+                        restaurantListMutableLiveData.postValue(restaurantList);
                     }
                 } else {
                     errorCode.postValue(ErrorCode.UNSUCCESSFUL_RESPONSE);
@@ -90,7 +94,7 @@ public class PlaceRepository {
 
         //Executor to execute the following code in the same thread (easier for tests)
         Log.d(TAG, "getRestaurantDetails " + restaurantId);
-        List<Restaurant> restaurantList = restaurantLiveData.getValue();
+        List<Restaurant> restaurantList = restaurantListMutableLiveData.getValue();
 
         executor.execute(() -> {
             Call<DetailsPlaceResponse> call =
@@ -108,11 +112,15 @@ public class PlaceRepository {
                                 }
 
                             }
+                            //restaurantLiveData.postValue(restaurantList);
 
 
                         } else {
                             Log.d(TAG, "details case");
-                            setRestaurantInfos(response.body().result, new Restaurant(restaurantId, null, null, 0.0, 0.0));
+                            Restaurant restaurantToCreate = new Restaurant(restaurantId, null, null, 0.0, 0.0);
+                            setRestaurantInfos(response.body().result, restaurantToCreate);
+                            restaurantMutableLiveData.postValue(restaurantToCreate);
+
 
                             // TODO
                             // get restaurant and post it

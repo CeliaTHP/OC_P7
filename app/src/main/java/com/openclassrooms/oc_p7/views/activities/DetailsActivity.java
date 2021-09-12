@@ -61,7 +61,6 @@ public class DetailsActivity extends BaseActivity {
     private void initExtras(Intent intent) {
         if (intent.getStringExtra("restaurantId") != null) {
             restaurant = new Restaurant(intent.getStringExtra("restaurantId"), null, null, 0.0, 0.0);
-
             detailsViewModel.getRestaurantDetails(restaurant.getId());
 
 
@@ -147,6 +146,11 @@ public class DetailsActivity extends BaseActivity {
     }
 
     private void initObservers() {
+        detailsViewModel.restaurantMutableLiveData.observe(this, restaurantLiveData -> {
+            restaurant = restaurantLiveData;
+            initUI(restaurant);
+
+        });
 
         //observe list to initui with restaurant
 

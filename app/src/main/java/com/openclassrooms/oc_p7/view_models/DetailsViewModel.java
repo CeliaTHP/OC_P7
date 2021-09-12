@@ -14,12 +14,13 @@ public class DetailsViewModel extends ViewModel {
 
     private WorkmateRepository workmateRepository;
     private PlaceRepository placeRepository;
-    private MutableLiveData<Restaurant> restaurantMutableLiveData;
+    public MutableLiveData<Restaurant> restaurantMutableLiveData;
 
 
     public DetailsViewModel(WorkmateRepository workmateRepository, PlaceRepository placeRepository) {
         this.workmateRepository = workmateRepository;
         this.placeRepository = placeRepository;
+        this.restaurantMutableLiveData = placeRepository.restaurantMutableLiveData;
 
     }
 

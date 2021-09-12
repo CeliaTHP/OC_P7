@@ -46,7 +46,7 @@ public class MapViewModel extends ViewModel {
 
     public void loadMap() {
         Log.d(TAG, "loadMap");
-        placeRepository.getRestaurantLiveData().observe(this.lifecycleOwner, restaurantList -> {
+        placeRepository.getRestaurantListMutableLiveData().observe(this.lifecycleOwner, restaurantList -> {
             Log.d(TAG, " getRestaurantLiveData observer ");
             restaurantLiveData.postValue(restaurantList);
 
