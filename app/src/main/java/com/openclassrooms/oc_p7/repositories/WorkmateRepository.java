@@ -2,15 +2,20 @@ package com.openclassrooms.oc_p7.repositories;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.openclassrooms.oc_p7.models.Restaurant;
 import com.openclassrooms.oc_p7.models.Workmate;
 import com.openclassrooms.oc_p7.services.firestore_helpers.WorkmateHelper;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -108,9 +113,10 @@ public class WorkmateRepository {
     }
 
 
-/*
-    public void getWorkmatesForRestaurantsList(List<Restaurant> restaurantList, OnSuccessListener<List<Restaurant>> onSuccessListener) {
+    public void getWorkmatesForRestaurantsList(MutableLiveData<List<Restaurant>> restaurantListMutableLiveData) {
         //FILTER VIA FIREBASE
+
+        List<Restaurant> restaurantList = restaurantListMutableLiveData.getValue();
         executor.execute(() -> {
 
             for (Restaurant restaurant : restaurantList) {
@@ -127,19 +133,19 @@ public class WorkmateRepository {
                             //UPDATE RESTAURANTLIVEDATA
 
                             restaurant.setAttendees(workmatesFiltered);
-                            onSuccessListener.onSuccess(restaurantList);
 
                         }
                     }
 
                 });
             }
+
         });
     }
 
 
 
- */
+
 /*
         for (Workmate workmate : workmateList) {
             if (workmate.getRestaurantId() != null) {

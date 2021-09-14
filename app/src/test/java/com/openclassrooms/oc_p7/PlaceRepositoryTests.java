@@ -24,7 +24,9 @@ import retrofit2.Call;
 public class PlaceRepositoryTests {
 
     private final PlacesApi placesApiMock = Mockito.mock(PlacesApi.class);
-    private final MutableLiveData<List<Restaurant>> restaurantLiveDataMock = (MutableLiveData<List<Restaurant>>) Mockito.mock(MutableLiveData.class);
+    private final MutableLiveData<List<Restaurant>> restaurantListLiveDataMock = (MutableLiveData<List<Restaurant>>) Mockito.mock(MutableLiveData.class);
+    private final MutableLiveData<Restaurant> restaurantLiveDataMock = (MutableLiveData<Restaurant>) Mockito.mock(MutableLiveData.class);
+
     private final Executor executor = MoreExecutors.newDirectExecutorService();
     private final String expectedRadiusQuery = "2000";
     private final String expectedRestaurantQuery = "restaurant";
@@ -35,14 +37,14 @@ public class PlaceRepositoryTests {
 
     @Before
     public void setUp() {
-        placeRepository = new PlaceRepository(placesApiMock, executor, restaurantLiveDataMock, expectedRadiusQuery, expectedRestaurantQuery, errorCodeMutableLiveDataMock);
+        placeRepository = new PlaceRepository(placesApiMock, executor, restaurantListLiveDataMock, restaurantLiveDataMock, expectedRadiusQuery, expectedRestaurantQuery, errorCodeMutableLiveDataMock);
         Mockito.when(expectedLocation.getLatitude()).thenReturn(49.0249d);
         Mockito.when(expectedLocation.getLongitude()).thenReturn(2.4640d);
     }
 
     @After
     public void tearDown() {
-        Mockito.verifyNoMoreInteractions(placesApiMock, restaurantLiveDataMock);
+        Mockito.verifyNoMoreInteractions(placesApiMock, restaurantListLiveDataMock);
     }
 
     @Test
@@ -55,7 +57,7 @@ public class PlaceRepositoryTests {
 
         Mockito.verify(placesApiMock).getNearbyPlaces(BuildConfig.GoogleMapApiKey, expectedLocationStringQuery, expectedRadiusQuery, expectedRestaurantQuery);
         Mockito.verify(call).execute();
-        Mockito.verify(restaurantLiveDataMock).postValue(RepositoryUtils.getRestaurantList());
+        Mockito.verify(restaurantListLiveDataMock).postValue(RepositoryUtils.getRestaurantList());
     }
 
     @Test
@@ -70,7 +72,20 @@ public class PlaceRepositoryTests {
         Mockito.verify(call).execute();
         Mockito.verify(errorCodeMutableLiveDataMock).postValue(PlaceRepository.ErrorCode.UNSUCCESSFUL_RESPONSE);
 
+    }
 
-        //TODO check postValue error
+    @Test
+    public void getNearbyPlacesTestIOException() throws IOException {
+
+        Call<NearbyPlaceResponse> call = APIUtils.getCallMock(true, APIUtils.getNearbyPlaceResponse());
+        String expectedLocationStringQuery = expectedLocation.getLatitude() + "," + expectedLocation.getLongitude();
+        Mockito.when(placesApiMock.getNearbyPlaces(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(call);
+        Mockito.doThrow(new IOException()).when(call).execute();
+
+        placeRepository.getNearbyPlaces(expectedLocation);
+
+        Mockito.verify(placesApiMock).getNearbyPlaces(BuildConfig.GoogleMapApiKey, expectedLocationStringQuery, expectedRadiusQuery, expectedRestaurantQuery);
+        Mockito.verify(errorCodeMutableLiveDataMock).postValue(PlaceRepository.ErrorCode.CONNECTION_ERROR);
+
     }
 }

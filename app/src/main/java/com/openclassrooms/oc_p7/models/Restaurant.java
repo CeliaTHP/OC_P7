@@ -25,6 +25,8 @@ public class Restaurant implements Serializable {
     private Boolean isChosen;
     private Boolean isLiked;
 
+    private Boolean hasDetails = false;
+
     public Restaurant(String id, String name, String address, double lat, double lng) {
         this.id = id;
         this.name = name;
@@ -33,6 +35,34 @@ public class Restaurant implements Serializable {
         this.lng = lng;
         isChosen = false;
         isLiked = false;
+    }
+
+    public void setPhotoReferences(List<String> photoReferences) {
+        this.photoReferences = photoReferences;
+    }
+
+    public Boolean getChosen() {
+        return isChosen;
+    }
+
+    public void setChosen(Boolean chosen) {
+        isChosen = chosen;
+    }
+
+    public Boolean getLiked() {
+        return isLiked;
+    }
+
+    public void setLiked(Boolean liked) {
+        isLiked = liked;
+    }
+
+    public Boolean getHasDetails() {
+        return hasDetails;
+    }
+
+    public void setHasDetails(Boolean hasDetails) {
+        this.hasDetails = hasDetails;
     }
 
     public String toString() {

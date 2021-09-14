@@ -57,12 +57,16 @@ public class PlaceRepository {
 
     public enum ErrorCode {
         UNSUCCESSFUL_RESPONSE,
-        DATA_FORMAT_ERROR,
+        CONNECTION_ERROR,
 
     }
 
     public LiveData<List<Restaurant>> getRestaurantListMutableLiveData() {
         return restaurantListMutableLiveData;
+    }
+
+    public LiveData<ErrorCode> getErrorCode() {
+        return errorCode;
     }
 
     public void getNearbyPlaces(Location location) {
@@ -84,7 +88,7 @@ public class PlaceRepository {
                     errorCode.postValue(ErrorCode.UNSUCCESSFUL_RESPONSE);
                 }
             } catch (IOException e) {
-                errorCode.postValue(ErrorCode.DATA_FORMAT_ERROR);
+                errorCode.postValue(ErrorCode.CONNECTION_ERROR);
 
             }
         });
@@ -106,13 +110,17 @@ public class PlaceRepository {
                         if (restaurantList != null && !restaurantList.isEmpty()) {
                             Log.d(TAG, "list case");
                             for (Restaurant restaurant : restaurantList) {
+                                Log.d(TAG, restaurant.getName());
                                 if (restaurant.getId().equals(restaurantId)) {
-                                    setRestaurantInfos(response.body().result, restaurant);
+                                    {
+                                        setRestaurantInfos(response.body().result, restaurant);
+
+                                    }
 
                                 }
 
                             }
-                            //restaurantLiveData.postValue(restaurantList);
+                            restaurantListMutableLiveData.postValue(restaurantList);
 
 
                         } else {
@@ -120,10 +128,6 @@ public class PlaceRepository {
                             Restaurant restaurantToCreate = new Restaurant(restaurantId, null, null, 0.0, 0.0);
                             setRestaurantInfos(response.body().result, restaurantToCreate);
                             restaurantMutableLiveData.postValue(restaurantToCreate);
-
-
-                            // TODO
-                            // get restaurant and post it
 
                         }
 
@@ -138,8 +142,9 @@ public class PlaceRepository {
 
             } catch (IOException e) {
                 Log.d(TAG, "onFailure: " + e.getMessage());
-                errorCode.postValue(ErrorCode.DATA_FORMAT_ERROR);
+                errorCode.postValue(ErrorCode.CONNECTION_ERROR);
             }
+            //restaurantListMutableLiveData.postValue(restaurantList);
 
 
         });
@@ -205,6 +210,8 @@ public class PlaceRepository {
 
              */
         }
+
+        restaurant.setHasDetails(true);
         Log.d(TAG, "has setRestaurantInfos : " + restaurant.getName());
 
     }

@@ -53,9 +53,10 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
     public void onBindViewHolder(@NonNull @NotNull RestaurantViewHolder.ViewHolder holder, int position) {
         Restaurant restaurant = restaurantList.get(position);
         Log.d(TAG, "onBind :  " + restaurant.toString());
-        //TODO getDetails here
 
-        mapViewModel.getRestaurantDetails(restaurant);
+        if (!restaurant.getHasDetails()) {
+            mapViewModel.getRestaurantDetails(restaurant);
+        }
 
 
         Location location = new Location("");
@@ -119,6 +120,10 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
             }
         }
         return hours;
+    }
+
+    public void setData(List<Restaurant> restaurantList) {
+        this.restaurantList = restaurantList;
     }
 
 

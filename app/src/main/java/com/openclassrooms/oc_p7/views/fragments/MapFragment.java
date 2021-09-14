@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,6 +31,7 @@ import com.openclassrooms.oc_p7.databinding.FragmentMapBinding;
 import com.openclassrooms.oc_p7.injections.Injection;
 import com.openclassrooms.oc_p7.models.Restaurant;
 import com.openclassrooms.oc_p7.models.pojo_models.general.RestaurantPojo;
+import com.openclassrooms.oc_p7.repositories.PlaceRepository;
 import com.openclassrooms.oc_p7.services.factories.MapViewModelFactory;
 import com.openclassrooms.oc_p7.services.factories.WorkmateViewModelFactory;
 import com.openclassrooms.oc_p7.view_models.LoginViewModel;
@@ -59,7 +61,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private LoginViewModel loginViewModel;
 
     private GoogleMap googleMap;
-
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -119,6 +120,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private void initObservers() {
 
+        mapViewModel.errorCodeMutableLiveData.observe(getViewLifecycleOwner(), errorCode -> {
+            if (errorCode == PlaceRepository.ErrorCode.CONNECTION_ERROR) {
+                Toast.makeText(fragmentMapBinding.getRoot().getContext(), getString(R.string.map_data_format_error), Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(fragmentMapBinding.getRoot().getContext(), getString(R.string.map_response_error), Toast.LENGTH_LONG).show();
+
+
+            }
+
+
+        });
+
         mapViewModel.currentLocationLiveData.observe(getViewLifecycleOwner(), location -> {
             LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(currentLatLng));
@@ -129,7 +142,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
-        mapViewModel.restaurantLiveData.observe(getViewLifecycleOwner(), restaurantList -> {
+        mapViewModel.restaurantListLiveData.observe(getViewLifecycleOwner(), restaurantList -> {
             Log.d(TAG, "restaurantLiveData observer : " + restaurantList);
             for (Restaurant restaurant : restaurantList) {
                 //getDetails
@@ -144,6 +157,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 }
             }
         });
+
 
 
 

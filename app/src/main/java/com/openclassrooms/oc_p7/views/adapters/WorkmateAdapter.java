@@ -8,6 +8,7 @@ import androidx.core.widget.TextViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.callbacks.OnWorkmateClickListener;
 import com.openclassrooms.oc_p7.databinding.ItemLayoutWorkmatesBinding;
@@ -53,6 +54,7 @@ public class WorkmateAdapter extends RecyclerView.Adapter<WorkmateViewHolder.Vie
         if (workmate.getPicUrl() != null) {
             Glide.with(holder.itemView.getContext())
                     .load(workmate.getPicUrl())
+                    .transition(DrawableTransitionOptions.withCrossFade())
                     .centerCrop()
                     .into(holder.itemLayoutWorkmatesBinding.workmatePic);
         }

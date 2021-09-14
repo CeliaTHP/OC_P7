@@ -6,16 +6,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.callbacks.OnRestaurantClickListener;
 import com.openclassrooms.oc_p7.databinding.FragmentListRestaurantsBinding;
 import com.openclassrooms.oc_p7.injections.Injection;
 import com.openclassrooms.oc_p7.models.Restaurant;
+import com.openclassrooms.oc_p7.repositories.PlaceRepository;
 import com.openclassrooms.oc_p7.services.factories.MapViewModelFactory;
 import com.openclassrooms.oc_p7.services.factories.WorkmateViewModelFactory;
 import com.openclassrooms.oc_p7.view_models.MapViewModel;
@@ -23,7 +26,7 @@ import com.openclassrooms.oc_p7.view_models.WorkmateViewModel;
 import com.openclassrooms.oc_p7.views.activities.DetailsActivity;
 import com.openclassrooms.oc_p7.views.adapters.RestaurantAdapter;
 
-import java.util.List;
+import java.util.Collections;
 
 public class RestaurantListFragment extends Fragment implements OnRestaurantClickListener {
 
@@ -43,6 +46,7 @@ public class RestaurantListFragment extends Fragment implements OnRestaurantClic
         initPlaces();
         initObservers();
 
+
         return fragmentListRestaurantsBinding.getRoot();
     }
 
@@ -61,16 +65,33 @@ public class RestaurantListFragment extends Fragment implements OnRestaurantClic
     }
 
     private void initObservers() {
-        mapViewModel.restaurantLiveData.observe(getViewLifecycleOwner(), restaurantList -> {
+
+        mapViewModel.currentLocationLiveData.observe(getViewLifecycleOwner(), currentLocation -> {
+            initRecyclerView();
+
+        });
+
+        mapViewModel.errorCodeMutableLiveData.observe(getViewLifecycleOwner(), errorCode -> {
+            if (errorCode == PlaceRepository.ErrorCode.CONNECTION_ERROR) {
+                Toast.makeText(fragmentListRestaurantsBinding.getRoot().getContext(), getString(R.string.map_data_format_error), Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(fragmentListRestaurantsBinding.getRoot().getContext(), getString(R.string.map_response_error), Toast.LENGTH_LONG).show();
+
+            }
+
+
+        });
+        mapViewModel.restaurantListLiveData.observe(getViewLifecycleOwner(), restaurantList -> {
+            adapter.setData(restaurantList);
+            adapter.notifyDataSetChanged();
             Log.d(TAG, "nearbyPlacesObserver from Restaurant");
-            initRecyclerView(restaurantList);
 
         });
     }
 
 
-    private void initRecyclerView(List<Restaurant> restaurantList) {
-        adapter = new RestaurantAdapter(restaurantList, mapViewModel.currentLocationLiveData.getValue(), this, mapViewModel);
+    private void initRecyclerView() {
+        adapter = new RestaurantAdapter(Collections.emptyList(), mapViewModel.currentLocationLiveData.getValue(), this, mapViewModel);
         fragmentListRestaurantsBinding.restaurantRecyclerView.setAdapter(adapter);
         fragmentListRestaurantsBinding.restaurantRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }

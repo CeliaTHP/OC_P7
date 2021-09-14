@@ -3,6 +3,7 @@ package com.openclassrooms.oc_p7.view_models;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.openclassrooms.oc_p7.models.Restaurant;
 import com.openclassrooms.oc_p7.models.Workmate;
 import com.openclassrooms.oc_p7.repositories.WorkmateRepository;
 
@@ -25,6 +26,10 @@ public class WorkmateViewModel extends ViewModel {
 
     public void getWorkmateList() {
         workmateRepository.getWorkmateList();
+    }
+
+    public void getWorkmateForRestaurant(Restaurant restaurant) {
+        workmateRepository.getWorkmatesForRestaurant(restaurant);
     }
 
 

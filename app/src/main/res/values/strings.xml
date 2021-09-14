@@ -47,6 +47,9 @@
 
     <!--MAP-->
     <string name="map_here">VOUS ÊTES ICI</string>
+    <string name="map_response_error">Une erreur a été rencontrée lors de la recherche de restaurants ( vérifiez contre connexion internet )</string>
+    <string name="map_data_format_error">Une erreur a été rencontrée lors du formatage des restaurants ! </string>
+
 
     <!--DETAILS-->
     <string name="list_workmates_empty">Personne ne mange ici</string>

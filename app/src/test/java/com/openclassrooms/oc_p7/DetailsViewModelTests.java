@@ -1,6 +1,5 @@
 package com.openclassrooms.oc_p7;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.openclassrooms.oc_p7.models.Restaurant;
 import com.openclassrooms.oc_p7.repositories.PlaceRepository;
 import com.openclassrooms.oc_p7.repositories.WorkmateRepository;
@@ -39,8 +38,6 @@ public class DetailsViewModelTests {
     @Test
     public void getRestaurantDetails() {
         String expectedRestaurantId = "expectedRestaurantId";
-        Restaurant expectedRestaurant = Mockito.mock(Restaurant.class);
-        OnSuccessListener<Restaurant> expectedOnSuccessListener = Mockito.mock(OnSuccessListener.class);
 
         detailsViewModel.getRestaurantDetails(expectedRestaurantId);
 
