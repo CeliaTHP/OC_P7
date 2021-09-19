@@ -29,9 +29,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.databinding.FragmentMapBinding;
 import com.openclassrooms.oc_p7.injections.Injection;
+import com.openclassrooms.oc_p7.models.ErrorCode;
 import com.openclassrooms.oc_p7.models.Restaurant;
 import com.openclassrooms.oc_p7.models.pojo_models.general.RestaurantPojo;
-import com.openclassrooms.oc_p7.repositories.PlaceRepository;
 import com.openclassrooms.oc_p7.services.factories.MapViewModelFactory;
 import com.openclassrooms.oc_p7.services.factories.WorkmateViewModelFactory;
 import com.openclassrooms.oc_p7.view_models.LoginViewModel;
@@ -121,7 +121,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private void initObservers() {
 
         mapViewModel.errorCodeMutableLiveData.observe(getViewLifecycleOwner(), errorCode -> {
-            if (errorCode == PlaceRepository.ErrorCode.CONNECTION_ERROR) {
+            if (errorCode == ErrorCode.CONNECTION_ERROR) {
                 Toast.makeText(fragmentMapBinding.getRoot().getContext(), getString(R.string.map_data_format_error), Toast.LENGTH_LONG).show();
             } else {
                 Toast.makeText(fragmentMapBinding.getRoot().getContext(), getString(R.string.map_response_error), Toast.LENGTH_LONG).show();

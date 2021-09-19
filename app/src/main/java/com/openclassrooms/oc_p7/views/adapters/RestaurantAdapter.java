@@ -10,6 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.openclassrooms.oc_p7.BuildConfig;
 import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.callbacks.OnRestaurantClickListener;
@@ -32,6 +34,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
     private Location currentLocation;
     private Context context;
     private MapViewModel mapViewModel;
+    private Boolean hasLoadPic = false;
 
     public RestaurantAdapter(List<Restaurant> restaurantList, Location currentLocation, OnRestaurantClickListener onRestaurantClickListener, MapViewModel mapViewModel) {
         this.restaurantList = restaurantList;
@@ -48,6 +51,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
         context = parent.getContext();
         return new RestaurantViewHolder.ViewHolder(itemLayoutRestaurantBinding);
     }
+
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull RestaurantViewHolder.ViewHolder holder, int position) {
@@ -76,10 +80,24 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
 
         if (restaurant.getPhotoReferences() != null) {
             String picUrl = holder.itemView.getContext().getString(R.string.place_photo_url, BuildConfig.GoogleMapApiKey, restaurant.getPhotoReferences().get(0));
+            //Blinks with picasso too
+
+            /*
+            Picasso.get()
+                    .load(picUrl)
+                    .resize(100,100)
+                    .centerCrop()
+                    .into(holder.itemLayoutRestaurantBinding.itemRestaurantPic);
+
+             */
+
             Glide.with(holder.itemView.getContext())
                     .load(picUrl)
                     .centerCrop()
+                    .dontAnimate()
+                    .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL))
                     .into(holder.itemLayoutRestaurantBinding.itemRestaurantPic);
+
 
         } else {
             holder.itemLayoutRestaurantBinding.itemRestaurantPic.setImageResource(R.drawable.ic_cutlery);

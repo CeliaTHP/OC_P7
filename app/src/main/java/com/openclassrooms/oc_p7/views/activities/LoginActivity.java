@@ -152,9 +152,11 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void initObservers() {
+        Log.d("WORKMATES_CREATION", "initObservers");
         loginViewModel.authenticatedUserLiveData.observe(this, new Observer<FirebaseUser>() {
             @Override
             public void onChanged(FirebaseUser firebaseUser) {
+                Log.d("WORKMATES_CREATION", "onChanged");
                 UserHelper.createUser(firebaseUser.getUid(), firebaseUser.getDisplayName(), firebaseUser.getEmail(), "" + firebaseUser.getPhotoUrl());
                 loginViewModel.initWorkmates();
 

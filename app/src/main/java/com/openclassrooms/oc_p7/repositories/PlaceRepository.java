@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.openclassrooms.oc_p7.BuildConfig;
+import com.openclassrooms.oc_p7.models.ErrorCode;
 import com.openclassrooms.oc_p7.models.Restaurant;
 import com.openclassrooms.oc_p7.models.pojo_models.details.DetailsPlaceResponse;
 import com.openclassrooms.oc_p7.models.pojo_models.details.RestaurantDetailsPojo;
@@ -55,11 +56,7 @@ public class PlaceRepository {
 
     public MutableLiveData<Location> currentLocationLiveData = new MutableLiveData<>();
 
-    public enum ErrorCode {
-        UNSUCCESSFUL_RESPONSE,
-        CONNECTION_ERROR,
 
-    }
 
     public LiveData<List<Restaurant>> getRestaurantListMutableLiveData() {
         return restaurantListMutableLiveData;
@@ -97,7 +94,6 @@ public class PlaceRepository {
     public void getRestaurantDetails(String restaurantId) {
 
         //Executor to execute the following code in the same thread (easier for tests)
-        Log.d(TAG, "getRestaurantDetails " + restaurantId);
         List<Restaurant> restaurantList = restaurantListMutableLiveData.getValue();
 
         executor.execute(() -> {

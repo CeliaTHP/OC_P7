@@ -13,7 +13,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.callbacks.OnWorkmateClickListener;
 import com.openclassrooms.oc_p7.databinding.FragmentListWorkmatesBinding;
@@ -24,7 +23,7 @@ import com.openclassrooms.oc_p7.view_models.WorkmateViewModel;
 import com.openclassrooms.oc_p7.views.activities.DetailsActivity;
 import com.openclassrooms.oc_p7.views.adapters.WorkmateAdapter;
 
-import java.util.List;
+import java.util.Collections;
 
 public class WorkmateListFragment extends Fragment {
 
@@ -32,6 +31,7 @@ public class WorkmateListFragment extends Fragment {
     private FragmentListWorkmatesBinding fragmentListWorkmatesBinding;
 
     private WorkmateViewModel workmateViewModel;
+    private WorkmateAdapter adapter;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -41,6 +41,7 @@ public class WorkmateListFragment extends Fragment {
 
         initViewModels();
         initObservers();
+        initRecyclerView();
 
         workmateViewModel.getWorkmateList();
 
@@ -55,12 +56,19 @@ public class WorkmateListFragment extends Fragment {
 
 
     private void initObservers() {
-        workmateViewModel.workmateListLiveData.observe(getViewLifecycleOwner(), workmates -> initRecyclerView(workmates));
+        workmateViewModel.workmateListLiveData.observe(getViewLifecycleOwner(), workmates -> {
+            Log.d(TAG, "workmateList observer from Fragment");
+            for (Workmate workmate : workmates) {
+                Log.d(TAG, workmate.getName() + " " + workmate.getPicUrl());
+            }
+            adapter.setData(workmates);
+            adapter.notifyDataSetChanged();
+        });
     }
 
-    private void initRecyclerView(List<Workmate> workmateList) {
-        Log.d(TAG, FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
-        fragmentListWorkmatesBinding.workmateRecyclerView.setAdapter(new WorkmateAdapter(workmateList, false, new OnWorkmateClickListener() {
+
+    private void initRecyclerView() {
+        adapter = new WorkmateAdapter(Collections.emptyList(), false, new OnWorkmateClickListener() {
             @Override
             public void onWorkmateClick(Workmate workmate) {
                 if ((workmate.getRestaurantId() != null)) {
@@ -72,8 +80,12 @@ public class WorkmateListFragment extends Fragment {
                 }
 
             }
-        }));
+
+
+        });
+        fragmentListWorkmatesBinding.workmateRecyclerView.setAdapter(adapter);
         fragmentListWorkmatesBinding.workmateRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
     }
 
 

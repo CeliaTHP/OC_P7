@@ -5,6 +5,7 @@ import android.location.Location;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.common.util.concurrent.MoreExecutors;
+import com.openclassrooms.oc_p7.models.ErrorCode;
 import com.openclassrooms.oc_p7.models.Restaurant;
 import com.openclassrooms.oc_p7.models.pojo_models.general.NearbyPlaceResponse;
 import com.openclassrooms.oc_p7.repositories.PlaceRepository;
@@ -33,7 +34,7 @@ public class PlaceRepositoryTests {
     private PlaceRepository placeRepository;
     private final Location expectedLocation = Mockito.mock(Location.class);
 
-    private final MutableLiveData<PlaceRepository.ErrorCode> errorCodeMutableLiveDataMock = (MutableLiveData<PlaceRepository.ErrorCode>) Mockito.mock(MutableLiveData.class);
+    private final MutableLiveData<ErrorCode> errorCodeMutableLiveDataMock = (MutableLiveData<ErrorCode>) Mockito.mock(MutableLiveData.class);
 
     @Before
     public void setUp() {
@@ -70,7 +71,7 @@ public class PlaceRepositoryTests {
 
         Mockito.verify(placesApiMock).getNearbyPlaces(BuildConfig.GoogleMapApiKey, expectedLocationStringQuery, expectedRadiusQuery, expectedRestaurantQuery);
         Mockito.verify(call).execute();
-        Mockito.verify(errorCodeMutableLiveDataMock).postValue(PlaceRepository.ErrorCode.UNSUCCESSFUL_RESPONSE);
+        Mockito.verify(errorCodeMutableLiveDataMock).postValue(ErrorCode.UNSUCCESSFUL_RESPONSE);
 
     }
 
@@ -85,7 +86,7 @@ public class PlaceRepositoryTests {
         placeRepository.getNearbyPlaces(expectedLocation);
 
         Mockito.verify(placesApiMock).getNearbyPlaces(BuildConfig.GoogleMapApiKey, expectedLocationStringQuery, expectedRadiusQuery, expectedRestaurantQuery);
-        Mockito.verify(errorCodeMutableLiveDataMock).postValue(PlaceRepository.ErrorCode.CONNECTION_ERROR);
+        Mockito.verify(errorCodeMutableLiveDataMock).postValue(ErrorCode.CONNECTION_ERROR);
 
     }
 }

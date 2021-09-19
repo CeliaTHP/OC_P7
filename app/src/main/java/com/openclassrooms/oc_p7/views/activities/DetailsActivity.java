@@ -108,12 +108,12 @@ public class DetailsActivity extends BaseActivity {
 
 
         initRecyclerView(restaurant.getAttendees());
-        initSlider();
+        initPicSlider();
 
 
     }
 
-    private void initSlider() {
+    private void initPicSlider() {
 
         SliderAdapter sliderAdapter = new SliderAdapter();
         if (restaurant.getPhotoReferences() != null && !restaurant.getPhotoReferences().isEmpty()) {

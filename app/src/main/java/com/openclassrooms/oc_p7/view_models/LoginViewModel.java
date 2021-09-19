@@ -221,10 +221,24 @@ public class LoginViewModel extends AndroidViewModel {
     }
 
     public void initWorkmates() {
+        Log.d("WORKMATES_CREATION", "initWorkmates");
+
         for (Workmate workmate : DummyWorkmateGenerator.generateWorkmates()) {
-            WorkmateHelper.createWorkmate(workmate.getUid(), workmate.getName(), workmate.getEmail(), workmate.getPicUrl());
-            if (workmate.getRestaurantId() != null)
+            WorkmateHelper.createWorkmate(workmate.getUid(), workmate.getName(), workmate.getEmail(), workmate.getPicUrl()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull @NotNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+                        Log.d("WORKMATES_CREATION", "is Successfull");
+                    } else {
+                        Log.d("WORKMATES_CREATION", "is not Successfull");
+
+                    }
+                }
+            });
+            if (workmate.getRestaurantId() != null) {
                 WorkmateHelper.updateWorkmateRestaurantId(workmate.getRestaurantId(), workmate.getUid());
+
+            }
             if (workmate.getRestaurantName() != null)
                 WorkmateHelper.updateWorkmateRestaurantName(workmate.getRestaurantName(), workmate.getUid());
         }
