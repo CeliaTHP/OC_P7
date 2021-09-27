@@ -29,7 +29,7 @@ public class DetailsViewModelTests {
     public void getWorkmateForRestaurantTests() {
         Restaurant expectedRestaurant = Mockito.mock(Restaurant.class);
 
-        detailsViewModel.getWorkmatesForRestaurant(expectedRestaurant);
+        detailsViewModel.getWorkmatesForRestaurant();
 
         Mockito.verify(workmateRepositoryMock).getWorkmatesForRestaurant(expectedRestaurant);
         Mockito.verifyNoMoreInteractions(workmateRepositoryMock);

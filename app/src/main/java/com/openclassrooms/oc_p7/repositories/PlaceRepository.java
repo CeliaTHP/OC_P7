@@ -33,7 +33,6 @@ public class PlaceRepository {
     private final String radiusQuery;
     private final String restaurantQuery;
     private MutableLiveData<ErrorCode> errorCode;
-    private Boolean shouldPostValue = true;
 
 
     public PlaceRepository(PlacesApi placesApi,

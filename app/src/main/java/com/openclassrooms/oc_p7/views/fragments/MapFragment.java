@@ -142,9 +142,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
+
         mapViewModel.restaurantListLiveData.observe(getViewLifecycleOwner(), restaurantList -> {
-            Log.d(TAG, "restaurantLiveData observer : " + restaurantList);
+
+            workmateViewModel.getWorkmateForRestaurantList(mapViewModel.restaurantListLiveData);
+
             for (Restaurant restaurant : restaurantList) {
+
+                Log.d(TAG, "observer mapFragment : " + restaurant.toString());
                 //getDetails
                 if (googleMap != null) {
                     LatLng latLng = new LatLng(restaurant.getLat(), restaurant.getLng());
@@ -156,7 +161,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
                 }
             }
+
+            workmateViewModel.workmateListLiveData.observe(getViewLifecycleOwner(), workmateList -> {
+
+
+            });
         });
+
 
 
 

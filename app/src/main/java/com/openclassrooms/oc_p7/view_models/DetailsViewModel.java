@@ -24,8 +24,8 @@ public class DetailsViewModel extends ViewModel {
 
     }
 
-    public void getWorkmatesForRestaurant(Restaurant restaurant) {
-        workmateRepository.getWorkmatesForRestaurant(restaurant);
+    public void getWorkmatesForRestaurant() {
+        workmateRepository.getWorkmatesForRestaurant(restaurantMutableLiveData);
     }
 
     public void getRestaurantDetails(String restaurantId) {

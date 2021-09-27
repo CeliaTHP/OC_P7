@@ -32,6 +32,7 @@ public class APIUtils {
         return nearByPlaceResponse;
     }
 
+
     public static List<RestaurantPojo> getRestaurantPojoList() {
         List<RestaurantPojo> restaurantPojoList = new ArrayList<>();
         RestaurantPojo restaurantPojo = new RestaurantPojo();
@@ -47,4 +48,5 @@ public class APIUtils {
         restaurantPojoList.add(restaurantPojo);
         return restaurantPojoList;
     }
+
 }

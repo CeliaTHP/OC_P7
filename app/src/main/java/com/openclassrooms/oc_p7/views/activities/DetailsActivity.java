@@ -77,7 +77,6 @@ public class DetailsActivity extends BaseActivity {
     private void initUI(Restaurant restaurant) {
 
 
-
         activityDetailsBinding.detailsRestaurantName.setText(restaurant.getName());
         activityDetailsBinding.detailsRestaurantAddress.setText(restaurant.getAddress());
 
@@ -133,6 +132,8 @@ public class DetailsActivity extends BaseActivity {
 
     private void initRecyclerView(List<Workmate> workmateList) {
         if (workmateList != null) {
+            //detailsViewModel.getWorkmatesForRestaurant();
+
             activityDetailsBinding.detailsRestaurantWorkmatesRv.setAdapter(new WorkmateAdapter(workmateList, true, new OnWorkmateClickListener() {
                 @Override
                 public void onWorkmateClick(Workmate workmate) {
@@ -149,14 +150,10 @@ public class DetailsActivity extends BaseActivity {
     private void initObservers() {
         detailsViewModel.restaurantMutableLiveData.observe(this, restaurantLiveData -> {
 
-            //TODO loop
-            //detailsViewModel.getWorkmatesForRestaurant(detailsViewModel.restaurantMutableLiveData);
+            detailsViewModel.getWorkmatesForRestaurant();
             restaurant = restaurantLiveData;
             initUI(restaurant);
-
         });
-
-        //observe list to initui with restaurant
 
     }
 

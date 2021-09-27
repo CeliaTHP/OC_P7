@@ -26,6 +26,7 @@ public class Restaurant implements Serializable {
     private Boolean isLiked;
 
     private Boolean hasDetails = false;
+    private Boolean hasWorkmates = false;
 
     public Restaurant(String id, String name, String address, double lat, double lng) {
         this.id = id;
@@ -35,6 +36,14 @@ public class Restaurant implements Serializable {
         this.lng = lng;
         isChosen = false;
         isLiked = false;
+    }
+
+    public Boolean getHasWorkmates() {
+        return hasWorkmates;
+    }
+
+    public void setHasWorkmates(Boolean hasWorkmates) {
+        this.hasWorkmates = hasWorkmates;
     }
 
     public void setPhotoReferences(List<String> photoReferences) {
@@ -66,7 +75,7 @@ public class Restaurant implements Serializable {
     }
 
     public String toString() {
-        return id + " " + name + " " + attendees + " " + address + " " + distance + " " + rating + " " + isChosen + " " + isLiked + " " + openingHours + " " + photoReferences;
+        return hasWorkmates + " " + hasDetails + " " + id + " " + name + " " + attendees + " " + address + " " + distance + " " + rating + " " + isChosen + " " + isLiked + " " + openingHours + " " + photoReferences;
     }
 
     public double getLat() {
