@@ -1,4 +1,4 @@
-package com.openclassrooms.oc_p7;
+package com.openclassrooms.oc_p7.utils;
 
 import com.openclassrooms.oc_p7.models.Restaurant;
 import com.openclassrooms.oc_p7.models.Workmate;
@@ -9,7 +9,7 @@ import java.util.List;
 
 public class RepositoryUtils {
 
-    static List<Restaurant> getRestaurantList() {
+    public static List<Restaurant> getRestaurantList() {
         List<RestaurantPojo> restaurantPojoList = APIUtils.getRestaurantPojoList();
         return PlaceRepository.getRestaurantList(restaurantPojoList);
     }

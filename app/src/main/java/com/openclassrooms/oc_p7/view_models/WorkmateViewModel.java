@@ -29,9 +29,7 @@ public class WorkmateViewModel extends ViewModel {
     }
 
     public void getWorkmateForRestaurantList(MutableLiveData<List<Restaurant>> restaurantMutableLiveData) {
-        workmateRepository.getWorkmatesForRestaurantsList(restaurantMutableLiveData);
-
-
+        workmateRepository.getWorkmatesForRestaurantList(restaurantMutableLiveData);
     }
 
 

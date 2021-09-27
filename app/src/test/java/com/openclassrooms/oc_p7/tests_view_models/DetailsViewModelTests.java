@@ -1,6 +1,5 @@
-package com.openclassrooms.oc_p7;
+package com.openclassrooms.oc_p7.tests_view_models;
 
-import com.openclassrooms.oc_p7.models.Restaurant;
 import com.openclassrooms.oc_p7.repositories.PlaceRepository;
 import com.openclassrooms.oc_p7.repositories.WorkmateRepository;
 import com.openclassrooms.oc_p7.view_models.DetailsViewModel;
@@ -27,11 +26,10 @@ public class DetailsViewModelTests {
 
     @Test
     public void getWorkmateForRestaurantTests() {
-        Restaurant expectedRestaurant = Mockito.mock(Restaurant.class);
 
         detailsViewModel.getWorkmatesForRestaurant();
 
-        Mockito.verify(workmateRepositoryMock).getWorkmatesForRestaurant(expectedRestaurant);
+        Mockito.verify(workmateRepositoryMock).getWorkmatesForRestaurant(detailsViewModel.restaurantMutableLiveData);
         Mockito.verifyNoMoreInteractions(workmateRepositoryMock);
     }
 

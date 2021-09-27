@@ -125,7 +125,7 @@ public class WorkmateRepository {
     }
 
 
-    public void getWorkmatesForRestaurantsList(MutableLiveData<List<Restaurant>> restaurantListMutableLiveData) {
+    public void getWorkmatesForRestaurantList(MutableLiveData<List<Restaurant>> restaurantListMutableLiveData) {
         //FILTER VIA FIREBASE
 
         List<Restaurant> restaurantList = restaurantListMutableLiveData.getValue();

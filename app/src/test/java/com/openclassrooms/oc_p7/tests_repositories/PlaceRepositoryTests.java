@@ -1,15 +1,18 @@
-package com.openclassrooms.oc_p7;
+package com.openclassrooms.oc_p7.tests_repositories;
 
 import android.location.Location;
 
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.common.util.concurrent.MoreExecutors;
+import com.openclassrooms.oc_p7.BuildConfig;
 import com.openclassrooms.oc_p7.models.ErrorCode;
 import com.openclassrooms.oc_p7.models.Restaurant;
 import com.openclassrooms.oc_p7.models.pojo_models.general.NearbyPlaceResponse;
 import com.openclassrooms.oc_p7.repositories.PlaceRepository;
 import com.openclassrooms.oc_p7.services.apis.PlacesApi;
+import com.openclassrooms.oc_p7.utils.APIUtils;
+import com.openclassrooms.oc_p7.utils.RepositoryUtils;
 
 import org.junit.After;
 import org.junit.Before;
@@ -87,6 +90,11 @@ public class PlaceRepositoryTests {
 
         Mockito.verify(placesApiMock).getNearbyPlaces(BuildConfig.GoogleMapApiKey, expectedLocationStringQuery, expectedRadiusQuery, expectedRestaurantQuery);
         Mockito.verify(errorCodeMutableLiveDataMock).postValue(ErrorCode.CONNECTION_ERROR);
+
+    }
+
+    @Test
+    public void getRestaurantDetailsTestSuccess() throws IOException {
 
     }
 }

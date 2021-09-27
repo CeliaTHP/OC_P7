@@ -1,4 +1,4 @@
-package com.openclassrooms.oc_p7;
+package com.openclassrooms.oc_p7.utils;
 
 import com.openclassrooms.oc_p7.models.pojo_models.general.Geometry;
 import com.openclassrooms.oc_p7.models.pojo_models.general.Location;

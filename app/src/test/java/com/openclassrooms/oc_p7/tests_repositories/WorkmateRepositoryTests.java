@@ -1,4 +1,4 @@
-package com.openclassrooms.oc_p7;
+package com.openclassrooms.oc_p7.tests_repositories;
 
 import androidx.lifecycle.MutableLiveData;
 
