@@ -1,7 +1,6 @@
 package com.openclassrooms.oc_p7.repositories;
 
 import android.location.Location;
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -55,7 +54,6 @@ public class PlaceRepository {
     public MutableLiveData<Location> currentLocationLiveData = new MutableLiveData<>();
 
 
-
     public LiveData<List<Restaurant>> getRestaurantListMutableLiveData() {
         return restaurantListMutableLiveData;
     }
@@ -89,11 +87,9 @@ public class PlaceRepository {
         });
     }
 
-    public void getRestaurantDetails(String restaurantId) {
-
+    public void updateRestaurantDetails(String restaurantId) {
         //Executor to execute the following code in the same thread (easier for tests)
         List<Restaurant> restaurantList = restaurantListMutableLiveData.getValue();
-
         executor.execute(() -> {
             Call<DetailsPlaceResponse> call =
                     placesApi.getDetailsById(BuildConfig.GoogleMapApiKey, restaurantId);
@@ -101,41 +97,25 @@ public class PlaceRepository {
                 Response<DetailsPlaceResponse> response = call.execute();
                 if (response.isSuccessful()) {
                     if (response.body() != null) {
-                        if (restaurantList != null && !restaurantList.isEmpty()) {
-                            Log.d(TAG, "list case");
+                        if (restaurantList != null) {
                             for (Restaurant restaurant : restaurantList) {
-                                Log.d(TAG, restaurant.getName());
                                 if (restaurant.getId().equals(restaurantId)) {
                                     {
                                         setRestaurantInfos(response.body().result, restaurant);
-
                                     }
-
                                 }
-
                             }
                             restaurantListMutableLiveData.postValue(restaurantList);
 
-
-                        } else {
-                            Log.d(TAG, "details case");
-                            Restaurant restaurantToCreate = new Restaurant(restaurantId, null, null, 0.0, 0.0);
-                            setRestaurantInfos(response.body().result, restaurantToCreate);
-                            restaurantMutableLiveData.postValue(restaurantToCreate);
-
                         }
-
-
                     }
+
                 } else {
                     errorCode.postValue(ErrorCode.UNSUCCESSFUL_RESPONSE);
-                    Log.d(TAG, "onFailure: " + response.errorBody());
 
                 }
 
-
             } catch (IOException e) {
-                Log.d(TAG, "onFailure: " + e.getMessage());
                 errorCode.postValue(ErrorCode.CONNECTION_ERROR);
             }
             //restaurantListMutableLiveData.postValue(restaurantList);
@@ -143,6 +123,30 @@ public class PlaceRepository {
 
         });
     }
+
+    public void getRestaurantDetails(String restaurantId) {
+        executor.execute(() -> {
+            Call<DetailsPlaceResponse> call =
+                    placesApi.getDetailsById(BuildConfig.GoogleMapApiKey, restaurantId);
+            try {
+                Response<DetailsPlaceResponse> response = call.execute();
+                if (response.isSuccessful()) {
+                    if (response.body() != null) {
+                        Restaurant restaurantToCreate = createRestaurant(response.body().result);
+                        setRestaurantInfos(response.body().result, restaurantToCreate);
+                        restaurantMutableLiveData.postValue(restaurantToCreate);
+                    }
+                } else {
+                    errorCode.postValue(ErrorCode.UNSUCCESSFUL_RESPONSE);
+
+                }
+            } catch (IOException e) {
+                errorCode.postValue(ErrorCode.CONNECTION_ERROR);
+            }
+        });
+
+    }
+
 
     static public List<Restaurant> getRestaurantList(List<RestaurantPojo> restaurantPojoList) {
         List<Restaurant> restaurantList = new ArrayList<>();
@@ -159,7 +163,6 @@ public class PlaceRepository {
 
     private void setRestaurantInfos(RestaurantPojo restaurantPojo, Restaurant restaurant) {
 
-        Log.d(TAG, "setRestaurantInfos for " + restaurant.getName());
 
         List<String> photos = new ArrayList<>();
 
@@ -198,15 +201,10 @@ public class PlaceRepository {
                 restaurant.setPhotoReference(photos);
             } else
                 restaurant.setPhotoReference(null);
-            /*
-            Log.d(TAG, restaurant.getName() + " " + restaurant.getRating() + " " + restaurant.getOpeningHours() + " " + restaurant.getPhone() + " "
-                    + restaurant.getWebsite() + " " + restaurant.getPhotoReferences().size() + restaurant.getPhotoReferences() + " ");
 
-             */
         }
 
         restaurant.setHasDetails(true);
-        Log.d(TAG, "has setRestaurantInfos : " + restaurant.getName());
 
     }
 

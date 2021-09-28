@@ -90,8 +90,8 @@ public class MapViewModel extends ViewModel {
 
     }
 
-    public void getRestaurantDetails(Restaurant restaurant) {
-        placeRepository.getRestaurantDetails(restaurant.getId());
+    public void updateRestaurantDetails(Restaurant restaurant) {
+        placeRepository.updateRestaurantDetails(restaurant.getId());
     }
 
     public void getLocationInformations(Context context) {

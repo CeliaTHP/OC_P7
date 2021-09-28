@@ -59,7 +59,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
         Log.d(TAG, "onBind :  " + restaurant.toString());
 
         if (!restaurant.getHasDetails()) {
-            mapViewModel.getRestaurantDetails(restaurant);
+            mapViewModel.updateRestaurantDetails(restaurant);
         }
 
 

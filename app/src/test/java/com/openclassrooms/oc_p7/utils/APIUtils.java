@@ -1,5 +1,6 @@
 package com.openclassrooms.oc_p7.utils;
 
+import com.openclassrooms.oc_p7.models.pojo_models.responses.DetailsPlaceResponse;
 import com.openclassrooms.oc_p7.models.pojo_models.responses.NearbyPlaceResponse;
 import com.openclassrooms.oc_p7.models.pojo_models.restaurant_pojo.Geometry;
 import com.openclassrooms.oc_p7.models.pojo_models.restaurant_pojo.Location;
@@ -32,6 +33,11 @@ public class APIUtils {
         return nearByPlaceResponse;
     }
 
+    public static DetailsPlaceResponse getDetailsPlaceResponse() {
+        DetailsPlaceResponse detailsPlaceResponse = new DetailsPlaceResponse();
+        detailsPlaceResponse.result = getRestaurantPojoList().get(0);
+        return detailsPlaceResponse;
+    }
 
     public static List<RestaurantPojo> getRestaurantPojoList() {
         List<RestaurantPojo> restaurantPojoList = new ArrayList<>();
