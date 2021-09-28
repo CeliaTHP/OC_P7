@@ -27,6 +27,7 @@
     <string name="menu_workmates">Collègues</string>
     <string name="toolbar_search">Rechercher</string>
     <string name="location_button">Centrer vue</string>
+    <string name="toolbar_query_too_short">Veuillez entrer au moins 3 caractères pour lancer la recherche</string>
 
     <!--FACEBOOK LOGIN-->
     <string name="facebook_app_id" translatable="false">950434559094038</string>

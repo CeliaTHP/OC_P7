@@ -17,8 +17,8 @@ android {
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
-        resValue "string", "GOOGLE_MAP_API_KEY", "\"AIzaSyBOkAdlOK08kOWkwI2HM78WOnkFOnTHzNk\""
-        buildConfigField("String", "GoogleMapApiKey", "\"AIzaSyBOkAdlOK08kOWkwI2HM78WOnkFOnTHzNk\"")
+        resValue "string", "GOOGLE_MAP_API_KEY", "\"AIzaSyDIPTvyUrMk4jPJekHJjLkwVOTAtrfTkcE\""
+            buildConfigField("String", "GoogleMapApiKey", "\"AIzaSyDIPTvyUrMk4jPJekHJjLkwVOTAtrfTkcE\"")
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true

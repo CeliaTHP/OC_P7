@@ -1,9 +1,9 @@
 package com.openclassrooms.oc_p7.utils;
 
-import com.openclassrooms.oc_p7.models.pojo_models.general.Geometry;
-import com.openclassrooms.oc_p7.models.pojo_models.general.Location;
-import com.openclassrooms.oc_p7.models.pojo_models.general.NearbyPlaceResponse;
-import com.openclassrooms.oc_p7.models.pojo_models.general.RestaurantPojo;
+import com.openclassrooms.oc_p7.models.pojo_models.responses.NearbyPlaceResponse;
+import com.openclassrooms.oc_p7.models.pojo_models.restaurant_pojo.Geometry;
+import com.openclassrooms.oc_p7.models.pojo_models.restaurant_pojo.Location;
+import com.openclassrooms.oc_p7.models.pojo_models.restaurant_pojo.RestaurantPojo;
 
 import org.mockito.Mockito;
 

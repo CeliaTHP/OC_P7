@@ -8,7 +8,7 @@ import com.google.common.util.concurrent.MoreExecutors;
 import com.openclassrooms.oc_p7.BuildConfig;
 import com.openclassrooms.oc_p7.models.ErrorCode;
 import com.openclassrooms.oc_p7.models.Restaurant;
-import com.openclassrooms.oc_p7.models.pojo_models.general.NearbyPlaceResponse;
+import com.openclassrooms.oc_p7.models.pojo_models.responses.NearbyPlaceResponse;
 import com.openclassrooms.oc_p7.repositories.PlaceRepository;
 import com.openclassrooms.oc_p7.services.apis.PlacesApi;
 import com.openclassrooms.oc_p7.utils.APIUtils;

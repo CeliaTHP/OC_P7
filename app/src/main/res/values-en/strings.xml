@@ -26,6 +26,8 @@
     <string name="menu_workmates">Workmates</string>
     <string name="toolbar_search">Search</string>
     <string name="location_button">Center view</string>.
+    <string name="toolbar_query_too_short">Please, enter at least 3 caracters to start the query</string>
+
 
     <!--DRAWER-->
     <string name="drawer_home">HOME</string>

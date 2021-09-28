@@ -31,7 +31,7 @@ import com.openclassrooms.oc_p7.databinding.FragmentMapBinding;
 import com.openclassrooms.oc_p7.injections.Injection;
 import com.openclassrooms.oc_p7.models.ErrorCode;
 import com.openclassrooms.oc_p7.models.Restaurant;
-import com.openclassrooms.oc_p7.models.pojo_models.general.RestaurantPojo;
+import com.openclassrooms.oc_p7.models.pojo_models.restaurant_pojo.RestaurantPojo;
 import com.openclassrooms.oc_p7.services.factories.MapViewModelFactory;
 import com.openclassrooms.oc_p7.services.factories.WorkmateViewModelFactory;
 import com.openclassrooms.oc_p7.view_models.LoginViewModel;

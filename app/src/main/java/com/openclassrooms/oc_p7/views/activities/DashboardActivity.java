@@ -24,6 +24,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.common.api.Status;
+import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
@@ -37,6 +38,7 @@ import com.openclassrooms.oc_p7.services.firestore_helpers.UserHelper;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 public class DashboardActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -67,14 +69,22 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
         drawerHeaderBinding = DrawerHeaderBinding.bind(activityDashboardBinding.drawerNavView.getHeaderView(0));
         setContentView(activityDashboardBinding.getRoot());
 
+        initPlaces();
         setToolbar();
         setDrawerLayout();
         setHeaderInfos();
 
     }
 
+    private void initPlaces() {
+        if (!Places.isInitialized()) {
+            Places.initialize(this, getString(R.string.google_api_key), Locale.FRANCE);
+        }
 
-    public void setHeaderInfos() {
+    }
+
+
+    private void setHeaderInfos() {
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             Log.d(TAG, "email " + FirebaseAuth.getInstance().getCurrentUser().getEmail());
             if (FirebaseAuth.getInstance().getCurrentUser().getDisplayName() != null) {
@@ -125,7 +135,7 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
         MenuItem.OnActionExpandListener onActionExpandListener = new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
-                //onSearchCalled();
+                onSearchCalled();
                 return true;
             }
 
@@ -133,20 +143,27 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 return true;
             }
+
         };
 
         menu.findItem(R.id.toolbar_search).setOnActionExpandListener(onActionExpandListener);
         searchView = (SearchView) menu.findItem(R.id.toolbar_search).getActionView();
         searchView.setQueryHint("Search location...");
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+        /*searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 if (query.length() >= 3) {
                     Log.d(TAG, "Can start query : " + query);
-                    //onSearchCalled();
                 } else if (query.length() != 0) {
+                    Toast toast = Toast.makeText(DashboardActivity.this, R.string.toolbar_query_too_short, Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.BOTTOM, 0, 20);
+                    toast.show();
                     Log.d(TAG, "Query too short " + query);
                 } else {
+                    Toast toast = Toast.makeText(DashboardActivity.this, R.string.toolbar_query_too_short, Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.BOTTOM, 0, 20);
+                    toast.show();
                     Log.d(TAG, "Empty query " + query);
                 }
 
@@ -160,7 +177,23 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
                 return true;
             }
         });
+
+         */
+        searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+            @Override
+            public boolean onSuggestionSelect(int position) {
+                Log.d(TAG, "onSuggestionSelected : ");
+                return false;
+            }
+
+            @Override
+            public boolean onSuggestionClick(int position) {
+                Log.d(TAG, "onSuggestionClick : ");
+                return false;
+            }
+        });
     }
+
 
     public void onSearchCalled() {
         // Set the fields to specify which types of place data to return.

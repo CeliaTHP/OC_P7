@@ -9,11 +9,10 @@ import androidx.lifecycle.MutableLiveData;
 import com.openclassrooms.oc_p7.BuildConfig;
 import com.openclassrooms.oc_p7.models.ErrorCode;
 import com.openclassrooms.oc_p7.models.Restaurant;
-import com.openclassrooms.oc_p7.models.pojo_models.details.DetailsPlaceResponse;
-import com.openclassrooms.oc_p7.models.pojo_models.details.RestaurantDetailsPojo;
-import com.openclassrooms.oc_p7.models.pojo_models.general.NearbyPlaceResponse;
-import com.openclassrooms.oc_p7.models.pojo_models.general.Photo;
-import com.openclassrooms.oc_p7.models.pojo_models.general.RestaurantPojo;
+import com.openclassrooms.oc_p7.models.pojo_models.responses.DetailsPlaceResponse;
+import com.openclassrooms.oc_p7.models.pojo_models.responses.NearbyPlaceResponse;
+import com.openclassrooms.oc_p7.models.pojo_models.restaurant_pojo.Photo;
+import com.openclassrooms.oc_p7.models.pojo_models.restaurant_pojo.RestaurantPojo;
 import com.openclassrooms.oc_p7.services.apis.PlacesApi;
 
 import java.io.IOException;
@@ -158,42 +157,42 @@ public class PlaceRepository {
         return new Restaurant(restaurantPojo.place_id, restaurantPojo.name, restaurantPojo.vicinity, restaurantPojo.geometry.location.lat, restaurantPojo.geometry.location.lng);
     }
 
-    private void setRestaurantInfos(RestaurantDetailsPojo restaurantDetailsPojo, Restaurant restaurant) {
+    private void setRestaurantInfos(RestaurantPojo restaurantPojo, Restaurant restaurant) {
 
         Log.d(TAG, "setRestaurantInfos for " + restaurant.getName());
 
         List<String> photos = new ArrayList<>();
 
-        if (restaurantDetailsPojo != null) {
-            if (restaurantDetailsPojo.name != null)
-                restaurant.setName(restaurantDetailsPojo.name);
+        if (restaurantPojo != null) {
+            if (restaurantPojo.name != null)
+                restaurant.setName(restaurantPojo.name);
 
-            if (restaurantDetailsPojo.formatted_address != null)
-                restaurant.setAddress(restaurantDetailsPojo.formatted_address);
+            if (restaurantPojo.formatted_address != null)
+                restaurant.setAddress(restaurantPojo.formatted_address);
 
-            if (restaurantDetailsPojo.geometry.location.lat != 0.0)
-                restaurant.setLat(restaurantDetailsPojo.geometry.location.lat);
+            if (restaurantPojo.geometry.location.lat != 0.0)
+                restaurant.setLat(restaurantPojo.geometry.location.lat);
 
-            if (restaurantDetailsPojo.geometry.location.lng != 0.0)
-                restaurant.setLng(restaurantDetailsPojo.geometry.location.lng);
+            if (restaurantPojo.geometry.location.lng != 0.0)
+                restaurant.setLng(restaurantPojo.geometry.location.lng);
 
-            if (restaurantDetailsPojo.place_id != null)
-                restaurant.setId(restaurantDetailsPojo.place_id);
+            if (restaurantPojo.place_id != null)
+                restaurant.setId(restaurantPojo.place_id);
 
-            if (restaurantDetailsPojo.rating != 0.0)
-                restaurant.setRating(restaurantDetailsPojo.rating);
+            if (restaurantPojo.rating != 0.0)
+                restaurant.setRating(restaurantPojo.rating);
 
-            if (restaurantDetailsPojo.opening_hours != null)
-                restaurant.setOpeningHours(restaurantDetailsPojo.opening_hours.weekday_text);
+            if (restaurantPojo.opening_hours != null)
+                restaurant.setOpeningHours(restaurantPojo.opening_hours.weekday_text);
 
-            if (restaurantDetailsPojo.international_phone_number != null)
-                restaurant.setPhone(restaurantDetailsPojo.international_phone_number);
+            if (restaurantPojo.international_phone_number != null)
+                restaurant.setPhone(restaurantPojo.international_phone_number);
 
-            if (restaurantDetailsPojo.website != null)
-                restaurant.setWebsite(restaurantDetailsPojo.website);
+            if (restaurantPojo.website != null)
+                restaurant.setWebsite(restaurantPojo.website);
 
-            if (restaurantDetailsPojo.photos != null) {
-                for (Photo photoUrl : restaurantDetailsPojo.photos) {
+            if (restaurantPojo.photos != null) {
+                for (Photo photoUrl : restaurantPojo.photos) {
                     photos.add(photoUrl.photo_reference);
                 }
                 restaurant.setPhotoReference(photos);

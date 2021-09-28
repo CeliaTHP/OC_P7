@@ -1,12 +1,8 @@
-package com.openclassrooms.oc_p7.models.pojo_models.details;
-
-import com.openclassrooms.oc_p7.models.pojo_models.general.Geometry;
-import com.openclassrooms.oc_p7.models.pojo_models.general.Photo;
-import com.openclassrooms.oc_p7.models.pojo_models.general.PlusCode;
+package com.openclassrooms.oc_p7.models.pojo_models.restaurant_pojo;
 
 import java.util.List;
 
-public class RestaurantDetailsPojo {
+public class RestaurantPojo {
 
     public List<AddressComponent> address_components;
     public String adr_address;
@@ -17,7 +13,7 @@ public class RestaurantDetailsPojo {
     public String icon;
     public String international_phone_number;
     public String name;
-    public OpeningHoursDetails opening_hours;
+    public OpeningHours opening_hours;
     public List<Photo> photos;
     public String place_id;
     public PlusCode plus_code;
@@ -25,6 +21,7 @@ public class RestaurantDetailsPojo {
     public double rating;
     public String reference;
     public List<Review> reviews;
+    public String scope;
     public List<String> types;
     public String url;
     public int user_ratings_total;
