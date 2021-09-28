@@ -55,37 +55,15 @@ public class MapViewModel extends ViewModel {
         });
         placeRepository.getRestaurantListMutableLiveData().observe(this.lifecycleOwner, restaurantList -> {
             Log.d(TAG, " getRestaurantLiveData observer ");
-
-
             restaurantListLiveData.postValue(restaurantList);
 
 
-            /*
-            restaurantLiveData.postValue(restaurantList);
-            for (Restaurant restaurant : restaurantList) {
-
-                workmateRepository.getWorkmatesForRestaurant(restaurant, new OnSuccessListener<Restaurant>() {
-                    @Override
-                    public void onSuccess(Restaurant restaurant) {
-                    }
-                });
-
-                placeRepository.getRestaurantDetails(restaurant.getId());
-
-
-            }
-             */
-
-            /*
-            workmateRepository.getWorkmatesForRestaurantsList(restaurantList, new OnSuccessListener<List<Restaurant>>() {
-                @Override
-                public void onSuccess(List<Restaurant> restaurantList) {
-                    restaurantLiveData.postValue(restaurantList);
-                }
-            });
-            */
-
         });
+
+
+    }
+
+    public void updateRestaurantDetails() {
 
 
     }

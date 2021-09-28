@@ -149,7 +149,6 @@ public class DetailsActivity extends BaseActivity {
 
     private void initObservers() {
         detailsViewModel.restaurantMutableLiveData.observe(this, restaurantLiveData -> {
-
             detailsViewModel.getWorkmatesForRestaurant();
             restaurant = restaurantLiveData;
             initUI(restaurant);

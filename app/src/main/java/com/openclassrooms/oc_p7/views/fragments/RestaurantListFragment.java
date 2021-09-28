@@ -42,9 +42,12 @@ public class RestaurantListFragment extends Fragment implements OnRestaurantClic
 
         fragmentListRestaurantsBinding = FragmentListRestaurantsBinding.inflate(LayoutInflater.from(this.getContext()));
 
+
         initViewModels();
         initPlaces();
         initObservers();
+
+        workmateViewModel.getWorkmateList();
 
 
         return fragmentListRestaurantsBinding.getRoot();
@@ -82,8 +85,11 @@ public class RestaurantListFragment extends Fragment implements OnRestaurantClic
 
         });
         mapViewModel.restaurantListLiveData.observe(getViewLifecycleOwner(), restaurantList -> {
+
+            workmateViewModel.getWorkmateForRestaurantList(mapViewModel.restaurantListLiveData);
             adapter.setData(restaurantList);
             adapter.notifyDataSetChanged();
+
             Log.d(TAG, "nearbyPlacesObserver from Restaurant");
 
         });
@@ -99,6 +105,7 @@ public class RestaurantListFragment extends Fragment implements OnRestaurantClic
 
     @Override
     public void onRestaurantClick(Restaurant restaurant) {
+
         Log.d(TAG, "click on : " + restaurant.getName());
         Intent intent = new Intent(this.getActivity(), DetailsActivity.class);
         intent.putExtra("restaurantId", restaurant.getId());
