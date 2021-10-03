@@ -39,8 +39,6 @@ public class WorkmateRepositoryTests {
     @Test
     public void getWorkmateListTestsSuccess() throws IOException {
 
-        workmateRepository.getWorkmateList();
-
 
     }
 

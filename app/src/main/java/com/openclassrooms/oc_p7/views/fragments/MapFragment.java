@@ -145,15 +145,20 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         mapViewModel.restaurantListLiveData.observe(getViewLifecycleOwner(), restaurantList -> {
 
+            Log.d(TAG, "observer,  size : " + restaurantList.size());
+
             workmateViewModel.getWorkmateForRestaurantList(mapViewModel.restaurantListLiveData);
 
             for (Restaurant restaurant : restaurantList) {
+
 
                 Log.d(TAG, "observer mapFragment : " + restaurant.toString());
                 //getDetails
                 if (googleMap != null) {
                     LatLng latLng = new LatLng(restaurant.getLat(), restaurant.getLng());
                     if (restaurant.getAttendees() != null && restaurant.getAttendees().size() >= 1) {
+                        Log.d(TAG, "getAttendees != null " + restaurant.getName());
+
                         googleMap.addMarker(new MarkerOptions().position(latLng).title(restaurant.getName()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
                         Log.d(TAG, "a workmate chosed : " + restaurant.getName());
                     } else

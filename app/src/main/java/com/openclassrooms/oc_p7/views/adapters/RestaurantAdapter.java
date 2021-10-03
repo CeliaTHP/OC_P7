@@ -34,7 +34,6 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
     private Location currentLocation;
     private Context context;
     private MapViewModel mapViewModel;
-    private Boolean hasLoadPic = false;
 
     public RestaurantAdapter(List<Restaurant> restaurantList, Location currentLocation, OnRestaurantClickListener onRestaurantClickListener, MapViewModel mapViewModel) {
         this.restaurantList = restaurantList;
@@ -61,11 +60,6 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
         if (!restaurant.getHasDetails()) {
             mapViewModel.updateRestaurantDetails(restaurant);
         }
-        /*
-        if(!restaurant.getHasWorkmates()) {
-
-        }
-         */
 
         Location location = new Location("");
         location.setLatitude(restaurant.getLat());

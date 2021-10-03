@@ -11,10 +11,16 @@ public class MyApplication extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
         instance = this;
+        initFirebaseMessaging();
+
     }
 
     public static MyApplication getInstance() {
         return MyApplication.instance;
+    }
+
+    private void initFirebaseMessaging() {
+
     }
 
 }

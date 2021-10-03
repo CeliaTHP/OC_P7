@@ -54,6 +54,7 @@ public class MapViewModel extends ViewModel {
 
         });
         placeRepository.getRestaurantListMutableLiveData().observe(this.lifecycleOwner, restaurantList -> {
+
             Log.d(TAG, " getRestaurantLiveData observer ");
             restaurantListLiveData.postValue(restaurantList);
 
@@ -63,10 +64,6 @@ public class MapViewModel extends ViewModel {
 
     }
 
-    public void updateRestaurantDetails() {
-
-
-    }
 
     public void updateRestaurantDetails(Restaurant restaurant) {
         placeRepository.updateRestaurantDetails(restaurant.getId());

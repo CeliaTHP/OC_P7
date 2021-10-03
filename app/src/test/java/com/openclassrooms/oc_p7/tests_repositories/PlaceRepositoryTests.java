@@ -130,7 +130,6 @@ public class PlaceRepositoryTests {
 
     }
 
-    //updateDetailsUnSuccessfull
     @Test
     public void updateRestaurantDetailsUnsuccessfullResponse() throws IOException {
 
