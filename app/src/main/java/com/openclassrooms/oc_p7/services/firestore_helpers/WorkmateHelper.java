@@ -15,8 +15,12 @@ public class WorkmateHelper {
 
 
     // COLLECTION REFERENCE
-    public static CollectionReference getWorkmatesCollection() {
+    private static CollectionReference getWorkmatesCollection() {
         return FirebaseFirestore.getInstance().collection(COLLECTION_NAME);
+    }
+
+    public static Task<QuerySnapshot> getAllWorkmates() {
+        return FirebaseFirestore.getInstance().collection(COLLECTION_NAME).get();
     }
 
 

@@ -43,7 +43,7 @@ public class WorkmateRepository {
     public void getWorkmateList() {
 
         executor.execute(() -> {
-            Task<QuerySnapshot> task = WorkmateHelper.getWorkmatesCollection().get();
+            Task<QuerySnapshot> task = WorkmateHelper.getAllWorkmates();
             try {
                 Tasks.await(task);
                 QuerySnapshot queryDocumentSnapshots = task.getResult();
@@ -62,25 +62,17 @@ public class WorkmateRepository {
                         if (snapshot.get("restaurantName") != null && snapshot.get("restaurantId") != null) {
                             workmate.setRestaurantName(snapshot.get("restaurantName").toString());
                             workmate.setRestaurantId(snapshot.get("restaurantId").toString());
-                            Log.d(TAG, "restaurant : " + workmate.getRestaurantId());
                         }
                         workmateList.add(workmate);
                     }
                 }
-                Log.d(TAG, "workmateList  : " + workmateList + "");
 
                 workmateListLiveData.postValue(workmateList);
             } catch (ExecutionException e) {
                 hasError.postValue(ErrorCode.EXECUTION_EXCEPTION);
-                Log.d(TAG, "ExecutionException while getting workmateList : " + e.getLocalizedMessage());
-
 
             } catch (InterruptedException e) {
                 hasError.postValue(ErrorCode.INTERRUPTED_EXCEPTION);
-
-                Log.d(TAG, "InterruptedException while getting workmateList : " + e.getMessage());
-
-
             }
         });
 
