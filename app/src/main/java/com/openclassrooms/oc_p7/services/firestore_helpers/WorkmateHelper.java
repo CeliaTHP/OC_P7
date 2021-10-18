@@ -13,53 +13,51 @@ public class WorkmateHelper {
     private static final String TAG = "WorkmateHelper";
     private static final String COLLECTION_NAME = "workmates";
 
-
     // COLLECTION REFERENCE
-    private static CollectionReference getWorkmatesCollection() {
-        return FirebaseFirestore.getInstance().collection(COLLECTION_NAME);
+    public static CollectionReference getWorkmatesCollection(FirebaseFirestore firebaseFirestore) {
+        return firebaseFirestore.collection(COLLECTION_NAME);
     }
 
-    public static Task<QuerySnapshot> getAllWorkmates() {
-        return FirebaseFirestore.getInstance().collection(COLLECTION_NAME).get();
+    public static Task<QuerySnapshot> getAllWorkmates(FirebaseFirestore firebaseFirestore) {
+        return firebaseFirestore.collection(COLLECTION_NAME).get();
     }
-
 
     // CREATE
-    public static Task<Void> createWorkmate(String uid, String name, String email, String picUrl) {
+    public static Task<Void> createWorkmate(FirebaseFirestore firebaseFirestore, String uid, String name, String email, String picUrl) {
         Workmate workmateToCreate = new Workmate(uid, name, email, picUrl);
-        return WorkmateHelper.getWorkmatesCollection().document(uid).set(workmateToCreate);
+        return WorkmateHelper.getWorkmatesCollection(firebaseFirestore).document(uid).set(workmateToCreate);
     }
 
     // GET
-    public static Task<DocumentSnapshot> getWorkmate(String uid) {
-        return WorkmateHelper.getWorkmatesCollection().document(uid).get();
+    public static Task<DocumentSnapshot> getWorkmate(FirebaseFirestore firebaseFirestore, String uid) {
+        return WorkmateHelper.getWorkmatesCollection(firebaseFirestore).document(uid).get();
     }
 
-    public static Task<QuerySnapshot> getWorkmatesForRestaurant(String restaurantId) {
-        return getWorkmatesCollection().whereEqualTo("restaurantId", restaurantId).get();
-    }
-
-    // UPDATE
-    public static Task<Void> updateWorkmateName(String name, String uid) {
-        return WorkmateHelper.getWorkmatesCollection().document(uid).update("name", name);
-    }
-
-    public static Task<Void> updateWorkmateRestaurantId(String restaurantId, String uid) {
-        return WorkmateHelper.getWorkmatesCollection().document(uid).update("restaurantId", restaurantId);
-    }
-
-    public static Task<Void> updateWorkmateRestaurantName(String restaurantName, String uid) {
-        return WorkmateHelper.getWorkmatesCollection().document(uid).update("restaurantName", restaurantName);
+    public static Task<QuerySnapshot> getWorkmatesForRestaurant(FirebaseFirestore firebaseFirestore, String restaurantId) {
+        return getWorkmatesCollection(firebaseFirestore).whereEqualTo("restaurantId", restaurantId).get();
     }
 
     // UPDATE
-    public static Task<Void> updateWorkmateRestaurantType(String restaurantType, String uid) {
-        return WorkmateHelper.getWorkmatesCollection().document(uid).update("restaurantType", restaurantType);
+    public static Task<Void> updateWorkmateName(FirebaseFirestore firebaseFirestore, String name, String uid) {
+        return WorkmateHelper.getWorkmatesCollection(firebaseFirestore).document(uid).update("name", name);
+    }
+
+    public static Task<Void> updateWorkmateRestaurantId(FirebaseFirestore firebaseFirestore, String restaurantId, String uid) {
+        return WorkmateHelper.getWorkmatesCollection(firebaseFirestore).document(uid).update("restaurantId", restaurantId);
+    }
+
+    public static Task<Void> updateWorkmateRestaurantName(FirebaseFirestore firebaseFirestore, String restaurantName, String uid) {
+        return WorkmateHelper.getWorkmatesCollection(firebaseFirestore).document(uid).update("restaurantName", restaurantName);
+    }
+
+    // UPDATE
+    public static Task<Void> updateWorkmateRestaurantType(FirebaseFirestore firebaseFirestore, String restaurantType, String uid) {
+        return WorkmateHelper.getWorkmatesCollection(firebaseFirestore).document(uid).update("restaurantType", restaurantType);
     }
 
     // DELETE WORKMATE
-    public static Task<Void> deleteWorkmate(String uid) {
-        return WorkmateHelper.getWorkmatesCollection().document(uid).delete();
+    public static Task<Void> deleteWorkmate(FirebaseFirestore firebaseFirestore, String uid) {
+        return WorkmateHelper.getWorkmatesCollection(firebaseFirestore).document(uid).delete();
     }
 
 }

@@ -4,7 +4,12 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.common.util.concurrent.MoreExecutors;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.openclassrooms.oc_p7.models.ErrorCode;
 import com.openclassrooms.oc_p7.models.Workmate;
 import com.openclassrooms.oc_p7.repositories.WorkmateRepository;
@@ -15,90 +20,62 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TestRule;
 import org.mockito.Mockito;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.Executor;
 
+
 public class WorkmateRepositoryTests {
 
-    private final MutableLiveData<List<Workmate>> workmateListLiveDataMock = (MutableLiveData<List<Workmate>>) Mockito.mock(MutableLiveData.class);
+
+    private FirebaseFirestore firebaseFirestoreMock = Mockito.mock(FirebaseFirestore.class);
+    private CollectionReference collectionReferenceMock = Mockito.mock(CollectionReference.class);
+    private DocumentReference documentReferenceMock;
 
 
     private final Executor executor = MoreExecutors.newDirectExecutorService();
     private WorkmateRepository workmateRepository;
 
-    private final MutableLiveData<Workmate> workmateMutableLiveData = (MutableLiveData<Workmate>) Mockito.mock(MutableLiveData.class);
+    private final MutableLiveData<List<Workmate>> workmateMutableLiveDataListMock = (MutableLiveData<List<Workmate>>) Mockito.mock(MutableLiveData.class);
 
 
     private final MutableLiveData<ErrorCode> errorCodeMutableLiveDataMock = (MutableLiveData<ErrorCode>) Mockito.mock(MutableLiveData.class);
 
     @Rule
-    public TestRule rule = new InstantTaskExecutorRule();
+    public InstantTaskExecutorRule rule = new InstantTaskExecutorRule();
 
     @Before
     public void setUp() {
-        workmateRepository = new WorkmateRepository(executor);
+        workmateRepository = new WorkmateRepository(firebaseFirestoreMock, executor, workmateMutableLiveDataListMock);
     }
 
     @After
     public void tearDown() {
-        Mockito.verifyNoMoreInteractions(workmateRepository);
+        Mockito.verifyNoMoreInteractions(workmateMutableLiveDataListMock, errorCodeMutableLiveDataMock);
     }
 
+    //TODO Mockito.mockStatic
+    //https://frontbackend.com/java/how-to-mock-static-methods-with-mockito or POWERMOCKITO
     @Test
     public void getWorkmateListTestsSuccess() throws IOException {
+        List<Workmate> expectedWorkmateList = WorkmateUtils.getWorkmateList();
 
+        Mockito.mockStatic(Tasks.class);
+        Task<QuerySnapshot> taskMock = WorkmateUtils.getTaskMock(true, WorkmateUtils.getDocumentSnapshotList());
+        Mockito.when(WorkmateHelper.getWorkmatesCollection(firebaseFirestoreMock)).thenReturn(collectionReferenceMock);
+        Mockito.when(WorkmateHelper.getAllWorkmates(firebaseFirestoreMock)).thenReturn(taskMock);
 
-        //TODO Mockito.mockStatic
-        //https://frontbackend.com/java/how-to-mock-static-methods-with-mockito
-
-        Task taskMock = WorkmateUtils.getTaskMock(true, WorkmateUtils.getDocumentSnapshotList());
-
-        Mockito.when(WorkmateHelper.getAllWorkmates()).thenReturn(taskMock);
 
         //TODO make DocumentSnapshot from object
         workmateRepository.getWorkmateList();
 
-        Mockito.verify(workmateListLiveDataMock).postValue(WorkmateUtils.getWorkmateList());
+        //can't verify the post value
+
+        Mockito.verify(workmateRepository.workmateListLiveData).postValue(expectedWorkmateList);
 
 
     }
 
-    @Test
-    public void getNearbyPlacesTestsUnsuccessfullResponse() throws IOException {
-        /*
-        Call<NearbyPlaceResponse> call = APIUtils.getCallMock(false, APIUtils.getNearbyPlaceResponse());
-        Mockito.when(placesApiMock.getNearbyPlaces(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(call);
-        String expectedLocationStringQuery = expectedLocation.getLatitude() + "," + expectedLocation.getLongitude();
-
-        placeRepository.getNearbyPlaces(expectedLocation);
-
-        Mockito.verify(placesApiMock).getNearbyPlaces(BuildConfig.GoogleMapApiKey, expectedLocationStringQuery, expectedRadiusQuery, expectedRestaurantQuery);
-        Mockito.verify(call).execute();
-        Mockito.verify(errorCodeMutableLiveDataMock).postValue(ErrorCode.UNSUCCESSFUL_RESPONSE);
-
-
-         */
-    }
-
-    @Test
-    public void getNearbyPlacesTestIOException() throws IOException {
-        /*
-
-        Call<NearbyPlaceResponse> call = APIUtils.getCallMock(true, APIUtils.getNearbyPlaceResponse());
-        String expectedLocationStringQuery = expectedLocation.getLatitude() + "," + expectedLocation.getLongitude();
-        Mockito.when(placesApiMock.getNearbyPlaces(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(call);
-        Mockito.doThrow(new IOException()).when(call).execute();
-
-        placeRepository.getNearbyPlaces(expectedLocation);
-
-        Mockito.verify(placesApiMock).getNearbyPlaces(BuildConfig.GoogleMapApiKey, expectedLocationStringQuery, expectedRadiusQuery, expectedRestaurantQuery);
-        Mockito.verify(errorCodeMutableLiveDataMock).postValue(ErrorCode.CONNECTION_ERROR);
-
-
-         */
-    }
 }

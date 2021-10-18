@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.callbacks.OnWorkmateClickListener;
 import com.openclassrooms.oc_p7.databinding.FragmentListWorkmatesBinding;
@@ -50,7 +51,7 @@ public class WorkmateListFragment extends Fragment {
     }
 
     private void initViewModels() {
-        WorkmateViewModelFactory workmateViewModelFactory = Injection.provideWorkmateViewModelFactory(getContext());
+        WorkmateViewModelFactory workmateViewModelFactory = Injection.provideWorkmateViewModelFactory(FirebaseFirestore.getInstance(), getContext());
         workmateViewModel = ViewModelProviders.of(this, workmateViewModelFactory).get(WorkmateViewModel.class);
     }
 

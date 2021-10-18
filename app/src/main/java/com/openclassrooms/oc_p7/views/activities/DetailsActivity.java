@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.callbacks.OnWorkmateClickListener;
 import com.openclassrooms.oc_p7.databinding.ActivityDetailsBinding;
@@ -68,7 +69,7 @@ public class DetailsActivity extends BaseActivity {
     }
 
     private void initViewModels() {
-        DetailViewModelFactory detailViewModelFactory = Injection.provideDetailViewModelFactory(this);
+        DetailViewModelFactory detailViewModelFactory = Injection.provideDetailViewModelFactory(FirebaseFirestore.getInstance(), this);
         detailsViewModel =
                 ViewModelProviders.of(this, detailViewModelFactory).get(DetailsViewModel.class);
 

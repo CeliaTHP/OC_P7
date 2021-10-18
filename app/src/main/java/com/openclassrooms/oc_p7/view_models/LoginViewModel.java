@@ -24,6 +24,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.OAuthProvider;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.openclassrooms.oc_p7.models.Workmate;
 import com.openclassrooms.oc_p7.services.dummies.DummyWorkmateGenerator;
 import com.openclassrooms.oc_p7.services.firestore_helpers.WorkmateHelper;
@@ -224,7 +225,7 @@ public class LoginViewModel extends AndroidViewModel {
         Log.d("WORKMATES_CREATION", "initWorkmates");
 
         for (Workmate workmate : DummyWorkmateGenerator.generateWorkmates()) {
-            WorkmateHelper.createWorkmate(workmate.getUid(), workmate.getName(), workmate.getEmail(), workmate.getPicUrl()).addOnCompleteListener(new OnCompleteListener<Void>() {
+            WorkmateHelper.createWorkmate(FirebaseFirestore.getInstance(), workmate.getUid(), workmate.getName(), workmate.getEmail(), workmate.getPicUrl()).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull @NotNull Task<Void> task) {
                     if (task.isSuccessful()) {
@@ -236,11 +237,11 @@ public class LoginViewModel extends AndroidViewModel {
                 }
             });
             if (workmate.getRestaurantId() != null) {
-                WorkmateHelper.updateWorkmateRestaurantId(workmate.getRestaurantId(), workmate.getUid());
+                WorkmateHelper.updateWorkmateRestaurantId(FirebaseFirestore.getInstance(), workmate.getRestaurantId(), workmate.getUid());
 
             }
             if (workmate.getRestaurantName() != null)
-                WorkmateHelper.updateWorkmateRestaurantName(workmate.getRestaurantName(), workmate.getUid());
+                WorkmateHelper.updateWorkmateRestaurantName(FirebaseFirestore.getInstance(), workmate.getRestaurantName(), workmate.getUid());
         }
     }
 

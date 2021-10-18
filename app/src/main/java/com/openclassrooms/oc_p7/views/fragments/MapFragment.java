@@ -26,6 +26,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.databinding.FragmentMapBinding;
 import com.openclassrooms.oc_p7.injections.Injection;
@@ -91,11 +92,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private void initViewModels() {
         loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
 
-        MapViewModelFactory mapViewModelFactory = Injection.provideMapViewModelFactory(getContext(), this);
+        MapViewModelFactory mapViewModelFactory = Injection.provideMapViewModelFactory(FirebaseFirestore.getInstance(), getContext(), this);
         mapViewModel =
                 ViewModelProviders.of(this, mapViewModelFactory).get(MapViewModel.class);
 
-        WorkmateViewModelFactory workmateViewModelFactory = Injection.provideWorkmateViewModelFactory(getContext());
+        WorkmateViewModelFactory workmateViewModelFactory = Injection.provideWorkmateViewModelFactory(FirebaseFirestore.getInstance(), getContext());
         workmateViewModel =
                 ViewModelProviders.of(this, workmateViewModelFactory).get(WorkmateViewModel.class);
 

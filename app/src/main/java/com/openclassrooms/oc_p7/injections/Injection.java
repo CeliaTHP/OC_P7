@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.openclassrooms.oc_p7.MyApplication;
 import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.repositories.PlaceRepository;
@@ -29,29 +30,29 @@ public class Injection {
         return new PlaceRepository(Injection.provideApiClient(), Executors.newSingleThreadExecutor(), new MutableLiveData<>(), new MutableLiveData<>(), radiusQuery, restaurantQuery, new MutableLiveData<>());
     }
 
-    public static WorkmateRepository provideWorkmateRepository(Context context) {
-        return new WorkmateRepository(Executors.newSingleThreadExecutor());
+    public static WorkmateRepository provideWorkmateRepository(FirebaseFirestore firebaseFirestore, Context context) {
+        return new WorkmateRepository(firebaseFirestore, Executors.newSingleThreadExecutor(), new MutableLiveData<>());
     }
 
-    public static MapViewModelFactory provideMapViewModelFactory(Context context, LifecycleOwner lifecycleOwner) {
+    public static MapViewModelFactory provideMapViewModelFactory(FirebaseFirestore firebaseFirestore, Context context, LifecycleOwner lifecycleOwner) {
         PlaceRepository placeRepository = providePlaceRepository();
-        WorkmateRepository workmateRepository = provideWorkmateRepository(context);
-        return new MapViewModelFactory(placeRepository, workmateRepository, Injection.provideFusedLocationProviderClient(context), lifecycleOwner);
+        WorkmateRepository workmateRepository = provideWorkmateRepository(firebaseFirestore, context);
+        return new MapViewModelFactory(placeRepository, workmateRepository, Injection.provideFusedLocationProviderClient(firebaseFirestore, context), lifecycleOwner);
     }
 
-    public static WorkmateViewModelFactory provideWorkmateViewModelFactory(Context context) {
-        WorkmateRepository workmateRepository = provideWorkmateRepository(context);
+    public static WorkmateViewModelFactory provideWorkmateViewModelFactory(FirebaseFirestore firebaseFirestore, Context context) {
+        WorkmateRepository workmateRepository = provideWorkmateRepository(firebaseFirestore, context);
         return new WorkmateViewModelFactory(workmateRepository);
     }
 
-    public static DetailViewModelFactory provideDetailViewModelFactory(Context context) {
-        WorkmateRepository workmateRepository = provideWorkmateRepository(context);
+    public static DetailViewModelFactory provideDetailViewModelFactory(FirebaseFirestore firebaseFirestore, Context context) {
+        WorkmateRepository workmateRepository = provideWorkmateRepository(firebaseFirestore, context);
         PlaceRepository placeRepository = providePlaceRepository();
         return new DetailViewModelFactory(workmateRepository, placeRepository);
     }
 
 
-    public static FusedLocationProviderClient provideFusedLocationProviderClient(Context context) {
+    public static FusedLocationProviderClient provideFusedLocationProviderClient(FirebaseFirestore firebaseFirestore, Context context) {
         return LocationServices.getFusedLocationProviderClient(context);
     }
 

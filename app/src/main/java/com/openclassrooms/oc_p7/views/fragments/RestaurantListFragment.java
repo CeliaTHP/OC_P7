@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.callbacks.OnRestaurantClickListener;
 import com.openclassrooms.oc_p7.databinding.FragmentListRestaurantsBinding;
@@ -55,10 +56,10 @@ public class RestaurantListFragment extends Fragment implements OnRestaurantClic
 
     private void initViewModels() {
 
-        MapViewModelFactory mapViewModelFactory = Injection.provideMapViewModelFactory(getContext(), this);
+        MapViewModelFactory mapViewModelFactory = Injection.provideMapViewModelFactory(FirebaseFirestore.getInstance(), getContext(), this);
         mapViewModel = ViewModelProviders.of(this, mapViewModelFactory).get(MapViewModel.class);
 
-        WorkmateViewModelFactory workmateViewModelFactory = Injection.provideWorkmateViewModelFactory(getContext());
+        WorkmateViewModelFactory workmateViewModelFactory = Injection.provideWorkmateViewModelFactory(FirebaseFirestore.getInstance(), getContext());
         workmateViewModel = ViewModelProviders.of(this, workmateViewModelFactory).get(WorkmateViewModel.class);
 
     }

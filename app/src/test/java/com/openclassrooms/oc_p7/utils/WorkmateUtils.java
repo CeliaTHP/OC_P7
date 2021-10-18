@@ -16,7 +16,7 @@ import retrofit2.Response;
 
 public class WorkmateUtils {
 
-    @SuppressWarnings("unchecked")
+
     public static <T> Call<T> getCallMock(Boolean isSuccessFull, T response) throws IOException {
         Call<T> callMock = Mockito.mock(Call.class);
         Response<T> responseMock = Mockito.mock(Response.class);
@@ -32,7 +32,7 @@ public class WorkmateUtils {
         QuerySnapshot querySnapshotMock = Mockito.mock(QuerySnapshot.class);
         Mockito.when(taskMock.getResult()).thenReturn(querySnapshotMock);
         Mockito.when(querySnapshotMock.getDocuments()).thenReturn(response);
-        //Mockito.when(Tasks.await(Mockito.any()). do nothing
+        //Mockito.when(Tasks.await(Mockito.any())).then(Mockito.doNothing());
 
         return taskMock;
     }
@@ -68,4 +68,5 @@ public class WorkmateUtils {
 
         return workmateList;
     }
+
 }
