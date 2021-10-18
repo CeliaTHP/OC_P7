@@ -3,6 +3,7 @@ package com.openclassrooms.oc_p7.repositories;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -28,19 +29,22 @@ public class WorkmateRepository {
 
     private Executor executor;
     private FirebaseFirestore firebaseFirestore;
+    private MutableLiveData<ErrorCode> errorCode;
+
     public MutableLiveData<List<Workmate>> workmateListLiveData;
 
-
-    public WorkmateRepository(FirebaseFirestore firebaseFirestore, Executor executor, MutableLiveData<List<Workmate>> workmateListLiveData) {
+    public WorkmateRepository(FirebaseFirestore firebaseFirestore, Executor executor, MutableLiveData<List<Workmate>> workmateListLiveData, MutableLiveData<ErrorCode> errorCode) {
         this.firebaseFirestore = firebaseFirestore;
         this.executor = executor;
         this.workmateListLiveData = workmateListLiveData;
+        this.errorCode = errorCode;
+    }
+
+    public LiveData<ErrorCode> getErrorCode() {
+        return errorCode;
     }
 
     private String TAG = "WorkmateRepository";
-
-    public MutableLiveData<ErrorCode> hasError = new MutableLiveData<>();
-
     private ArrayList<Workmate> workmateList = new ArrayList<>();
 
 
@@ -73,10 +77,10 @@ public class WorkmateRepository {
 
                 workmateListLiveData.postValue(workmateList);
             } catch (ExecutionException e) {
-                hasError.postValue(ErrorCode.EXECUTION_EXCEPTION);
+                errorCode.postValue(ErrorCode.EXECUTION_EXCEPTION);
 
             } catch (InterruptedException e) {
-                hasError.postValue(ErrorCode.INTERRUPTED_EXCEPTION);
+                errorCode.postValue(ErrorCode.INTERRUPTED_EXCEPTION);
             }
         });
 

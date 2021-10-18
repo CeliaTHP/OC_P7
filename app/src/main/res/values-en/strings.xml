@@ -39,8 +39,8 @@
 
     <!--MAP-->
     <string name="map_here">YOU ARE HERE</string>
-    <string name="map_response_error">An error has been encountered while requesting restaurants( Verify your internet connection )</string>
-    <string name="map_data_format_error">An error has been encountered while parsing restaurants </string>
+    <string name="map_response_error">An error has been encountered while requesting restaurants ( verify your internet connection ).</string>
+    <string name="map_data_format_error">An error has been encountered while reading restaurants </string>
 
     <!--DETAILS-->
     <string name="list_workmates_empty">No one is eating here</string>
@@ -51,6 +51,8 @@
     <string name="workmate_text">%1$s is eating %2$s</string>
     <string name="workmate_text_details">%1$s is joining !</string>
     <string name="workmate_text_no_lunch">%1$s did not choose yet </string>
+    <string name="workmate_execution_error">Could not retrieve workmates ( verify your internet connection ).</string>
+    <string name="workmate_interrupted_error">Workmates retriaval interrupted. Please retry.</string>
 
 
     <!--LIST VIEW -->

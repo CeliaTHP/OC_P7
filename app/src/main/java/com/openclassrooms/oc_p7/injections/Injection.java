@@ -31,7 +31,7 @@ public class Injection {
     }
 
     public static WorkmateRepository provideWorkmateRepository(FirebaseFirestore firebaseFirestore, Context context) {
-        return new WorkmateRepository(firebaseFirestore, Executors.newSingleThreadExecutor(), new MutableLiveData<>());
+        return new WorkmateRepository(firebaseFirestore, Executors.newSingleThreadExecutor(), new MutableLiveData<>(), new MutableLiveData<>());
     }
 
     public static MapViewModelFactory provideMapViewModelFactory(FirebaseFirestore firebaseFirestore, Context context, LifecycleOwner lifecycleOwner) {

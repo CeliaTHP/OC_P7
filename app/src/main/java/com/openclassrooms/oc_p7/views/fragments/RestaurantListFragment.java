@@ -75,7 +75,7 @@ public class RestaurantListFragment extends Fragment implements OnRestaurantClic
 
         });
 
-        mapViewModel.errorCodeMutableLiveData.observe(getViewLifecycleOwner(), errorCode -> {
+        mapViewModel.placeRepositoryErrorCodeMutableLiveData.observe(getViewLifecycleOwner(), errorCode -> {
             if (errorCode == ErrorCode.CONNECTION_ERROR) {
                 Toast.makeText(fragmentListRestaurantsBinding.getRoot().getContext(), getString(R.string.map_data_format_error), Toast.LENGTH_LONG).show();
             } else {
@@ -85,6 +85,16 @@ public class RestaurantListFragment extends Fragment implements OnRestaurantClic
 
 
         });
+
+        mapViewModel.workmateRepositoryErrorCodeMutableLiveData.observe(getViewLifecycleOwner(), errorCode -> {
+            if (errorCode == ErrorCode.EXECUTION_EXCEPTION) {
+                Toast.makeText(fragmentListRestaurantsBinding.getRoot().getContext(), getString(R.string.workmate_execution_error), Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(fragmentListRestaurantsBinding.getRoot().getContext(), getString(R.string.workmate_interrupted_error), Toast.LENGTH_LONG).show();
+            }
+
+        });
+
         mapViewModel.restaurantListLiveData.observe(getViewLifecycleOwner(), restaurantList -> {
 
             workmateViewModel.getWorkmateForRestaurantList(mapViewModel.restaurantListLiveData);

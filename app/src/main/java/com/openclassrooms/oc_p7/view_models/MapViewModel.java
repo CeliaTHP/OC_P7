@@ -32,7 +32,9 @@ public class MapViewModel extends ViewModel {
     public MutableLiveData<List<Restaurant>> restaurantListLiveData;
     public MutableLiveData<Location> currentLocationLiveData;
 
-    public MutableLiveData<ErrorCode> errorCodeMutableLiveData = new MutableLiveData<>();
+    public MutableLiveData<ErrorCode> placeRepositoryErrorCodeMutableLiveData = new MutableLiveData<>();
+    public MutableLiveData<ErrorCode> workmateRepositoryErrorCodeMutableLiveData = new MutableLiveData<>();
+
 
     public MapViewModel(PlaceRepository placeRepository, WorkmateRepository workmateRepository, FusedLocationProviderClient fusedLocationProviderClient, LifecycleOwner lifecycleOwner) {
         this.placeRepository = placeRepository;
@@ -49,10 +51,14 @@ public class MapViewModel extends ViewModel {
 
         placeRepository.getErrorCode().observe(this.lifecycleOwner, errorCode -> {
             Log.d(TAG, errorCode.toString());
-            errorCodeMutableLiveData.postValue(errorCode);
-
+            placeRepositoryErrorCodeMutableLiveData.postValue(errorCode);
 
         });
+
+        workmateRepository.getErrorCode().observe(this.lifecycleOwner, errorCode -> {
+            workmateRepositoryErrorCodeMutableLiveData.postValue(errorCode);
+        });
+
         placeRepository.getRestaurantListMutableLiveData().observe(this.lifecycleOwner, restaurantList -> {
 
             Log.d(TAG, " getRestaurantLiveData observer ");

@@ -48,7 +48,7 @@ public class WorkmateRepositoryTests {
 
     @Before
     public void setUp() {
-        workmateRepository = new WorkmateRepository(firebaseFirestoreMock, executor, workmateMutableLiveDataListMock);
+        workmateRepository = new WorkmateRepository(firebaseFirestoreMock, executor, workmateMutableLiveDataListMock, errorCodeMutableLiveDataMock);
     }
 
     @After

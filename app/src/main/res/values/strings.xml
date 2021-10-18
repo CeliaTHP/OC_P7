@@ -48,8 +48,8 @@
 
     <!--MAP-->
     <string name="map_here">VOUS ÊTES ICI</string>
-    <string name="map_response_error">Une erreur a été rencontrée lors de la recherche de restaurants ( vérifiez contre connexion internet )</string>
-    <string name="map_data_format_error">Une erreur a été rencontrée lors du formatage des restaurants ! </string>
+    <string name="map_response_error">Une erreur a été rencontrée lors de la recherche de restaurants ( vérifiez votre connexion internet ).</string>
+    <string name="map_data_format_error">Une erreur a été rencontrée lors de la lecture des restaurants ! </string>
 
 
     <!--DETAILS-->
@@ -61,6 +61,8 @@
     <string name="workmate_text">%1$s mange %2$s</string>
     <string name="workmate_text_details">%1$s mange ici !</string>
     <string name="workmate_text_no_lunch">%1$s n\'a pas encore choisi </string>
+    <string name="workmate_execution_error">Récupération des collègues impossible( vérifiez votre connexion internet ).</string>
+    <string name="workmate_interrupted_error">Récupération des collègues interrompue. Veuillez réessayer.</string>
 
     <!--LIST VIEW -->
     <string name="item_restaurant_address" translatable="false">%1$s</string>

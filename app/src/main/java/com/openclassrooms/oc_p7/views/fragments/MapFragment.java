@@ -121,15 +121,23 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private void initObservers() {
 
-        mapViewModel.errorCodeMutableLiveData.observe(getViewLifecycleOwner(), errorCode -> {
+        mapViewModel.placeRepositoryErrorCodeMutableLiveData.observe(getViewLifecycleOwner(), errorCode -> {
             if (errorCode == ErrorCode.CONNECTION_ERROR) {
                 Toast.makeText(fragmentMapBinding.getRoot().getContext(), getString(R.string.map_data_format_error), Toast.LENGTH_LONG).show();
             } else {
                 Toast.makeText(fragmentMapBinding.getRoot().getContext(), getString(R.string.map_response_error), Toast.LENGTH_LONG).show();
 
-
             }
 
+
+        });
+
+        mapViewModel.workmateRepositoryErrorCodeMutableLiveData.observe(getViewLifecycleOwner(), errorCode -> {
+            if (errorCode == ErrorCode.EXECUTION_EXCEPTION) {
+                Toast.makeText(fragmentMapBinding.getRoot().getContext(), getString(R.string.workmate_execution_error), Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(fragmentMapBinding.getRoot().getContext(), getString(R.string.workmate_interrupted_error), Toast.LENGTH_LONG).show();
+            }
 
         });
 
