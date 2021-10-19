@@ -36,7 +36,6 @@ import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.databinding.ActivityDashboardBinding;
 import com.openclassrooms.oc_p7.databinding.DrawerHeaderBinding;
 import com.openclassrooms.oc_p7.services.firestore_helpers.UserHelper;
-import com.openclassrooms.oc_p7.view_models.MapViewModel;
 
 import java.util.Arrays;
 import java.util.List;
@@ -51,7 +50,7 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
     private Toolbar toolbar;
     private final static int AUTOCOMPLETE_REQUEST_CODE = 1;
     private SearchView searchView;
-    private MapViewModel mapViewModel;
+    private int fragmentNum;
 
     ActivityDashboardBinding activityDashboardBinding;
     DrawerHeaderBinding drawerHeaderBinding;
@@ -76,6 +75,11 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
         setToolbar();
         setDrawerLayout();
         setHeaderInfos();
+
+    }
+
+    public void updateFragmentNum(int fragmentNum) {
+        this.fragmentNum = fragmentNum;
 
     }
 
@@ -129,6 +133,12 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
 
     }
 
+
+    private void getCurrentFragment() {
+
+    }
+
+
     /**
      * Setting up the searchView for AutoComplete
      */
@@ -138,6 +148,7 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
         MenuItem.OnActionExpandListener onActionExpandListener = new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
+                getCurrentFragment();
                 onSearchCalled();
                 return true;
             }

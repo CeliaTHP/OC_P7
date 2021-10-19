@@ -1,5 +1,6 @@
 package com.openclassrooms.oc_p7.views.fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,6 +24,8 @@ import com.openclassrooms.oc_p7.services.factories.WorkmateViewModelFactory;
 import com.openclassrooms.oc_p7.view_models.WorkmateViewModel;
 import com.openclassrooms.oc_p7.views.activities.DetailsActivity;
 import com.openclassrooms.oc_p7.views.adapters.WorkmateAdapter;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 
@@ -48,6 +51,13 @@ public class WorkmateListFragment extends Fragment {
 
 
         return fragmentListWorkmatesBinding.getRoot();
+    }
+
+    @Override
+    public void onAttach(@NonNull @NotNull Context context) {
+
+        super.onAttach(context);
+
     }
 
     private void initViewModels() {

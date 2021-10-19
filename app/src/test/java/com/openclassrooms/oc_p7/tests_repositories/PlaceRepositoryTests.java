@@ -5,7 +5,6 @@ import android.location.Location;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.common.util.concurrent.MoreExecutors;
-import com.openclassrooms.oc_p7.BuildConfig;
 import com.openclassrooms.oc_p7.models.ErrorCode;
 import com.openclassrooms.oc_p7.models.Restaurant;
 import com.openclassrooms.oc_p7.models.pojo_models.responses.DetailsPlaceResponse;
@@ -38,6 +37,8 @@ public class PlaceRepositoryTests {
     private PlaceRepository placeRepository;
     private final Location expectedLocation = Mockito.mock(Location.class);
 
+    private final String GoogleMapApiKey = "fakeApiKey";
+
     private final MutableLiveData<ErrorCode> errorCodeMutableLiveDataMock = (MutableLiveData<ErrorCode>) Mockito.mock(MutableLiveData.class);
 
     @Before
@@ -60,7 +61,7 @@ public class PlaceRepositoryTests {
 
         placeRepository.getNearbyPlaces(expectedLocation);
 
-        Mockito.verify(placesApiMock).getNearbyPlaces(BuildConfig.GoogleMapApiKey, expectedLocationStringQuery, expectedRadiusQuery, expectedRestaurantQuery);
+        Mockito.verify(placesApiMock).getNearbyPlaces(GoogleMapApiKey, expectedLocationStringQuery, expectedRadiusQuery, expectedRestaurantQuery);
         Mockito.verify(call).execute();
         Mockito.verify(restaurantListLiveDataMock).postValue(RepositoryUtils.getRestaurantList());
     }
@@ -73,7 +74,7 @@ public class PlaceRepositoryTests {
 
         placeRepository.getNearbyPlaces(expectedLocation);
 
-        Mockito.verify(placesApiMock).getNearbyPlaces(BuildConfig.GoogleMapApiKey, expectedLocationStringQuery, expectedRadiusQuery, expectedRestaurantQuery);
+        Mockito.verify(placesApiMock).getNearbyPlaces(GoogleMapApiKey, expectedLocationStringQuery, expectedRadiusQuery, expectedRestaurantQuery);
         Mockito.verify(call).execute();
         Mockito.verify(errorCodeMutableLiveDataMock).postValue(ErrorCode.UNSUCCESSFUL_RESPONSE);
 
@@ -89,7 +90,7 @@ public class PlaceRepositoryTests {
 
         placeRepository.getNearbyPlaces(expectedLocation);
 
-        Mockito.verify(placesApiMock).getNearbyPlaces(BuildConfig.GoogleMapApiKey, expectedLocationStringQuery, expectedRadiusQuery, expectedRestaurantQuery);
+        Mockito.verify(placesApiMock).getNearbyPlaces(GoogleMapApiKey, expectedLocationStringQuery, expectedRadiusQuery, expectedRestaurantQuery);
         Mockito.verify(errorCodeMutableLiveDataMock).postValue(ErrorCode.CONNECTION_ERROR);
 
     }
@@ -100,13 +101,13 @@ public class PlaceRepositoryTests {
         Call<DetailsPlaceResponse> call = APIUtils.getCallMock(true, APIUtils.getDetailsPlaceResponse());
         String expectedRestaurantId = "42";
         List<Restaurant> expectedRestaurantList = RepositoryUtils.getRestaurantList();
-        Mockito.when(placesApiMock.getDetailsById(BuildConfig.GoogleMapApiKey, expectedRestaurantId)).thenReturn(call);
+        Mockito.when(placesApiMock.getDetailsById(GoogleMapApiKey, expectedRestaurantId)).thenReturn(call);
         Mockito.when(restaurantListLiveDataMock.getValue()).thenReturn(expectedRestaurantList);
 
 
         placeRepository.updateRestaurantDetails(expectedRestaurantId);
 
-        Mockito.verify(placesApiMock).getDetailsById(BuildConfig.GoogleMapApiKey, expectedRestaurantId);
+        Mockito.verify(placesApiMock).getDetailsById(GoogleMapApiKey, expectedRestaurantId);
         Mockito.verify(restaurantListLiveDataMock).getValue();
         Mockito.verify(call).execute();
         Mockito.verify(restaurantListLiveDataMock).postValue(expectedRestaurantList);
@@ -120,11 +121,11 @@ public class PlaceRepositoryTests {
         Call<DetailsPlaceResponse> call = APIUtils.getCallMock(true, APIUtils.getDetailsPlaceResponse());
         String expectedRestaurantId = "42";
         Restaurant expectedRestaurant = RepositoryUtils.getRestaurantList().get(0);
-        Mockito.when(placesApiMock.getDetailsById(BuildConfig.GoogleMapApiKey, expectedRestaurantId)).thenReturn(call);
+        Mockito.when(placesApiMock.getDetailsById(GoogleMapApiKey, expectedRestaurantId)).thenReturn(call);
 
         placeRepository.getRestaurantDetails(expectedRestaurantId);
 
-        Mockito.verify(placesApiMock).getDetailsById(BuildConfig.GoogleMapApiKey, expectedRestaurantId);
+        Mockito.verify(placesApiMock).getDetailsById(GoogleMapApiKey, expectedRestaurantId);
         Mockito.verify(call).execute();
         Mockito.verify(restaurantLiveDataMock).postValue(expectedRestaurant);
 
@@ -136,12 +137,12 @@ public class PlaceRepositoryTests {
         Call<DetailsPlaceResponse> call = APIUtils.getCallMock(false, APIUtils.getDetailsPlaceResponse());
         String expectedRestaurantId = "42";
         List<Restaurant> expectedRestaurantList = RepositoryUtils.getRestaurantList();
-        Mockito.when(placesApiMock.getDetailsById(BuildConfig.GoogleMapApiKey, expectedRestaurantId)).thenReturn(call);
+        Mockito.when(placesApiMock.getDetailsById(GoogleMapApiKey, expectedRestaurantId)).thenReturn(call);
         Mockito.when(restaurantListLiveDataMock.getValue()).thenReturn(expectedRestaurantList);
 
         placeRepository.updateRestaurantDetails(expectedRestaurantId);
 
-        Mockito.verify(placesApiMock).getDetailsById(BuildConfig.GoogleMapApiKey, expectedRestaurantId);
+        Mockito.verify(placesApiMock).getDetailsById(GoogleMapApiKey, expectedRestaurantId);
         Mockito.verify(restaurantListLiveDataMock).getValue();
         Mockito.verify(call).execute();
         Mockito.verify(errorCodeMutableLiveDataMock).postValue(ErrorCode.UNSUCCESSFUL_RESPONSE);
@@ -153,11 +154,11 @@ public class PlaceRepositoryTests {
 
         Call<DetailsPlaceResponse> call = APIUtils.getCallMock(false, APIUtils.getDetailsPlaceResponse());
         String expectedRestaurantId = "42";
-        Mockito.when(placesApiMock.getDetailsById(BuildConfig.GoogleMapApiKey, expectedRestaurantId)).thenReturn(call);
+        Mockito.when(placesApiMock.getDetailsById(GoogleMapApiKey, expectedRestaurantId)).thenReturn(call);
 
         placeRepository.getRestaurantDetails(expectedRestaurantId);
 
-        Mockito.verify(placesApiMock).getDetailsById(BuildConfig.GoogleMapApiKey, expectedRestaurantId);
+        Mockito.verify(placesApiMock).getDetailsById(GoogleMapApiKey, expectedRestaurantId);
         Mockito.verify(call).execute();
         Mockito.verify(errorCodeMutableLiveDataMock).postValue(ErrorCode.UNSUCCESSFUL_RESPONSE);
 
@@ -169,13 +170,13 @@ public class PlaceRepositoryTests {
         Call<DetailsPlaceResponse> call = APIUtils.getCallMock(true, APIUtils.getDetailsPlaceResponse());
         String expectedRestaurantId = "42";
         List<Restaurant> expectedRestaurantList = RepositoryUtils.getRestaurantList();
-        Mockito.when(placesApiMock.getDetailsById(BuildConfig.GoogleMapApiKey, expectedRestaurantId)).thenReturn(call);
+        Mockito.when(placesApiMock.getDetailsById(GoogleMapApiKey, expectedRestaurantId)).thenReturn(call);
         Mockito.when(restaurantListLiveDataMock.getValue()).thenReturn(expectedRestaurantList);
         Mockito.doThrow(new IOException()).when(call).execute();
 
         placeRepository.updateRestaurantDetails(expectedRestaurantId);
 
-        Mockito.verify(placesApiMock).getDetailsById(BuildConfig.GoogleMapApiKey, expectedRestaurantId);
+        Mockito.verify(placesApiMock).getDetailsById(GoogleMapApiKey, expectedRestaurantId);
         Mockito.verify(restaurantListLiveDataMock).getValue();
         Mockito.verify(errorCodeMutableLiveDataMock).postValue(ErrorCode.CONNECTION_ERROR);
 
@@ -186,12 +187,12 @@ public class PlaceRepositoryTests {
 
         Call<DetailsPlaceResponse> call = APIUtils.getCallMock(true, APIUtils.getDetailsPlaceResponse());
         String expectedRestaurantId = "42";
-        Mockito.when(placesApiMock.getDetailsById(BuildConfig.GoogleMapApiKey, expectedRestaurantId)).thenReturn(call);
+        Mockito.when(placesApiMock.getDetailsById(GoogleMapApiKey, expectedRestaurantId)).thenReturn(call);
         Mockito.doThrow(new IOException()).when(call).execute();
 
         placeRepository.getRestaurantDetails(expectedRestaurantId);
 
-        Mockito.verify(placesApiMock).getDetailsById(BuildConfig.GoogleMapApiKey, expectedRestaurantId);
+        Mockito.verify(placesApiMock).getDetailsById(GoogleMapApiKey, expectedRestaurantId);
         Mockito.verify(errorCodeMutableLiveDataMock).postValue(ErrorCode.CONNECTION_ERROR);
 
     }
