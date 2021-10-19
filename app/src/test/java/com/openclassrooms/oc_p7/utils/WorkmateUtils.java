@@ -29,9 +29,11 @@ public class WorkmateUtils {
     public static <T> Task<QuerySnapshot> getTaskMock(Boolean isSuccessFull, List<DocumentSnapshot> response) throws IOException {
         Task<QuerySnapshot> taskMock = Mockito.mock(Task.class);
 
+        //isSuccessfull useless cause we return empty list ?
         QuerySnapshot querySnapshotMock = Mockito.mock(QuerySnapshot.class);
         Mockito.when(taskMock.getResult()).thenReturn(querySnapshotMock);
         Mockito.when(querySnapshotMock.getDocuments()).thenReturn(response);
+        Mockito.when(taskMock.isSuccessful()).thenReturn(isSuccessFull);
         //Mockito.when(Tasks.await(Mockito.any())).then(Mockito.doNothing());
 
         return taskMock;
@@ -52,6 +54,27 @@ public class WorkmateUtils {
 
 
         documentSnapshotList.add(documentSnapshotMock);
+
+        return documentSnapshotList;
+
+    }
+
+    public static List<DocumentSnapshot> getEmptyDocumentSnapshotList() {
+        List<DocumentSnapshot> documentSnapshotList = new ArrayList<>();
+
+        DocumentSnapshot documentSnapshotMock = Mockito.mock(DocumentSnapshot.class);
+
+        Mockito.when(documentSnapshotMock.get("uid")).thenReturn(null);
+        /*
+        Mockito.when(documentSnapshotMock.get("name")).thenReturn("testName");
+        Mockito.when(documentSnapshotMock.get("email")).thenReturn("testEmail");
+        Mockito.when(documentSnapshotMock.get("picUrl")).thenReturn("testPicUrl");
+        Mockito.when(documentSnapshotMock.get("restaurantId")).thenReturn("testRestaurantId");
+        Mockito.when(documentSnapshotMock.get("restaurantName")).thenReturn("testRestaurantName");
+
+         */
+
+        // documentSnapshotList.add(documentSnapshotMock);
 
         return documentSnapshotList;
 
