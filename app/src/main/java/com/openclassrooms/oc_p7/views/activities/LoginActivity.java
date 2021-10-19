@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -22,6 +23,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.databinding.ActivityLoginBinding;
 import com.openclassrooms.oc_p7.services.firestore_helpers.UserHelper;
+import com.openclassrooms.oc_p7.services.utils.NetworkChecker;
 import com.openclassrooms.oc_p7.view_models.LoginViewModel;
 
 import java.util.Arrays;
@@ -63,25 +65,41 @@ public class LoginActivity extends BaseActivity {
         activityLoginBinding.loginFacebookButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                signInWithFacebook();
+                if (NetworkChecker.isInternetConnected(activityLoginBinding.getRoot().getContext())) {
+                    signInWithFacebook();
+                } else {
+                    Toast.makeText(activityLoginBinding.getRoot().getContext(), getString(R.string.login_network_error), Toast.LENGTH_LONG).show();
+                }
             }
         });
         activityLoginBinding.loginGoogleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                signInWithGoogle();
+                if (NetworkChecker.isInternetConnected(activityLoginBinding.getRoot().getContext())) {
+                    signInWithGoogle();
+                } else {
+                    Toast.makeText(activityLoginBinding.getRoot().getContext(), getString(R.string.login_network_error), Toast.LENGTH_LONG).show();
+                }
             }
         });
         activityLoginBinding.loginTwitterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                signInWithTwitter();
+                if (NetworkChecker.isInternetConnected(activityLoginBinding.getRoot().getContext())) {
+                    signInWithTwitter();
+                } else {
+                    Toast.makeText(activityLoginBinding.getRoot().getContext(), getString(R.string.login_network_error), Toast.LENGTH_LONG).show();
+                }
             }
         });
         activityLoginBinding.loginUsernameButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                signInWithUsername();
+                if (NetworkChecker.isInternetConnected(activityLoginBinding.getRoot().getContext())) {
+                    signInWithUsername();
+                } else {
+                    Toast.makeText(activityLoginBinding.getRoot().getContext(), getString(R.string.login_network_error), Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
@@ -152,11 +170,11 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void initObservers() {
-        Log.d("WORKMATES_CREATION", "initObservers");
+        Log.d(TAG, "initObservers");
         loginViewModel.authenticatedUserLiveData.observe(this, new Observer<FirebaseUser>() {
             @Override
             public void onChanged(FirebaseUser firebaseUser) {
-                Log.d("WORKMATES_CREATION", "onChanged");
+                Log.d(TAG, "onChanged");
                 UserHelper.createUser(firebaseUser.getUid(), firebaseUser.getDisplayName(), firebaseUser.getEmail(), "" + firebaseUser.getPhotoUrl());
                 loginViewModel.initWorkmates();
 

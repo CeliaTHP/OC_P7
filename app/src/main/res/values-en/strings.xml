@@ -6,6 +6,8 @@
     <string name="login_google">Sign in with Google</string>
     <string name="login_twitter">Sign in with Twitter</string>
     <string name="login_username">Sign in with username</string>
+    <string name="login_network_error">Could not connect to service ( verify your internet connection ).</string>
+
 
     <!--LOGIN WITH EMAIL-->
     <string name="login_hint_email">email@address.com</string>

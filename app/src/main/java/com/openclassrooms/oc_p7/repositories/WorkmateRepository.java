@@ -75,7 +75,8 @@ public class WorkmateRepository {
                     }
                 }
 
-                workmateListLiveData.postValue(workmateList);
+                if (!workmateList.isEmpty())
+                    workmateListLiveData.postValue(workmateList);
             } catch (ExecutionException e) {
                 errorCode.postValue(ErrorCode.EXECUTION_EXCEPTION);
 

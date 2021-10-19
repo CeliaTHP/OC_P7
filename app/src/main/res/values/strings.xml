@@ -5,6 +5,7 @@
     <string name="login_google">Connexion avec Google</string>
     <string name="login_twitter">Connexion avec Twitter</string>
     <string name="login_username">Connexion avec identifiants</string>
+    <string name="login_network_error">Connexion au service impossible ( vérifiez votre connexion internet ).</string>
 
 
     <!--LOGIN WITH EMAIL-->
