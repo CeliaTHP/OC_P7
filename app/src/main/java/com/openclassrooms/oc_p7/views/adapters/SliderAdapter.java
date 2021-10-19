@@ -4,7 +4,6 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
-import com.openclassrooms.oc_p7.BuildConfig;
 import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.databinding.ActivityDetailsBinding;
 import com.openclassrooms.oc_p7.databinding.SliderViewBinding;
@@ -44,7 +43,7 @@ public class SliderAdapter extends SliderViewAdapter<SliderViewHolder.ViewHolder
     public void onBindViewHolder(SliderViewHolder.ViewHolder viewHolder, int position) {
         String picUrl = null;
         if (picUrlList.get(position) != null) {
-            picUrl = viewHolder.itemView.getContext().getString(R.string.place_photo_url, BuildConfig.GoogleMapApiKey, picUrlList.get(position));
+            picUrl = viewHolder.itemView.getContext().getString(R.string.place_photo_url, viewHolder.activityDetailsBinding.getRoot().getContext().getString(R.string.GOOGLE_MAP_API_KEY_DEV), picUrlList.get(position));
         }
         Glide.with(viewHolder.itemView)
                 .load(picUrl)

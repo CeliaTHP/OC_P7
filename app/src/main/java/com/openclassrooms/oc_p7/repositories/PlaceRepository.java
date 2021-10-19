@@ -5,7 +5,8 @@ import android.location.Location;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.openclassrooms.oc_p7.BuildConfig;
+import com.openclassrooms.oc_p7.MyApplication;
+import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.models.ErrorCode;
 import com.openclassrooms.oc_p7.models.Restaurant;
 import com.openclassrooms.oc_p7.models.pojo_models.responses.DetailsPlaceResponse;
@@ -31,6 +32,7 @@ public class PlaceRepository {
     private final String radiusQuery;
     private final String restaurantQuery;
     private MutableLiveData<ErrorCode> errorCode;
+    private final String apiKey = MyApplication.getInstance().getApplicationContext().getString(R.string.GOOGLE_MAP_API_KEY_DEV);
 
 
     public PlaceRepository(PlacesApi placesApi,
@@ -68,7 +70,7 @@ public class PlaceRepository {
 
         //Executor to execute the following code in the same thread (easier for tests)
         executor.execute(() -> {
-            Call<NearbyPlaceResponse> call = placesApi.getNearbyPlaces(BuildConfig.GoogleMapApiKey, locationStringQuery, radiusQuery, restaurantQuery);
+            Call<NearbyPlaceResponse> call = placesApi.getNearbyPlaces(apiKey, locationStringQuery, radiusQuery, restaurantQuery);
             try {
                 Response<NearbyPlaceResponse> response = call.execute();
                 if (response.isSuccessful()) {
@@ -92,7 +94,7 @@ public class PlaceRepository {
         List<Restaurant> restaurantList = restaurantListMutableLiveData.getValue();
         executor.execute(() -> {
             Call<DetailsPlaceResponse> call =
-                    placesApi.getDetailsById(BuildConfig.GoogleMapApiKey, restaurantId);
+                    placesApi.getDetailsById(apiKey, restaurantId);
             try {
                 Response<DetailsPlaceResponse> response = call.execute();
                 if (response.isSuccessful()) {
@@ -127,7 +129,7 @@ public class PlaceRepository {
     public void getRestaurantDetails(String restaurantId) {
         executor.execute(() -> {
             Call<DetailsPlaceResponse> call =
-                    placesApi.getDetailsById(BuildConfig.GoogleMapApiKey, restaurantId);
+                    placesApi.getDetailsById(apiKey, restaurantId);
             try {
                 Response<DetailsPlaceResponse> response = call.execute();
                 if (response.isSuccessful()) {

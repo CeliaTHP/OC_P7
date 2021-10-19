@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.openclassrooms.oc_p7.BuildConfig;
 import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.callbacks.OnRestaurantClickListener;
 import com.openclassrooms.oc_p7.databinding.ItemLayoutRestaurantBinding;
@@ -77,7 +76,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
             holder.itemLayoutRestaurantBinding.itemRestaurantAttendees.setText(holder.itemView.getContext().getString(R.string.item_restaurant_attendees, restaurant.getAttendees().size()));
 
         if (restaurant.getPhotoReferences() != null) {
-            String picUrl = holder.itemView.getContext().getString(R.string.place_photo_url, BuildConfig.GoogleMapApiKey, restaurant.getPhotoReferences().get(0));
+            String picUrl = holder.itemView.getContext().getString(R.string.place_photo_url, holder.itemLayoutRestaurantBinding.getRoot().getContext().getString(R.string.GOOGLE_MAP_API_KEY_DEV), restaurant.getPhotoReferences().get(0));
             //Blinks with picasso too
 
             /*

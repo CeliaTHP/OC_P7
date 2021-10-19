@@ -58,6 +58,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private MapView mapView;
 
     private Bundle savedInstanceState;
+    private Bundle bundle;
 
     private LoginViewModel loginViewModel;
 
@@ -69,9 +70,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         this.savedInstanceState = savedInstanceState;
 
+
         //initBinding
         fragmentMapBinding = FragmentMapBinding.inflate(LayoutInflater.from(this.getContext()), null, false);
 
+        if (getArguments() != null) initBundle();
         initViewModels();
         initMap(savedInstanceState);
         initObservers();
@@ -81,6 +84,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         return fragmentMapBinding.getRoot();
     }
 
+    private void initBundle() {
+        bundle = getArguments();
+        LatLng latLng = new LatLng(bundle.getDouble("lat"), bundle.getDouble("lng"));
+
+    }
+
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -88,6 +98,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         requestPermissions();
 
     }
+
 
     private void initViewModels() {
         loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
@@ -129,9 +140,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
             }
 
-
         });
-
         mapViewModel.workmateRepositoryErrorCodeMutableLiveData.observe(getViewLifecycleOwner(), errorCode -> {
             if (errorCode == ErrorCode.EXECUTION_EXCEPTION) {
                 Toast.makeText(fragmentMapBinding.getRoot().getContext(), getString(R.string.workmate_execution_error), Toast.LENGTH_LONG).show();
@@ -159,8 +168,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             workmateViewModel.getWorkmateForRestaurantList(mapViewModel.restaurantListLiveData);
 
             for (Restaurant restaurant : restaurantList) {
-
-
                 Log.d(TAG, "observer mapFragment : " + restaurant.toString());
                 //getDetails
                 if (googleMap != null) {
@@ -182,38 +189,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             });
         });
 
+        mapViewModel.requestedPlace.observe(getViewLifecycleOwner(), place -> {
+            if (place.getLatLng() != null) {
+                LatLng requestedLatLng = new LatLng(place.getLatLng().latitude, place.getLatLng().longitude);
+                googleMap.addMarker(new MarkerOptions().position(requestedLatLng).title(place.getName())).showInfoWindow();
+                googleMap.moveCamera(CameraUpdateFactory.newLatLng(requestedLatLng));
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(requestedLatLng, 14));
 
-
-
-
- /*
-
-        mapViewModel.nearbyPlacesLiveData.observe(getViewLifecycleOwner(), placeList -> {
-            Log.d(TAG, "placeListLiveData onChanged");
-            for (RestaurantPojo place : placeList) {
-                if (googleMap != null) {
-                    LatLng latLng = new LatLng(place.geometry.location.lat, place.geometry.location.lng);
-                    if (placeIdList.contains(place.place_id))
-                        googleMap.addMarker(new MarkerOptions().position(latLng).title(place.name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
-                    else
-                        googleMap.addMarker(new MarkerOptions().position(latLng).title(place.name));
-                }
             }
-            LatLng currentLatLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(currentLatLng));
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 14));
+
         });
 
-*/
-
-/*
-        workmateViewModel.workmatePlaceIdListLiveData.observe(getViewLifecycleOwner(), idList -> {
-            Log.d(TAG, "idList size : " + idList.size());
-            placeIdList = idList;
-            refreshMap();
-        });
-
- */
 
     }
 

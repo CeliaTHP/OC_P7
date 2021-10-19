@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,6 +36,7 @@ import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.databinding.ActivityDashboardBinding;
 import com.openclassrooms.oc_p7.databinding.DrawerHeaderBinding;
 import com.openclassrooms.oc_p7.services.firestore_helpers.UserHelper;
+import com.openclassrooms.oc_p7.view_models.MapViewModel;
 
 import java.util.Arrays;
 import java.util.List;
@@ -48,7 +50,8 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private Toolbar toolbar;
     private final static int AUTOCOMPLETE_REQUEST_CODE = 1;
-    SearchView searchView;
+    private SearchView searchView;
+    private MapViewModel mapViewModel;
 
     ActivityDashboardBinding activityDashboardBinding;
     DrawerHeaderBinding drawerHeaderBinding;
@@ -78,7 +81,7 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
 
     private void initPlaces() {
         if (!Places.isInitialized()) {
-            Places.initialize(this, getString(R.string.google_api_key), Locale.FRANCE);
+            Places.initialize(this, getString(R.string.GOOGLE_MAP_API_KEY_DEV), Locale.FRANCE);
         }
 
     }
@@ -150,7 +153,7 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
         searchView = (SearchView) menu.findItem(R.id.toolbar_search).getActionView();
         searchView.setQueryHint("Search location...");
 
-        /*searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 if (query.length() >= 3) {
@@ -178,7 +181,7 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
             }
         });
 
-         */
+
         searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
             @Override
             public boolean onSuggestionSelect(int position) {
@@ -219,6 +222,7 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
                 toolbar.collapseActionView();
                 Place place = Autocomplete.getPlaceFromIntent(data);
                 Log.d(TAG, "Place: " + place.getName() + ", " + place.getId());
+                //mapViewModel.focusMap(place);
             } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
                 // TODO: Handle the error.
                 Status status = Autocomplete.getStatusFromIntent(data);
@@ -288,19 +292,15 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.drawer_home:
-                Log.d(TAG, "Home pressed");
                 break;
             case R.id.drawer_lunch:
                 goToLunch();
-                Log.d(TAG, "Lunch pressed");
                 break;
             case R.id.drawer_settings:
                 goToSettings();
-                Log.d(TAG, "Setting pressed");
                 break;
             case R.id.drawer_logout:
                 logOut();
-                Log.d(TAG, "Logout pressed");
                 break;
         }
         activityDashboardBinding.drawerLayout.closeDrawer(GravityCompat.START);
