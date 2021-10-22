@@ -36,6 +36,7 @@ import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.databinding.ActivityDashboardBinding;
 import com.openclassrooms.oc_p7.databinding.DrawerHeaderBinding;
 import com.openclassrooms.oc_p7.services.firestore_helpers.UserHelper;
+import com.openclassrooms.oc_p7.views.fragments.HomeFragment;
 
 import java.util.Arrays;
 import java.util.List;
@@ -78,8 +79,9 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
 
     }
 
-    public void updateFragmentNum(int fragmentNum) {
-        this.fragmentNum = fragmentNum;
+    public void getCurrentfragment() {
+
+        Log.d(TAG, "PAGE INT = " + HomeFragment.getCurrentItemInt());
 
     }
 
@@ -134,11 +136,6 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
     }
 
 
-    private void getCurrentFragment() {
-
-    }
-
-
     /**
      * Setting up the searchView for AutoComplete
      */
@@ -148,7 +145,7 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
         MenuItem.OnActionExpandListener onActionExpandListener = new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
-                getCurrentFragment();
+                getCurrentfragment();
                 onSearchCalled();
                 return true;
             }

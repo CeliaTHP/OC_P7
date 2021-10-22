@@ -34,7 +34,7 @@ public class WorkmateHelper {
     }
 
     public static Task<QuerySnapshot> getWorkmatesForRestaurant(FirebaseFirestore firebaseFirestore, String restaurantId) {
-        return getWorkmatesCollection(firebaseFirestore).whereEqualTo("restaurantId", restaurantId).get();
+        return WorkmateHelper.getWorkmatesCollection(firebaseFirestore).whereEqualTo("restaurantId", restaurantId).get();
     }
 
     // UPDATE

@@ -30,7 +30,7 @@ public class MapViewModel extends ViewModel {
     private WorkmateRepository workmateRepository;
 
 
-    public MutableLiveData<List<Restaurant>> restaurantListLiveData;
+    public MutableLiveData<List<Restaurant>> restaurantListLiveData = new MutableLiveData<>();
     public MutableLiveData<Location> currentLocationLiveData;
     public MutableLiveData<Place> requestedPlace = new MutableLiveData<>();
     public MutableLiveData<ErrorCode> placeRepositoryErrorCodeMutableLiveData = new MutableLiveData<>();
@@ -42,14 +42,12 @@ public class MapViewModel extends ViewModel {
         this.workmateRepository = workmateRepository;
         this.fusedLocationProviderClient = fusedLocationProviderClient;
         this.lifecycleOwner = lifecycleOwner;
-        this.restaurantListLiveData = new MutableLiveData();
         this.currentLocationLiveData = placeRepository.currentLocationLiveData;
 
     }
 
     public void focusMap(Place place) {
         requestedPlace.postValue(place);
-
     }
 
     public void loadMap() {

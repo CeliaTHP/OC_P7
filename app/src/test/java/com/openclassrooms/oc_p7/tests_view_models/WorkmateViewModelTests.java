@@ -56,7 +56,7 @@ public class WorkmateViewModelTests {
 
     @Test
     public void constructorTest() {
-        Assert.assertEquals(workmateViewModel.workmateListLiveData, workmateRepositoryMock.workmateListLiveData);
+        Assert.assertEquals(workmateViewModel.workmateListLiveData, workmateRepositoryMock.getWorkmateListLiveData());
 
     }
 

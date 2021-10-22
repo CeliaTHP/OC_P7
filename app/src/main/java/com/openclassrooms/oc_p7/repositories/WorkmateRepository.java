@@ -31,13 +31,17 @@ public class WorkmateRepository {
     private FirebaseFirestore firebaseFirestore;
     private MutableLiveData<ErrorCode> errorCode;
 
-    public MutableLiveData<List<Workmate>> workmateListLiveData;
+    private MutableLiveData<List<Workmate>> workmateListLiveData;
 
     public WorkmateRepository(FirebaseFirestore firebaseFirestore, Executor executor, MutableLiveData<List<Workmate>> workmateListLiveData, MutableLiveData<ErrorCode> errorCode) {
         this.firebaseFirestore = firebaseFirestore;
         this.executor = executor;
         this.workmateListLiveData = workmateListLiveData;
         this.errorCode = errorCode;
+    }
+
+    public MutableLiveData<List<Workmate>> getWorkmateListLiveData() {
+        return workmateListLiveData;
     }
 
     public LiveData<ErrorCode> getErrorCode() {
@@ -89,7 +93,6 @@ public class WorkmateRepository {
 
     public void getWorkmatesForRestaurant(MutableLiveData<Restaurant> restaurantMutableLiveData) {
         //FILTER VIA FIREBASE
-        Log.d(TAG, "getWorkmatesForRestaurant");
         Restaurant restaurant = restaurantMutableLiveData.getValue();
 
 
@@ -107,7 +110,6 @@ public class WorkmateRepository {
                     for (DocumentSnapshot documentSnapshot : snapshotList) {
                         Workmate workmateToAdd = documentSnapshot.toObject(Workmate.class);
                         workmatesFiltered.add(workmateToAdd);
-                        Log.d(TAG, "added : " + workmateToAdd.getName() + " to " + restaurant.getName());
                     }
                     //UPDATE RESTAURANTLIVEDATA
 

@@ -1,6 +1,7 @@
 package com.openclassrooms.oc_p7.views.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,15 +10,19 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDestination;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
 import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.databinding.FragmentHomeBinding;
 
+import org.jetbrains.annotations.NotNull;
+
 public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding fragmentHomeBinding;
+    private static String pageName;
     private String TAG = "HomeFragment";
 
     @Nullable
@@ -42,8 +47,26 @@ public class HomeFragment extends Fragment {
         //Verifnonull
         if (getActivity() != null) {
             NavController navController = ((NavHostFragment) getChildFragmentManager().findFragmentById(R.id.bottom_nav_host_fragment)).getNavController();
-
+            navController.addOnDestinationChangedListener(new NavController.OnDestinationChangedListener() {
+                @Override
+                public void onDestinationChanged(@NonNull @NotNull NavController controller, @NonNull @NotNull NavDestination destination, @Nullable @org.jetbrains.annotations.Nullable Bundle arguments) {
+                    Log.d(TAG, "onDestinationChanged name : " + destination.getDisplayName() + "navName : " + destination.getNavigatorName() + navController.getClass());
+                    pageName = destination.getDisplayName();
+                }
+            });
             NavigationUI.setupWithNavController(fragmentHomeBinding.bottomNavView, navController);
+
+        }
+    }
+
+    public static int getCurrentItemInt() {
+        switch (pageName) {
+            case ("com.openclassrooms.oc_p7:id/navigation_map"):
+                return 0;
+            case ("com.openclassrooms.oc_p7:id/navigation_list"):
+                return 1;
+            default:
+                return 2;
         }
     }
 }

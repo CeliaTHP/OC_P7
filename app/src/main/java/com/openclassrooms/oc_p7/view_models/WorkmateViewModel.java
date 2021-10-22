@@ -21,7 +21,7 @@ public class WorkmateViewModel extends ViewModel {
 
     public WorkmateViewModel(WorkmateRepository workmateRepository) {
         this.workmateRepository = workmateRepository;
-        workmateListLiveData = workmateRepository.workmateListLiveData;
+        workmateListLiveData = workmateRepository.getWorkmateListLiveData();
     }
 
     public void getWorkmateList() {

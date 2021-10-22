@@ -59,26 +59,6 @@ public class WorkmateUtils {
 
     }
 
-    public static List<DocumentSnapshot> getEmptyDocumentSnapshotList() {
-        List<DocumentSnapshot> documentSnapshotList = new ArrayList<>();
-
-        DocumentSnapshot documentSnapshotMock = Mockito.mock(DocumentSnapshot.class);
-
-        Mockito.when(documentSnapshotMock.get("uid")).thenReturn(null);
-        /*
-        Mockito.when(documentSnapshotMock.get("name")).thenReturn("testName");
-        Mockito.when(documentSnapshotMock.get("email")).thenReturn("testEmail");
-        Mockito.when(documentSnapshotMock.get("picUrl")).thenReturn("testPicUrl");
-        Mockito.when(documentSnapshotMock.get("restaurantId")).thenReturn("testRestaurantId");
-        Mockito.when(documentSnapshotMock.get("restaurantName")).thenReturn("testRestaurantName");
-
-         */
-
-        // documentSnapshotList.add(documentSnapshotMock);
-
-        return documentSnapshotList;
-
-    }
 
     public static List<Workmate> getWorkmateList() {
         List<Workmate> workmateList = new ArrayList<>();
