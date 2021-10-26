@@ -1,7 +1,5 @@
 package com.openclassrooms.oc_p7.repositories;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -32,9 +30,11 @@ public class WorkmateRepository {
     private MutableLiveData<ErrorCode> errorCode;
 
     private MutableLiveData<List<Workmate>> workmateListLiveData;
+    private WorkmateHelper workmateHelper;
 
-    public WorkmateRepository(FirebaseFirestore firebaseFirestore, Executor executor, MutableLiveData<List<Workmate>> workmateListLiveData, MutableLiveData<ErrorCode> errorCode) {
+    public WorkmateRepository(FirebaseFirestore firebaseFirestore, WorkmateHelper workmateHelper, Executor executor, MutableLiveData<List<Workmate>> workmateListLiveData, MutableLiveData<ErrorCode> errorCode) {
         this.firebaseFirestore = firebaseFirestore;
+        this.workmateHelper = workmateHelper;
         this.executor = executor;
         this.workmateListLiveData = workmateListLiveData;
         this.errorCode = errorCode;
@@ -53,9 +53,8 @@ public class WorkmateRepository {
 
 
     public void getWorkmateList() {
-
         executor.execute(() -> {
-            Task<QuerySnapshot> task = WorkmateHelper.getAllWorkmates(firebaseFirestore);
+            Task<QuerySnapshot> task = workmateHelper.getAllWorkmates(firebaseFirestore);
             try {
                 Tasks.await(task);
                 QuerySnapshot queryDocumentSnapshots = task.getResult();
@@ -100,7 +99,7 @@ public class WorkmateRepository {
             executor.execute(() -> {
                 List<Workmate> workmatesFiltered = new ArrayList<>();
 
-                Task<QuerySnapshot> task = WorkmateHelper.getWorkmatesForRestaurant(firebaseFirestore, restaurant.getId());
+                Task<QuerySnapshot> task = workmateHelper.getWorkmatesForRestaurant(firebaseFirestore, restaurant.getId());
 
                 try {
                     Tasks.await(task);
@@ -117,7 +116,6 @@ public class WorkmateRepository {
                     restaurant.setHasWorkmates(true);
                     restaurantMutableLiveData.postValue(restaurant);
 
-                    Log.d(TAG, restaurant.toString());
 
                 } catch (InterruptedException | ExecutionException e) {
                     e.printStackTrace();
@@ -139,14 +137,13 @@ public class WorkmateRepository {
                 for (Restaurant restaurant : restaurantList) {
                     if (!restaurant.getHasWorkmates()) {
                         List<Workmate> workmatesFiltered = new ArrayList<>();
-                        WorkmateHelper.getWorkmatesForRestaurant(firebaseFirestore, restaurant.getId()).addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        workmateHelper.getWorkmatesForRestaurant(firebaseFirestore, restaurant.getId()).addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                             @Override
                             public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
                                 if (task.isSuccessful()) {
                                     for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                                         Workmate workmateToAdd = documentSnapshot.toObject(Workmate.class);
                                         workmatesFiltered.add(workmateToAdd);
-                                        Log.d(TAG, "withList added : " + workmateToAdd.getName() + " to " + restaurant.getName());
                                     }
                                     //UPDATE RESTAURANTLIVEDATA
 

@@ -37,6 +37,7 @@ public class LoginViewModel extends AndroidViewModel {
     public MutableLiveData<FirebaseUser> authenticatedUserLiveData = new MutableLiveData<>();
     public FirebaseAuth auth = FirebaseAuth.getInstance();
     private OAuthProvider.Builder provider;
+    private WorkmateHelper workmateHelper = new WorkmateHelper();
 
     private static String TAG = "LoginViewModel";
 
@@ -225,7 +226,7 @@ public class LoginViewModel extends AndroidViewModel {
         Log.d("WORKMATES_CREATION", "initWorkmates");
 
         for (Workmate workmate : DummyWorkmateGenerator.generateWorkmates()) {
-            WorkmateHelper.createWorkmate(FirebaseFirestore.getInstance(), workmate.getUid(), workmate.getName(), workmate.getEmail(), workmate.getPicUrl()).addOnCompleteListener(new OnCompleteListener<Void>() {
+            workmateHelper.createWorkmate(FirebaseFirestore.getInstance(), workmate.getUid(), workmate.getName(), workmate.getEmail(), workmate.getPicUrl()).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull @NotNull Task<Void> task) {
                     if (task.isSuccessful()) {
@@ -237,11 +238,11 @@ public class LoginViewModel extends AndroidViewModel {
                 }
             });
             if (workmate.getRestaurantId() != null) {
-                WorkmateHelper.updateWorkmateRestaurantId(FirebaseFirestore.getInstance(), workmate.getRestaurantId(), workmate.getUid());
+                workmateHelper.updateWorkmateRestaurantId(FirebaseFirestore.getInstance(), workmate.getRestaurantId(), workmate.getUid());
 
             }
             if (workmate.getRestaurantName() != null)
-                WorkmateHelper.updateWorkmateRestaurantName(FirebaseFirestore.getInstance(), workmate.getRestaurantName(), workmate.getUid());
+                workmateHelper.updateWorkmateRestaurantName(FirebaseFirestore.getInstance(), workmate.getRestaurantName(), workmate.getUid());
         }
     }
 

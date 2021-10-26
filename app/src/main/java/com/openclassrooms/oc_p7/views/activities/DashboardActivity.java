@@ -37,6 +37,7 @@ import com.openclassrooms.oc_p7.databinding.ActivityDashboardBinding;
 import com.openclassrooms.oc_p7.databinding.DrawerHeaderBinding;
 import com.openclassrooms.oc_p7.services.firestore_helpers.UserHelper;
 import com.openclassrooms.oc_p7.views.fragments.HomeFragment;
+import com.openclassrooms.oc_p7.views.fragments.RestaurantListFragment;
 
 import java.util.Arrays;
 import java.util.List;
@@ -79,10 +80,9 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
 
     }
 
-    public void getCurrentfragment() {
-
+    public int getCurrentfragment() {
         Log.d(TAG, "PAGE INT = " + HomeFragment.getCurrentItemInt());
-
+        return HomeFragment.getCurrentItemInt();
     }
 
     private void initPlaces() {
@@ -145,8 +145,12 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
         MenuItem.OnActionExpandListener onActionExpandListener = new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
-                getCurrentfragment();
-                onSearchCalled();
+                if (getCurrentfragment() == 0)
+                    onSearchForMap();
+                else {
+
+                    //Filter
+                }
                 return true;
             }
 
@@ -165,6 +169,10 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
             @Override
             public boolean onQueryTextSubmit(String query) {
                 if (query.length() >= 3) {
+                    RestaurantListFragment.query.postValue(query);
+                    //RestaurantListFragment.filterList(query);
+
+
                     Log.d(TAG, "Can start query : " + query);
                 } else if (query.length() != 0) {
                     Toast toast = Toast.makeText(DashboardActivity.this, R.string.toolbar_query_too_short, Toast.LENGTH_LONG);
@@ -183,6 +191,8 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
 
             @Override
             public boolean onQueryTextChange(String newText) {
+
+
                 Log.d(TAG, "text changed : " + newText);
 
                 return true;
@@ -206,7 +216,7 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
     }
 
 
-    public void onSearchCalled() {
+    public void onSearchForMap() {
         // Set the fields to specify which types of place data to return.
         List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG);
         // Start the autocomplete intent.
@@ -230,6 +240,7 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
                 toolbar.collapseActionView();
                 Place place = Autocomplete.getPlaceFromIntent(data);
                 Log.d(TAG, "Place: " + place.getName() + ", " + place.getId());
+                handleSearch(getCurrentfragment());
                 //mapViewModel.focusMap(place);
             } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
                 // TODO: Handle the error.
@@ -244,6 +255,10 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
             return;
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void handleSearch(int pageNum) {
+
     }
 
 

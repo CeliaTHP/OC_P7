@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -27,7 +28,9 @@ import com.openclassrooms.oc_p7.view_models.WorkmateViewModel;
 import com.openclassrooms.oc_p7.views.activities.DetailsActivity;
 import com.openclassrooms.oc_p7.views.adapters.RestaurantAdapter;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class RestaurantListFragment extends Fragment implements OnRestaurantClickListener {
 
@@ -36,6 +39,9 @@ public class RestaurantListFragment extends Fragment implements OnRestaurantClic
     private MapViewModel mapViewModel;
     private FragmentListRestaurantsBinding fragmentListRestaurantsBinding;
     private RestaurantAdapter adapter;
+    public static MutableLiveData<String> query = new MutableLiveData<>();
+    private List<Restaurant> restaurantList = new ArrayList<>();
+    private List<Restaurant> filteredList = new ArrayList<>();
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -53,6 +59,7 @@ public class RestaurantListFragment extends Fragment implements OnRestaurantClic
 
         return fragmentListRestaurantsBinding.getRoot();
     }
+
 
     private void initViewModels() {
 
@@ -96,13 +103,27 @@ public class RestaurantListFragment extends Fragment implements OnRestaurantClic
         });
 
         mapViewModel.restaurantListLiveData.observe(getViewLifecycleOwner(), restaurantList -> {
-
+            this.restaurantList = restaurantList;
             workmateViewModel.getWorkmateForRestaurantList(mapViewModel.restaurantListLiveData);
             adapter.setData(restaurantList);
             adapter.notifyDataSetChanged();
 
             Log.d(TAG, "nearbyPlacesObserver from Restaurant");
 
+        });
+
+        query.observe(getViewLifecycleOwner(), query -> {
+            filteredList.clear();
+
+            for (Restaurant restaurant : restaurantList) {
+                if (restaurant.getName().contains(query) || restaurant.getAddress().contains(query)) {
+                    filteredList.add(restaurant);
+                }
+            }
+            if (adapter != null) {
+                adapter.setData(filteredList);
+                adapter.notifyDataSetChanged();
+            }
         });
     }
 

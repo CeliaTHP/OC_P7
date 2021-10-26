@@ -86,6 +86,9 @@
     <string name="notification_channel_id" translatable="false">myCanal</string>
     <string name="notification_channel_title" translatable="false">myTitle</string>
     <string name="notification_channel_desc" translatable="false">This is a test channel</string>
+    <string name="notification_title">Rappel</string>
+    <string name="notification_content">Direction %1$s à %2$s avec %3$s</string>
+    <string name="notification_content_no_workmates">Direction %1$s à %2$s</string>
 
 
 </resources>

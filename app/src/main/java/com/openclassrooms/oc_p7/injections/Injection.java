@@ -16,6 +16,7 @@ import com.openclassrooms.oc_p7.services.apis.PlacesApi;
 import com.openclassrooms.oc_p7.services.factories.DetailViewModelFactory;
 import com.openclassrooms.oc_p7.services.factories.MapViewModelFactory;
 import com.openclassrooms.oc_p7.services.factories.WorkmateViewModelFactory;
+import com.openclassrooms.oc_p7.services.firestore_helpers.WorkmateHelper;
 
 import java.util.concurrent.Executors;
 
@@ -31,7 +32,7 @@ public class Injection {
     }
 
     public static WorkmateRepository provideWorkmateRepository(FirebaseFirestore firebaseFirestore, Context context) {
-        return new WorkmateRepository(firebaseFirestore, Executors.newSingleThreadExecutor(), new MutableLiveData<>(), new MutableLiveData<>());
+        return new WorkmateRepository(firebaseFirestore, new WorkmateHelper(), Executors.newSingleThreadExecutor(), new MutableLiveData<>(), new MutableLiveData<>());
     }
 
     public static MapViewModelFactory provideMapViewModelFactory(FirebaseFirestore firebaseFirestore, Context context, LifecycleOwner lifecycleOwner) {

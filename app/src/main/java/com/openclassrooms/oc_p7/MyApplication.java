@@ -11,7 +11,7 @@ public class MyApplication extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
         instance = this;
-        initFirebaseMessaging();
+        initNotificationService();
 
     }
 
@@ -19,7 +19,7 @@ public class MyApplication extends MultiDexApplication {
         return MyApplication.instance;
     }
 
-    private void initFirebaseMessaging() {
+    private void initNotificationService() {
 
     }
 

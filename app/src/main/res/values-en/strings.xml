@@ -65,5 +65,11 @@
     <!--CONTENT DESCRIPTION -->
     <string name="cutlery_image">cutlery image</string>
 
+    <!--NOTIFICATION -->
+    <string name="notification_title">Reminder</string>
+
+    <string name="notification_content">Direction %1$s à %2$s avec %3$s</string>
+    <string name="notification_content_no_workmates">Direction %1$s à %2$s</string>
+
 
 </resources>
