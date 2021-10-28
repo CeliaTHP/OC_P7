@@ -117,8 +117,11 @@ public class WorkmateRepository {
                     restaurantMutableLiveData.postValue(restaurant);
 
 
-                } catch (InterruptedException | ExecutionException e) {
-                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    errorCode.postValue(ErrorCode.EXECUTION_EXCEPTION);
+
+                } catch (InterruptedException e) {
+                    errorCode.postValue(ErrorCode.INTERRUPTED_EXCEPTION);
                 }
             });
         }

@@ -82,7 +82,6 @@ public class WorkmateRepositoryTests {
 
         Mockito.verify(workmateMutableLiveDataListMock).postValue(expectedWorkmateList);
 
-
     }
 
     @Test
@@ -97,15 +96,14 @@ public class WorkmateRepositoryTests {
 
         Mockito.verify(errorCodeMutableLiveDataMock).postValue(ErrorCode.EXECUTION_EXCEPTION);
 
-
     }
 
     @Test
     public void getWorkmateListTestInterruptedException() throws IOException, ExecutionException, InterruptedException {
 
         Task<QuerySnapshot> taskMock = WorkmateUtils.getTaskMock(false, WorkmateUtils.getDocumentSnapshotList());
-        // Mockito.when(WorkmateHelper.getWorkmatesCollection(firebaseFirestoreMock)).thenReturn(collectionReferenceMock);
-        //Mockito.when(WorkmateHelper.getAllWorkmates(firebaseFirestoreMock)).thenReturn(taskMock);
+        Mockito.when(workmateHelper.getWorkmatesCollection(firebaseFirestoreMock)).thenReturn(collectionReferenceMock);
+        Mockito.when(workmateHelper.getAllWorkmates(firebaseFirestoreMock)).thenReturn(taskMock);
         Mockito.when(Tasks.await(Mockito.any())).thenThrow(new InterruptedException());
 
         workmateRepository.getWorkmateList();
@@ -120,7 +118,6 @@ public class WorkmateRepositoryTests {
     public void getWorkmateForRestaurantTestsSuccess() throws IOException {
 
         Restaurant expectedRestaurant = Mockito.mock(Restaurant.class);
-
         Task<QuerySnapshot> taskMock = WorkmateUtils.getTaskMock(true, WorkmateUtils.getDocumentSnapshotList());
         Mockito.when(workmateHelper.getWorkmatesForRestaurant(Mockito.any(), Mockito.any())).thenReturn(taskMock);
         Mockito.when(restaurantMutableLiveDataMock.getValue()).thenReturn(expectedRestaurant);
@@ -130,36 +127,42 @@ public class WorkmateRepositoryTests {
         Mockito.verify(restaurantMutableLiveDataMock).getValue();
         Mockito.verify(restaurantMutableLiveDataMock).postValue(expectedRestaurant);
 
-
     }
 
     @Test
     public void getWorkmateForRestaurantTestsExecutionException() throws IOException, ExecutionException, InterruptedException {
 
-/*
         Restaurant expectedRestaurant = Mockito.mock(Restaurant.class);
-
-        Task<QuerySnapshot> taskMock = WorkmateUtils.getTaskMock(true, WorkmateUtils.getDocumentSnapshotList());
-        Mockito.when(Tasks.await(Mockito.any())).thenThrow(new ExecutionException("testException", new Throwable()));
-        Mockito.when(workmateHelper.getWorkmatesCollection(firebaseFirestoreMock)).thenReturn(collectionReferenceMock);
-
+        Task<QuerySnapshot> taskMock = WorkmateUtils.getTaskMock(false, WorkmateUtils.getDocumentSnapshotList());
         Mockito.when(workmateHelper.getWorkmatesForRestaurant(Mockito.any(), Mockito.any())).thenReturn(taskMock);
         Mockito.when(restaurantMutableLiveDataMock.getValue()).thenReturn(expectedRestaurant);
-
+        Mockito.when(Tasks.await(taskMock)).thenThrow(new ExecutionException("testExecutionException", new Throwable()));
 
         workmateRepository.getWorkmatesForRestaurant(restaurantMutableLiveDataMock);
 
         Mockito.verify(restaurantMutableLiveDataMock).getValue();
         Mockito.verify(errorCodeMutableLiveDataMock).postValue(ErrorCode.EXECUTION_EXCEPTION);
 
-       // Mockito.verify(restaurantMutableLiveDataMock).postValue(Mockito.any());
+    }
 
 
+    @Test
+    public void getWorkmateForRestaurantTestsInterruptedException() throws IOException, ExecutionException, InterruptedException {
 
+        Restaurant expectedRestaurant = Mockito.mock(Restaurant.class);
+        Task<QuerySnapshot> taskMock = WorkmateUtils.getTaskMock(false, WorkmateUtils.getDocumentSnapshotList());
+        Mockito.when(workmateHelper.getWorkmatesForRestaurant(Mockito.any(), Mockito.any())).thenReturn(taskMock);
+        Mockito.when(restaurantMutableLiveDataMock.getValue()).thenReturn(expectedRestaurant);
+        Mockito.when(Tasks.await(taskMock)).thenThrow(new InterruptedException());
 
- */
+        workmateRepository.getWorkmatesForRestaurant(restaurantMutableLiveDataMock);
+
+        Mockito.verify(restaurantMutableLiveDataMock).getValue();
+        Mockito.verify(errorCodeMutableLiveDataMock).postValue(ErrorCode.INTERRUPTED_EXCEPTION);
 
     }
+
+
 
 
 }
