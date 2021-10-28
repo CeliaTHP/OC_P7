@@ -15,8 +15,8 @@ import com.openclassrooms.oc_p7.models.Restaurant;
 import com.openclassrooms.oc_p7.models.Workmate;
 import com.openclassrooms.oc_p7.repositories.WorkmateRepository;
 import com.openclassrooms.oc_p7.services.firestore_helpers.WorkmateHelper;
+import com.openclassrooms.oc_p7.utils.FirestoreUtils;
 import com.openclassrooms.oc_p7.utils.RepositoryUtils;
-import com.openclassrooms.oc_p7.utils.WorkmateUtils;
 
 import org.junit.After;
 import org.junit.Before;
@@ -75,8 +75,8 @@ public class WorkmateRepositoryTests {
     @Test
     public void getWorkmateListTestsSuccess() throws IOException {
 
-        List<Workmate> expectedWorkmateList = WorkmateUtils.getWorkmateList();
-        Task<QuerySnapshot> taskMock = WorkmateUtils.getTaskMock(true, WorkmateUtils.getDocumentSnapshotList());
+        List<Workmate> expectedWorkmateList = FirestoreUtils.getWorkmateList();
+        Task<QuerySnapshot> taskMock = FirestoreUtils.getTaskMock(true, FirestoreUtils.getDocumentSnapshotList());
         Mockito.when(workmateHelper.getWorkmatesCollection(firebaseFirestoreMock)).thenReturn(collectionReferenceMock);
         Mockito.when(workmateHelper.getAllWorkmates(firebaseFirestoreMock)).thenReturn(taskMock);
 
@@ -89,7 +89,7 @@ public class WorkmateRepositoryTests {
     @Test
     public void getWorkmateListTestExecutionException() throws IOException, ExecutionException, InterruptedException {
 
-        Task<QuerySnapshot> taskMock = WorkmateUtils.getTaskMock(false, WorkmateUtils.getDocumentSnapshotList());
+        Task<QuerySnapshot> taskMock = FirestoreUtils.getTaskMock(false, FirestoreUtils.getDocumentSnapshotList());
         Mockito.when(workmateHelper.getWorkmatesCollection(firebaseFirestoreMock)).thenReturn(collectionReferenceMock);
         Mockito.when(workmateHelper.getAllWorkmates(firebaseFirestoreMock)).thenReturn(taskMock);
         Mockito.when(Tasks.await(Mockito.any())).thenThrow(new ExecutionException("testException", new Throwable()));
@@ -103,7 +103,7 @@ public class WorkmateRepositoryTests {
     @Test
     public void getWorkmateListTestInterruptedException() throws IOException, ExecutionException, InterruptedException {
 
-        Task<QuerySnapshot> taskMock = WorkmateUtils.getTaskMock(false, WorkmateUtils.getDocumentSnapshotList());
+        Task<QuerySnapshot> taskMock = FirestoreUtils.getTaskMock(false, FirestoreUtils.getDocumentSnapshotList());
         Mockito.when(workmateHelper.getWorkmatesCollection(firebaseFirestoreMock)).thenReturn(collectionReferenceMock);
         Mockito.when(workmateHelper.getAllWorkmates(firebaseFirestoreMock)).thenReturn(taskMock);
         Mockito.when(Tasks.await(Mockito.any())).thenThrow(new InterruptedException());
@@ -120,7 +120,7 @@ public class WorkmateRepositoryTests {
     public void getWorkmateForRestaurantTestsSuccess() throws IOException {
 
         Restaurant expectedRestaurant = Mockito.mock(Restaurant.class);
-        Task<QuerySnapshot> taskMock = WorkmateUtils.getTaskMock(true, WorkmateUtils.getDocumentSnapshotList());
+        Task<QuerySnapshot> taskMock = FirestoreUtils.getTaskMock(true, FirestoreUtils.getDocumentSnapshotList());
         Mockito.when(workmateHelper.getWorkmatesForRestaurant(Mockito.any(), Mockito.any())).thenReturn(taskMock);
         Mockito.when(restaurantMutableLiveDataMock.getValue()).thenReturn(expectedRestaurant);
 
@@ -135,7 +135,7 @@ public class WorkmateRepositoryTests {
     public void getWorkmateForRestaurantTestsExecutionException() throws IOException, ExecutionException, InterruptedException {
 
         Restaurant expectedRestaurant = Mockito.mock(Restaurant.class);
-        Task<QuerySnapshot> taskMock = WorkmateUtils.getTaskMock(false, WorkmateUtils.getDocumentSnapshotList());
+        Task<QuerySnapshot> taskMock = FirestoreUtils.getTaskMock(false, FirestoreUtils.getDocumentSnapshotList());
         Mockito.when(workmateHelper.getWorkmatesForRestaurant(Mockito.any(), Mockito.any())).thenReturn(taskMock);
         Mockito.when(restaurantMutableLiveDataMock.getValue()).thenReturn(expectedRestaurant);
         Mockito.when(Tasks.await(taskMock)).thenThrow(new ExecutionException("testExecutionException", new Throwable()));
@@ -152,7 +152,7 @@ public class WorkmateRepositoryTests {
     public void getWorkmateForRestaurantTestsInterruptedException() throws IOException, ExecutionException, InterruptedException {
 
         Restaurant expectedRestaurant = Mockito.mock(Restaurant.class);
-        Task<QuerySnapshot> taskMock = WorkmateUtils.getTaskMock(false, WorkmateUtils.getDocumentSnapshotList());
+        Task<QuerySnapshot> taskMock = FirestoreUtils.getTaskMock(false, FirestoreUtils.getDocumentSnapshotList());
         Mockito.when(workmateHelper.getWorkmatesForRestaurant(Mockito.any(), Mockito.any())).thenReturn(taskMock);
         Mockito.when(restaurantMutableLiveDataMock.getValue()).thenReturn(expectedRestaurant);
         Mockito.when(Tasks.await(taskMock)).thenThrow(new InterruptedException());
@@ -168,7 +168,7 @@ public class WorkmateRepositoryTests {
     public void getWorkmateForRestaurantListTestsSuccess() throws IOException {
 
         List<Restaurant> expectedRestaurantList = RepositoryUtils.getRestaurantList();
-        Task<QuerySnapshot> taskMock = WorkmateUtils.getTaskMock(true, WorkmateUtils.getDocumentSnapshotList());
+        Task<QuerySnapshot> taskMock = FirestoreUtils.getTaskMock(true, FirestoreUtils.getDocumentSnapshotList());
         Mockito.when(workmateHelper.getWorkmatesForRestaurant(Mockito.any(), Mockito.any())).thenReturn(taskMock);
         Mockito.when(restaurantListMutableLiveDataMock.getValue()).thenReturn(expectedRestaurantList);
 
@@ -186,7 +186,7 @@ public class WorkmateRepositoryTests {
     public void getWorkmateForRestaurantListTestsExecutionException() throws IOException, ExecutionException, InterruptedException {
 
         List<Restaurant> expectedRestaurantList = RepositoryUtils.getRestaurantList();
-        Task<QuerySnapshot> taskMock = WorkmateUtils.getTaskMock(true, WorkmateUtils.getDocumentSnapshotList());
+        Task<QuerySnapshot> taskMock = FirestoreUtils.getTaskMock(true, FirestoreUtils.getDocumentSnapshotList());
         Mockito.when(workmateHelper.getWorkmatesForRestaurant(Mockito.any(), Mockito.any())).thenReturn(taskMock);
         Mockito.when(restaurantListMutableLiveDataMock.getValue()).thenReturn(expectedRestaurantList);
         Mockito.when(Tasks.await(taskMock)).thenThrow(new ExecutionException("testExecutionException", new Throwable()));
@@ -204,7 +204,7 @@ public class WorkmateRepositoryTests {
     public void getWorkmateForRestaurantListTestsInterruptedException() throws IOException, ExecutionException, InterruptedException {
 
         List<Restaurant> expectedRestaurantList = RepositoryUtils.getRestaurantList();
-        Task<QuerySnapshot> taskMock = WorkmateUtils.getTaskMock(true, WorkmateUtils.getDocumentSnapshotList());
+        Task<QuerySnapshot> taskMock = FirestoreUtils.getTaskMock(true, FirestoreUtils.getDocumentSnapshotList());
         Mockito.when(workmateHelper.getWorkmatesForRestaurant(Mockito.any(), Mockito.any())).thenReturn(taskMock);
         Mockito.when(restaurantListMutableLiveDataMock.getValue()).thenReturn(expectedRestaurantList);
         Mockito.when(Tasks.await(taskMock)).thenThrow(new InterruptedException());

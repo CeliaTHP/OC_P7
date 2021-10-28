@@ -11,20 +11,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Response;
+public class FirestoreUtils {
 
-public class WorkmateUtils {
-
-
-    public static <T> Call<T> getCallMock(Boolean isSuccessFull, T response) throws IOException {
-        Call<T> callMock = Mockito.mock(Call.class);
-        Response<T> responseMock = Mockito.mock(Response.class);
-        Mockito.when(callMock.execute()).thenReturn(responseMock);
-        Mockito.when(responseMock.isSuccessful()).thenReturn(isSuccessFull);
-        Mockito.when(responseMock.body()).thenReturn(response);
-        return callMock;
-    }
 
     public static <T> Task<QuerySnapshot> getTaskMock(Boolean isSuccessFull, List<DocumentSnapshot> response) throws IOException {
         Task<QuerySnapshot> taskMock = Mockito.mock(Task.class);
@@ -38,7 +26,6 @@ public class WorkmateUtils {
 
         return taskMock;
     }
-
 
     public static List<DocumentSnapshot> getDocumentSnapshotList() {
         List<DocumentSnapshot> documentSnapshotList = new ArrayList<>();

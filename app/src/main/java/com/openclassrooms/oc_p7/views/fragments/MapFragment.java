@@ -1,6 +1,7 @@
 package com.openclassrooms.oc_p7.views.fragments;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -26,6 +27,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -34,17 +36,18 @@ import com.openclassrooms.oc_p7.databinding.FragmentMapBinding;
 import com.openclassrooms.oc_p7.injections.Injection;
 import com.openclassrooms.oc_p7.models.ErrorCode;
 import com.openclassrooms.oc_p7.models.Restaurant;
-import com.openclassrooms.oc_p7.models.pojo_models.restaurant_pojo.RestaurantPojo;
 import com.openclassrooms.oc_p7.services.factories.MapViewModelFactory;
 import com.openclassrooms.oc_p7.services.factories.WorkmateViewModelFactory;
 import com.openclassrooms.oc_p7.view_models.LoginViewModel;
 import com.openclassrooms.oc_p7.view_models.MapViewModel;
 import com.openclassrooms.oc_p7.view_models.WorkmateViewModel;
+import com.openclassrooms.oc_p7.views.activities.DetailsActivity;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
 
@@ -54,7 +57,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private MapViewModel mapViewModel;
     private WorkmateViewModel workmateViewModel;
 
-    private ArrayList<RestaurantPojo> nearbyPlaceList = new ArrayList<>();
+    private List<Restaurant> restaurantList = new ArrayList<Restaurant>();
 
     private FragmentMapBinding fragmentMapBinding;
     private MapView mapView;
@@ -165,6 +168,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         mapViewModel.restaurantListLiveData.observe(getViewLifecycleOwner(), restaurantList -> {
 
+            this.restaurantList = restaurantList;
             Log.d(TAG, "observer,  size : " + restaurantList.size());
 
             workmateViewModel.getWorkmateForRestaurantList(mapViewModel.restaurantListLiveData);
@@ -176,7 +180,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     LatLng latLng = new LatLng(restaurant.getLat(), restaurant.getLng());
                     if (restaurant.getAttendees() != null && restaurant.getAttendees().size() >= 1) {
                         Log.d(TAG, "getAttendees != null " + restaurant.getName());
-
                         googleMap.addMarker(new MarkerOptions().position(latLng).title(restaurant.getName()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
                         Log.d(TAG, "a workmate chosed : " + restaurant.getName());
                     } else
@@ -194,7 +197,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             });
 
         });
-
 
 
     }
@@ -231,24 +233,47 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(@NonNull GoogleMap googleMap) {
         Log.d(TAG, "MAP READY");
         this.googleMap = googleMap;
+        googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(@NonNull @NotNull Marker marker) {
+                Log.d(TAG, marker.getTitle() + " ");
+
+                startDetailsActivityForRestaurant(marker.getTitle());
+
+            }
+        });
+
         if (getTheme())
             googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.mapstyle));
 
         googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(@NonNull LatLng latLng) {
-                /*
-                MarkerOptions markerOptions = new MarkerOptions();
-                markerOptions.position(latLng);
-                markerOptions.title(latLng.latitude + " : " + latLng.longitude);
-                googleMap.clear();
-                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
-                googleMap.addMarker(markerOptions);
-                 */
+
 
             }
         });
         refreshMap();
+
+    }
+
+    private void startDetailsActivityForRestaurant(String title) {
+        String chosenRestaurantId = null;
+
+        for (Restaurant restaurant : restaurantList) {
+
+            if (restaurant.getName().equals(title)) {
+                chosenRestaurantId = restaurant.getId();
+
+            }
+        }
+        if (chosenRestaurantId != null) {
+            Intent intent = new Intent(fragmentMapBinding.getRoot().getContext(), DetailsActivity.class);
+            intent.putExtra("restaurantId", chosenRestaurantId);
+            startActivity(intent);
+        } else {
+            Toast.makeText(fragmentMapBinding.getRoot().getContext(), R.string.map_no_restaurant, Toast.LENGTH_LONG).show();
+        }
 
     }
 
