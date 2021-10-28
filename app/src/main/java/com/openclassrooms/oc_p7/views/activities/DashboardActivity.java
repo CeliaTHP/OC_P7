@@ -149,6 +149,7 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
                     onSearchForMap();
                 else {
 
+
                     //Filter
                 }
                 return true;
@@ -169,9 +170,10 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
             @Override
             public boolean onQueryTextSubmit(String query) {
                 if (query.length() >= 3) {
+                    //TODO: this one useless if already set onQueryTextChanged ?
+
                     RestaurantListFragment.query.postValue(query);
                     //RestaurantListFragment.filterList(query);
-
 
                     Log.d(TAG, "Can start query : " + query);
                 } else if (query.length() != 0) {
@@ -191,10 +193,7 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
 
             @Override
             public boolean onQueryTextChange(String newText) {
-
-
-                Log.d(TAG, "text changed : " + newText);
-
+                RestaurantListFragment.query.postValue(newText);
                 return true;
             }
         });
@@ -240,8 +239,12 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
                 toolbar.collapseActionView();
                 Place place = Autocomplete.getPlaceFromIntent(data);
                 Log.d(TAG, "Place: " + place.getName() + ", " + place.getId());
-                handleSearch(getCurrentfragment());
-                //mapViewModel.focusMap(place);
+                //TODO : Choose one
+
+                //MapFragment.requestedPlace.postValue(place);
+                startDetailsActivity(place.getId());
+
+                //handleSearch(getCurrentfragment());
             } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
                 // TODO: Handle the error.
                 Status status = Autocomplete.getStatusFromIntent(data);
@@ -258,6 +261,13 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
     }
 
     private void handleSearch(int pageNum) {
+
+    }
+
+    private void startDetailsActivity(String restaurantId) {
+        Intent intent = new Intent(this, DetailsActivity.class);
+        intent.putExtra("restaurantId", restaurantId);
+        startActivity(intent);
 
     }
 

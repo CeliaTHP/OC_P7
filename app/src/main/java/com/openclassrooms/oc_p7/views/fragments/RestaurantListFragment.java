@@ -116,7 +116,7 @@ public class RestaurantListFragment extends Fragment implements OnRestaurantClic
             filteredList.clear();
 
             for (Restaurant restaurant : restaurantList) {
-                if (restaurant.getName().contains(query) || restaurant.getAddress().contains(query)) {
+                if (restaurant.getName().toLowerCase().contains(query.toLowerCase())) {
                     filteredList.add(restaurant);
                 }
             }

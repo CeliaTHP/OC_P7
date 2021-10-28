@@ -13,7 +13,6 @@ import androidx.lifecycle.ViewModel;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.tasks.Task;
-import com.google.android.libraries.places.api.model.Place;
 import com.openclassrooms.oc_p7.models.ErrorCode;
 import com.openclassrooms.oc_p7.models.Restaurant;
 import com.openclassrooms.oc_p7.repositories.PlaceRepository;
@@ -32,7 +31,6 @@ public class MapViewModel extends ViewModel {
 
     public MutableLiveData<List<Restaurant>> restaurantListLiveData = new MutableLiveData<>();
     public MutableLiveData<Location> currentLocationLiveData;
-    public MutableLiveData<Place> requestedPlace = new MutableLiveData<>();
     public MutableLiveData<ErrorCode> placeRepositoryErrorCodeMutableLiveData = new MutableLiveData<>();
     public MutableLiveData<ErrorCode> workmateRepositoryErrorCodeMutableLiveData = new MutableLiveData<>();
 
@@ -46,9 +44,6 @@ public class MapViewModel extends ViewModel {
 
     }
 
-    public void focusMap(Place place) {
-        requestedPlace.postValue(place);
-    }
 
     public void loadMap() {
         Log.d(TAG, "loadMap");

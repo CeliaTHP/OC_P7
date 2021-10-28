@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -26,6 +27,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.libraries.places.api.model.Place;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.databinding.FragmentMapBinding;
@@ -63,6 +65,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private LoginViewModel loginViewModel;
 
     private GoogleMap googleMap;
+    public static MutableLiveData<Place> requestedPlace = new MutableLiveData<>();
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -160,7 +163,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
-
         mapViewModel.restaurantListLiveData.observe(getViewLifecycleOwner(), restaurantList -> {
 
             Log.d(TAG, "observer,  size : " + restaurantList.size());
@@ -182,23 +184,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
                 }
             }
-
-            workmateViewModel.workmateListLiveData.observe(getViewLifecycleOwner(), workmateList -> {
-
-
-            });
-        });
-
-        mapViewModel.requestedPlace.observe(getViewLifecycleOwner(), place -> {
-            if (place.getLatLng() != null) {
-                LatLng requestedLatLng = new LatLng(place.getLatLng().latitude, place.getLatLng().longitude);
-                googleMap.addMarker(new MarkerOptions().position(requestedLatLng).title(place.getName())).showInfoWindow();
+            requestedPlace.observe(getViewLifecycleOwner(), requestedPlace -> {
+                LatLng requestedLatLng = new LatLng(requestedPlace.getLatLng().latitude, requestedPlace.getLatLng().longitude);
                 googleMap.moveCamera(CameraUpdateFactory.newLatLng(requestedLatLng));
                 googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(requestedLatLng, 14));
+                googleMap.addMarker(new MarkerOptions().position(requestedLatLng).title(requestedPlace.getName())).showInfoWindow();
 
-            }
+                requestedPlace = null;
+            });
 
         });
+
 
 
     }
