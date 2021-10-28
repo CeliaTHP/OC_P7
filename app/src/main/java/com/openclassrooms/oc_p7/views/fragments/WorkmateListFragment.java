@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -27,15 +28,22 @@ import com.openclassrooms.oc_p7.views.adapters.WorkmateAdapter;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class WorkmateListFragment extends Fragment {
 
     private final String TAG = "WorkmatesFragment";
     private FragmentListWorkmatesBinding fragmentListWorkmatesBinding;
 
+    private List<Workmate> workmateList = new ArrayList<>();
+    private List<Workmate> filteredList = new ArrayList<>();
+
     private WorkmateViewModel workmateViewModel;
     private WorkmateAdapter adapter;
+
+    public static MutableLiveData<String> query = new MutableLiveData<>();
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -67,13 +75,28 @@ public class WorkmateListFragment extends Fragment {
 
 
     private void initObservers() {
-        workmateViewModel.workmateListLiveData.observe(getViewLifecycleOwner(), workmates -> {
+        workmateViewModel.workmateListLiveData.observe(getViewLifecycleOwner(), workmateList -> {
+            this.workmateList = workmateList;
             Log.d(TAG, "workmateList observer from Fragment");
-            for (Workmate workmate : workmates) {
+            for (Workmate workmate : workmateList) {
                 Log.d(TAG, workmate.getName() + " " + workmate.getPicUrl());
             }
-            adapter.setData(workmates);
+            adapter.setData(workmateList);
             adapter.notifyDataSetChanged();
+        });
+
+        query.observe(getViewLifecycleOwner(), query -> {
+            filteredList.clear();
+            for (Workmate workmate : workmateList) {
+                if (workmate.getName().toLowerCase().contains(query.toLowerCase()) ||
+                        workmate.getRestaurantName() != null && workmate.getRestaurantName().toLowerCase().contains(query.toLowerCase())) {
+                    filteredList.add(workmate);
+                }
+            }
+            if (adapter != null) {
+                adapter.setData(filteredList);
+                adapter.notifyDataSetChanged();
+            }
         });
     }
 

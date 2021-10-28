@@ -38,6 +38,7 @@ import com.openclassrooms.oc_p7.databinding.DrawerHeaderBinding;
 import com.openclassrooms.oc_p7.services.firestore_helpers.UserHelper;
 import com.openclassrooms.oc_p7.views.fragments.HomeFragment;
 import com.openclassrooms.oc_p7.views.fragments.RestaurantListFragment;
+import com.openclassrooms.oc_p7.views.fragments.WorkmateListFragment;
 
 import java.util.Arrays;
 import java.util.List;
@@ -142,13 +143,49 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
 
     public void setUpSearchView(Menu menu) {
 
+
         MenuItem.OnActionExpandListener onActionExpandListener = new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
                 if (getCurrentfragment() == 0)
                     onSearchForMap();
                 else {
+                    searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                        @Override
+                        public boolean onQueryTextSubmit(String query) {
+                            if (query.length() >= 3) {
+                                //TODO: this one useless if already set onQueryTextChanged ?
+                                if (getCurrentfragment() == 1)
+                                    RestaurantListFragment.query.postValue(query);
+                                else
+                                    WorkmateListFragment.query.postValue(query);
+                                //RestaurantListFragment.filterList(query);
 
+                                Log.d(TAG, "Can start query : " + query);
+                            } else if (query.length() != 0) {
+                                Toast toast = Toast.makeText(DashboardActivity.this, R.string.toolbar_query_too_short, Toast.LENGTH_LONG);
+                                toast.setGravity(Gravity.BOTTOM, 0, 20);
+                                toast.show();
+                                Log.d(TAG, "Query too short " + query);
+                            } else {
+                                Toast toast = Toast.makeText(DashboardActivity.this, R.string.toolbar_query_too_short, Toast.LENGTH_LONG);
+                                toast.setGravity(Gravity.BOTTOM, 0, 20);
+                                toast.show();
+                                Log.d(TAG, "Empty query " + query);
+                            }
+
+                            return true;
+                        }
+
+                        @Override
+                        public boolean onQueryTextChange(String newText) {
+                            if (getCurrentfragment() == 1)
+                                RestaurantListFragment.query.postValue(newText);
+                            else
+                                WorkmateListFragment.query.postValue(newText);
+                            return true;
+                        }
+                    });
 
                     //Filter
                 }
@@ -165,38 +202,6 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
         menu.findItem(R.id.toolbar_search).setOnActionExpandListener(onActionExpandListener);
         searchView = (SearchView) menu.findItem(R.id.toolbar_search).getActionView();
         searchView.setQueryHint("Search location...");
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                if (query.length() >= 3) {
-                    //TODO: this one useless if already set onQueryTextChanged ?
-
-                    RestaurantListFragment.query.postValue(query);
-                    //RestaurantListFragment.filterList(query);
-
-                    Log.d(TAG, "Can start query : " + query);
-                } else if (query.length() != 0) {
-                    Toast toast = Toast.makeText(DashboardActivity.this, R.string.toolbar_query_too_short, Toast.LENGTH_LONG);
-                    toast.setGravity(Gravity.BOTTOM, 0, 20);
-                    toast.show();
-                    Log.d(TAG, "Query too short " + query);
-                } else {
-                    Toast toast = Toast.makeText(DashboardActivity.this, R.string.toolbar_query_too_short, Toast.LENGTH_LONG);
-                    toast.setGravity(Gravity.BOTTOM, 0, 20);
-                    toast.show();
-                    Log.d(TAG, "Empty query " + query);
-                }
-
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                RestaurantListFragment.query.postValue(newText);
-                return true;
-            }
-        });
 
 
         searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
