@@ -15,6 +15,7 @@ import com.openclassrooms.oc_p7.models.Restaurant;
 import com.openclassrooms.oc_p7.models.Workmate;
 import com.openclassrooms.oc_p7.repositories.WorkmateRepository;
 import com.openclassrooms.oc_p7.services.firestore_helpers.WorkmateHelper;
+import com.openclassrooms.oc_p7.utils.RepositoryUtils;
 import com.openclassrooms.oc_p7.utils.WorkmateUtils;
 
 import org.junit.After;
@@ -43,6 +44,7 @@ public class WorkmateRepositoryTests {
 
     private final MutableLiveData<List<Workmate>> workmateMutableLiveDataListMock = (MutableLiveData<List<Workmate>>) Mockito.mock(MutableLiveData.class);
     private final MutableLiveData<Restaurant> restaurantMutableLiveDataMock = (MutableLiveData<Restaurant>) Mockito.mock(MutableLiveData.class);
+    private final MutableLiveData<List<Restaurant>> restaurantListMutableLiveDataMock = (MutableLiveData<List<Restaurant>>) Mockito.mock(MutableLiveData.class);
 
 
     private final MutableLiveData<ErrorCode> errorCodeMutableLiveDataMock = (MutableLiveData<ErrorCode>) Mockito.mock(MutableLiveData.class);
@@ -162,7 +164,57 @@ public class WorkmateRepositoryTests {
 
     }
 
+    @Test
+    public void getWorkmateForRestaurantListTestsSuccess() throws IOException {
 
+        List<Restaurant> expectedRestaurantList = RepositoryUtils.getRestaurantList();
+        Task<QuerySnapshot> taskMock = WorkmateUtils.getTaskMock(true, WorkmateUtils.getDocumentSnapshotList());
+        Mockito.when(workmateHelper.getWorkmatesForRestaurant(Mockito.any(), Mockito.any())).thenReturn(taskMock);
+        Mockito.when(restaurantListMutableLiveDataMock.getValue()).thenReturn(expectedRestaurantList);
+
+        workmateRepository.getWorkmatesForRestaurantList(restaurantListMutableLiveDataMock);
+
+        //test passes without this line ???
+        // Mockito.verify(restaurantListMutableLiveDataMock).getValue();
+
+        Mockito.verify(restaurantListMutableLiveDataMock).postValue(expectedRestaurantList);
+
+    }
+
+
+    @Test
+    public void getWorkmateForRestaurantListTestsExecutionException() throws IOException, ExecutionException, InterruptedException {
+
+        List<Restaurant> expectedRestaurantList = RepositoryUtils.getRestaurantList();
+        Task<QuerySnapshot> taskMock = WorkmateUtils.getTaskMock(true, WorkmateUtils.getDocumentSnapshotList());
+        Mockito.when(workmateHelper.getWorkmatesForRestaurant(Mockito.any(), Mockito.any())).thenReturn(taskMock);
+        Mockito.when(restaurantListMutableLiveDataMock.getValue()).thenReturn(expectedRestaurantList);
+        Mockito.when(Tasks.await(taskMock)).thenThrow(new ExecutionException("testExecutionException", new Throwable()));
+
+        workmateRepository.getWorkmatesForRestaurantList(restaurantListMutableLiveDataMock);
+
+        //test passes without this line ???
+        // Mockito.verify(restaurantListMutableLiveDataMock).getValue();
+        Mockito.verify(errorCodeMutableLiveDataMock).postValue(ErrorCode.EXECUTION_EXCEPTION);
+
+    }
+
+
+    @Test
+    public void getWorkmateForRestaurantListTestsInterruptedException() throws IOException, ExecutionException, InterruptedException {
+
+        List<Restaurant> expectedRestaurantList = RepositoryUtils.getRestaurantList();
+        Task<QuerySnapshot> taskMock = WorkmateUtils.getTaskMock(true, WorkmateUtils.getDocumentSnapshotList());
+        Mockito.when(workmateHelper.getWorkmatesForRestaurant(Mockito.any(), Mockito.any())).thenReturn(taskMock);
+        Mockito.when(restaurantListMutableLiveDataMock.getValue()).thenReturn(expectedRestaurantList);
+        Mockito.when(Tasks.await(taskMock)).thenThrow(new InterruptedException());
+
+        workmateRepository.getWorkmatesForRestaurantList(restaurantListMutableLiveDataMock);
+
+        //test passes without this line ???
+        // Mockito.verify(restaurantListMutableLiveDataMock).getValue();
+        Mockito.verify(errorCodeMutableLiveDataMock).postValue(ErrorCode.INTERRUPTED_EXCEPTION);
+    }
 
 
 }

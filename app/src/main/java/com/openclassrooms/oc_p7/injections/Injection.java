@@ -25,10 +25,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Injection {
 
-    public static PlaceRepository providePlaceRepository() {
+    public static PlaceRepository providePlaceRepository(Context context) {
         String radiusQuery = MyApplication.getInstance().getApplicationContext().getString(R.string.query_radius);
         String restaurantQuery = MyApplication.getInstance().getApplicationContext().getString(R.string.query_restaurant);
-        return new PlaceRepository(Injection.provideApiClient(), Executors.newSingleThreadExecutor(), new MutableLiveData<>(), new MutableLiveData<>(), radiusQuery, restaurantQuery, new MutableLiveData<>());
+        String apiKey = context.getString(R.string.GOOGLE_MAP_API_KEY_DEV);
+        return new PlaceRepository(Injection.provideApiClient(), apiKey, Executors.newSingleThreadExecutor(), new MutableLiveData<>(), new MutableLiveData<>(), radiusQuery, restaurantQuery, new MutableLiveData<>());
     }
 
     public static WorkmateRepository provideWorkmateRepository(FirebaseFirestore firebaseFirestore, Context context) {
@@ -36,7 +37,7 @@ public class Injection {
     }
 
     public static MapViewModelFactory provideMapViewModelFactory(FirebaseFirestore firebaseFirestore, Context context, LifecycleOwner lifecycleOwner) {
-        PlaceRepository placeRepository = providePlaceRepository();
+        PlaceRepository placeRepository = providePlaceRepository(context);
         WorkmateRepository workmateRepository = provideWorkmateRepository(firebaseFirestore, context);
         return new MapViewModelFactory(placeRepository, workmateRepository, Injection.provideFusedLocationProviderClient(firebaseFirestore, context), lifecycleOwner);
     }
@@ -48,7 +49,7 @@ public class Injection {
 
     public static DetailViewModelFactory provideDetailViewModelFactory(FirebaseFirestore firebaseFirestore, Context context) {
         WorkmateRepository workmateRepository = provideWorkmateRepository(firebaseFirestore, context);
-        PlaceRepository placeRepository = providePlaceRepository();
+        PlaceRepository placeRepository = providePlaceRepository(context);
         return new DetailViewModelFactory(workmateRepository, placeRepository);
     }
 

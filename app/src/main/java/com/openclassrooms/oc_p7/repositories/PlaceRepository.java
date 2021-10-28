@@ -5,8 +5,6 @@ import android.location.Location;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.openclassrooms.oc_p7.MyApplication;
-import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.models.ErrorCode;
 import com.openclassrooms.oc_p7.models.Restaurant;
 import com.openclassrooms.oc_p7.models.pojo_models.responses.DetailsPlaceResponse;
@@ -32,16 +30,18 @@ public class PlaceRepository {
     private final String radiusQuery;
     private final String restaurantQuery;
     private MutableLiveData<ErrorCode> errorCode;
-    private final String apiKey = MyApplication.getInstance().getApplicationContext().getString(R.string.GOOGLE_MAP_API_KEY_DEV);
+    private final String apiKey;
 
 
     public PlaceRepository(PlacesApi placesApi,
+                           String apiKey,
                            Executor executor,
                            MutableLiveData<List<Restaurant>> restaurantListMutableLiveData,
                            MutableLiveData<Restaurant> restaurantMutableLiveData,
                            String radiusQuery,
                            String restaurantQuery, MutableLiveData<ErrorCode> errorCode) {
         this.placesApi = placesApi;
+        this.apiKey = apiKey;
         this.executor = executor;
         this.restaurantListMutableLiveData = restaurantListMutableLiveData;
         this.restaurantMutableLiveData = restaurantMutableLiveData;
