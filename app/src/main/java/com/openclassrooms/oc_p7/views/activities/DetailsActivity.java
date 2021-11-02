@@ -167,11 +167,12 @@ public class DetailsActivity extends BaseActivity {
                     activityDetailsBinding.detailsRestaurantCheck.setColorFilter(getResources().getColor(R.color.green));
                     restaurant.setIsChosen(true);
                     UserHelper.updateUserRestaurantId(restaurant.getId(), FirebaseAuth.getInstance().getUid());
+                    UserHelper.updateUserRestaurantName(restaurant.getName(), FirebaseAuth.getInstance().getUid());
                 } else {
                     activityDetailsBinding.detailsRestaurantCheck.setColorFilter(getResources().getColor(R.color.pastel_green));
                     restaurant.setIsChosen(false);
                     UserHelper.updateUserRestaurantId(null, FirebaseAuth.getInstance().getUid());
-
+                    UserHelper.updateUserRestaurantName(null, FirebaseAuth.getInstance().getUid());
                 }
             }
         });
@@ -183,7 +184,7 @@ public class DetailsActivity extends BaseActivity {
                     intent.setData(Uri.parse("tel:" + restaurant.getPhone()));
                     startActivity(intent);
                 } else {
-                    Toast.makeText(getParent(), getString(R.string.details_no_info), Toast.LENGTH_LONG).show();
+                    Toast.makeText(activityDetailsBinding.getRoot().getContext(), getString(R.string.details_no_info), Toast.LENGTH_LONG).show();
                 }
             }
         });
