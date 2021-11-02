@@ -37,6 +37,7 @@ import com.openclassrooms.oc_p7.databinding.ActivityDashboardBinding;
 import com.openclassrooms.oc_p7.databinding.DrawerHeaderBinding;
 import com.openclassrooms.oc_p7.services.firestore_helpers.UserHelper;
 import com.openclassrooms.oc_p7.views.fragments.HomeFragment;
+import com.openclassrooms.oc_p7.views.fragments.MapFragment;
 import com.openclassrooms.oc_p7.views.fragments.RestaurantListFragment;
 import com.openclassrooms.oc_p7.views.fragments.WorkmateListFragment;
 
@@ -159,7 +160,6 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
                                     RestaurantListFragment.query.postValue(query);
                                 else
                                     WorkmateListFragment.query.postValue(query);
-                                //RestaurantListFragment.filterList(query);
 
                                 Log.d(TAG, "Can start query : " + query);
                             } else if (query.length() != 0) {
@@ -245,11 +245,9 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
                 Place place = Autocomplete.getPlaceFromIntent(data);
                 Log.d(TAG, "Place: " + place.getName() + ", " + place.getId());
                 //TODO : Choose one
-
-                //MapFragment.requestedPlace.postValue(place);
-                startDetailsActivity(place.getId());
-
-                //handleSearch(getCurrentfragment());
+                MapFragment.requestedPlace.postValue(place);
+                //startDetailsActivity(place.getId());
+                handleSearch(getCurrentfragment());
             } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
                 // TODO: Handle the error.
                 Status status = Autocomplete.getStatusFromIntent(data);

@@ -113,17 +113,9 @@ public class RestaurantListFragment extends Fragment implements OnRestaurantClic
         });
 
         query.observe(getViewLifecycleOwner(), query -> {
-            filteredList.clear();
+            // if (query != null)
+            // mapViewModel.filterList(query);
 
-            for (Restaurant restaurant : restaurantList) {
-                if (restaurant.getName().toLowerCase().contains(query.toLowerCase())) {
-                    filteredList.add(restaurant);
-                }
-            }
-            if (adapter != null) {
-                adapter.setData(filteredList);
-                adapter.notifyDataSetChanged();
-            }
         });
     }
 

@@ -56,9 +56,11 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
         Restaurant restaurant = restaurantList.get(position);
         Log.d(TAG, "onBind :  " + restaurant.toString());
 
+
         if (!restaurant.getHasDetails()) {
             mapViewModel.updateRestaurantDetails(restaurant);
         }
+
 
         Location location = new Location("");
         location.setLatitude(restaurant.getLat());

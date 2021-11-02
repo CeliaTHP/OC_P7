@@ -18,6 +18,7 @@ import com.openclassrooms.oc_p7.models.Restaurant;
 import com.openclassrooms.oc_p7.repositories.PlaceRepository;
 import com.openclassrooms.oc_p7.repositories.WorkmateRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MapViewModel extends ViewModel {
@@ -27,6 +28,9 @@ public class MapViewModel extends ViewModel {
     private FusedLocationProviderClient fusedLocationProviderClient;
     private LifecycleOwner lifecycleOwner;
     private WorkmateRepository workmateRepository;
+    private List<Restaurant> originalList = new ArrayList<>();
+    private List<Restaurant> filteredRestaurantList = new ArrayList<>();
+    private String query;
 
 
     public MutableLiveData<List<Restaurant>> restaurantListLiveData = new MutableLiveData<>();
@@ -60,11 +64,35 @@ public class MapViewModel extends ViewModel {
 
         placeRepository.getRestaurantListMutableLiveData().observe(this.lifecycleOwner, restaurantList -> {
             Log.d(TAG, " getRestaurantLiveData observer ");
+            // filterList();
             restaurantListLiveData.postValue(restaurantList);
+
 
         });
 
 
+    }
+
+    private void filterList() {
+        originalList = placeRepository.getRestaurantListMutableLiveData().getValue();
+        filteredRestaurantList.clear();
+        if (originalList != null) {
+            if (query != null) {
+                for (Restaurant restaurant : originalList) {
+                    if (restaurant.getName().toLowerCase().contains(query.toLowerCase())) {
+                        filteredRestaurantList.add(restaurant);
+                    }
+                }
+                restaurantListLiveData.postValue(filteredRestaurantList);
+            } else {
+                restaurantListLiveData.postValue(originalList);
+            }
+        }
+    }
+
+    public void filterList(String query) {
+        this.query = query;
+        filterList();
     }
 
 

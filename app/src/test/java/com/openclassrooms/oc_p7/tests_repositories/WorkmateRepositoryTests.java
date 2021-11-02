@@ -65,7 +65,7 @@ public class WorkmateRepositoryTests {
 
     @After
     public void tearDown() {
-        Mockito.verifyNoMoreInteractions(workmateMutableLiveDataListMock, restaurantMutableLiveDataMock, errorCodeMutableLiveDataMock);
+        Mockito.verifyNoMoreInteractions(workmateMutableLiveDataListMock, restaurantMutableLiveDataMock, restaurantListMutableLiveDataMock, errorCodeMutableLiveDataMock);
         mockedSettings.close();
     }
 
@@ -174,9 +174,7 @@ public class WorkmateRepositoryTests {
 
         workmateRepository.getWorkmatesForRestaurantList(restaurantListMutableLiveDataMock);
 
-        //test passes without this line ???
-        // Mockito.verify(restaurantListMutableLiveDataMock).getValue();
-
+        Mockito.verify(restaurantListMutableLiveDataMock).getValue();
         Mockito.verify(restaurantListMutableLiveDataMock).postValue(expectedRestaurantList);
 
     }
@@ -193,8 +191,7 @@ public class WorkmateRepositoryTests {
 
         workmateRepository.getWorkmatesForRestaurantList(restaurantListMutableLiveDataMock);
 
-        //test passes without this line ???
-        // Mockito.verify(restaurantListMutableLiveDataMock).getValue();
+        Mockito.verify(restaurantListMutableLiveDataMock).getValue();
         Mockito.verify(errorCodeMutableLiveDataMock).postValue(ErrorCode.EXECUTION_EXCEPTION);
 
     }
@@ -211,8 +208,7 @@ public class WorkmateRepositoryTests {
 
         workmateRepository.getWorkmatesForRestaurantList(restaurantListMutableLiveDataMock);
 
-        //test passes without this line ???
-        // Mockito.verify(restaurantListMutableLiveDataMock).getValue();
+        Mockito.verify(restaurantListMutableLiveDataMock).getValue();
         Mockito.verify(errorCodeMutableLiveDataMock).postValue(ErrorCode.INTERRUPTED_EXCEPTION);
     }
 

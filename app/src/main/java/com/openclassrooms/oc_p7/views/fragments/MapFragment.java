@@ -1,10 +1,13 @@
 package com.openclassrooms.oc_p7.views.fragments;
 
 import android.Manifest;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,6 +41,7 @@ import com.openclassrooms.oc_p7.models.ErrorCode;
 import com.openclassrooms.oc_p7.models.Restaurant;
 import com.openclassrooms.oc_p7.services.factories.MapViewModelFactory;
 import com.openclassrooms.oc_p7.services.factories.WorkmateViewModelFactory;
+import com.openclassrooms.oc_p7.services.utils.ReminderBroadcast;
 import com.openclassrooms.oc_p7.view_models.LoginViewModel;
 import com.openclassrooms.oc_p7.view_models.MapViewModel;
 import com.openclassrooms.oc_p7.view_models.WorkmateViewModel;
@@ -119,6 +123,31 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     }
 
+    private void testNotification() {
+
+        NotificationManager notificationManager = (NotificationManager) fragmentMapBinding.getRoot().getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+
+        Intent intent = new Intent(fragmentMapBinding.getRoot().getContext(), ReminderBroadcast.class);
+
+
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        intent.putExtra(ReminderBroadcast.RESTAURANT_NAME, "restaurantName");
+        intent.putExtra(ReminderBroadcast.RESTAURANT_ADDRESS, "restaurantAddress");
+        intent.putExtra(ReminderBroadcast.RESTAURANT_WORKMATES, "list of workmates eating here");
+        intent.putExtra(ReminderBroadcast.RESTAURANT_PIC, "https://i.pravatar.cc/150?img=5");
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ReminderBroadcast.createNotification(fragmentMapBinding.getRoot().getContext(), "restaurantName",
+                        "restaurantPic", "restaurantAddress", "list of workmates eating here");
+            }
+        }, 5000);
+
+
+    }
 
     public void initListeners() {
 
@@ -126,6 +155,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick locationButton");
+                testNotification();
                 if (mapViewModel.currentLocationLiveData.getValue() != null) {
                     LatLng currentLatLng = new LatLng(mapViewModel.currentLocationLiveData.getValue().getLatitude(), mapViewModel.currentLocationLiveData.getValue().getLongitude());
                     googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 14));
@@ -192,8 +222,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 googleMap.moveCamera(CameraUpdateFactory.newLatLng(requestedLatLng));
                 googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(requestedLatLng, 14));
                 googleMap.addMarker(new MarkerOptions().position(requestedLatLng).title(requestedPlace.getName())).showInfoWindow();
-
-                requestedPlace = null;
             });
 
         });
@@ -202,6 +230,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void initMap(Bundle savedInstanceState) {
+        requestedPlace = new MutableLiveData<>();
         mapView = fragmentMapBinding.googleMap;
         mapView.getMapAsync(this);
         mapView.onCreate(savedInstanceState);
@@ -232,6 +261,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         Log.d(TAG, "MAP READY");
+        googleMap.clear();
         this.googleMap = googleMap;
         googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override

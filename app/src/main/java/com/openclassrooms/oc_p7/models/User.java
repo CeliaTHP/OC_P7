@@ -44,7 +44,6 @@ public class User {
         this.email = email;
     }
 
-
     public String getPicUrl() {
         return picUrl;
     }
