@@ -117,17 +117,24 @@ public class DetailsActivity extends BaseActivity {
 
         SliderAdapter sliderAdapter = new SliderAdapter();
         if (restaurant.getPhotoReferences() != null && !restaurant.getPhotoReferences().isEmpty()) {
-            for (String picUrl : restaurant.getPhotoReferences())
-                sliderAdapter.addItem(picUrl);
+            sliderAdapter.renewItems(restaurant.getPhotoReferences());
 
         } else {
-            sliderAdapter.addItem(null);
+            sliderAdapter.renewItems(null);
         }
-        activityDetailsBinding.detailsRestaurantPicSlider.setSliderAdapter(sliderAdapter);
-        activityDetailsBinding.detailsRestaurantPicSlider.setIndicatorEnabled(true);
-        activityDetailsBinding.detailsRestaurantPicSlider.setIndicatorAnimation(IndicatorAnimationType.COLOR);
-        activityDetailsBinding.detailsRestaurantPicSlider.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
-        activityDetailsBinding.detailsRestaurantPicSlider.startAutoCycle();
+
+        if (sliderAdapter.getCount() >= 1) {
+            activityDetailsBinding.detailsRestaurantPicSlider.setSliderAdapter(sliderAdapter);
+            activityDetailsBinding.detailsRestaurantPicSlider.setIndicatorEnabled(true);
+            activityDetailsBinding.detailsRestaurantPicSlider.setIndicatorAnimation(IndicatorAnimationType.COLOR);
+            activityDetailsBinding.detailsRestaurantPicSlider.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
+            Log.d(TAG, "count > 1");
+            activityDetailsBinding.detailsRestaurantPicSlider.startAutoCycle();
+        } else {
+            activityDetailsBinding.detailsRestaurantPic.setVisibility(View.VISIBLE);
+            Log.d(TAG, "count < 1");
+
+        }
 
     }
 

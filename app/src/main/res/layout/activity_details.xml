@@ -15,6 +15,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <ImageView
+            android:id="@+id/details_restaurant_pic"
+            android:layout_width="wrap_content"
+            android:layout_height="300dp"
+            android:scaleType="centerCrop"
+            android:visibility="gone"
+            android:src="@drawable/restaurant"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <com.smarteist.autoimageslider.SliderView
             android:id="@+id/details_restaurant_pic_slider"
             android:layout_width="wrap_content"

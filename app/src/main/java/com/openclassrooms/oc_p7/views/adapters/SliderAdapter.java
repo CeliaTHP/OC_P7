@@ -1,5 +1,6 @@
 package com.openclassrooms.oc_p7.views.adapters;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -45,6 +46,7 @@ public class SliderAdapter extends SliderViewAdapter<SliderViewHolder.ViewHolder
         if (picUrlList.get(position) != null) {
             picUrl = viewHolder.itemView.getContext().getString(R.string.place_photo_url, viewHolder.activityDetailsBinding.getRoot().getContext().getString(R.string.GOOGLE_MAP_API_KEY_DEV), picUrlList.get(position));
         }
+        Log.d(TAG, " picUrl = " + picUrlList.get(position));
         Glide.with(viewHolder.itemView)
                 .load(picUrl)
                 .placeholder(R.drawable.restaurant)
@@ -54,6 +56,8 @@ public class SliderAdapter extends SliderViewAdapter<SliderViewHolder.ViewHolder
 
     @Override
     public int getCount() {
+        if (picUrlList == null)
+            return 0;
         return picUrlList.size();
     }
 }
