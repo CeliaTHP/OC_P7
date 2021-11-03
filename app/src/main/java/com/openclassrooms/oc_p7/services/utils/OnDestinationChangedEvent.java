@@ -5,8 +5,15 @@ public class OnDestinationChangedEvent {
     private String destinationDisplayName;
 
 
-    public String getDestinationDisplayName() {
-        return destinationDisplayName;
+    public int getDestinationInt() {
+        switch (destinationDisplayName) {
+            case ("com.openclassrooms.oc_p7:id/navigation_map"):
+                return 0;
+            case ("com.openclassrooms.oc_p7:id/navigation_list"):
+                return 1;
+            default:
+                return 2;
+        }
     }
 
     public void setDestinationDisplayName(String destinationDisplayName) {

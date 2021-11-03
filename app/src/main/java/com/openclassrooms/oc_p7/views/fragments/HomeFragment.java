@@ -56,7 +56,6 @@ public class HomeFragment extends Fragment {
                 @Override
                 public void onDestinationChanged(@NonNull @NotNull NavController controller, @NonNull @NotNull NavDestination destination, @Nullable @org.jetbrains.annotations.Nullable Bundle arguments) {
                     Log.d(TAG, "onDestinationChanged name : " + destination.getDisplayName() + "navName : " + destination.getNavigatorName() + navController.getClass());
-                    pageName = destination.getDisplayName();
                     onDestinationChangedEvent.setDestinationDisplayName(destination.getDisplayName());
                     EventBus.getDefault().post(onDestinationChangedEvent);
                 }
@@ -65,18 +64,5 @@ public class HomeFragment extends Fragment {
 
         }
     }
-
-
-    public static int getCurrentItemInt() {
-        switch (pageName) {
-            case ("com.openclassrooms.oc_p7:id/navigation_map"):
-                return 0;
-            case ("com.openclassrooms.oc_p7:id/navigation_list"):
-                return 1;
-            default:
-                return 2;
-        }
-    }
-
 
 }

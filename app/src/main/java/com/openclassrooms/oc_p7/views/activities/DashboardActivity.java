@@ -38,7 +38,6 @@ import com.openclassrooms.oc_p7.databinding.DrawerHeaderBinding;
 import com.openclassrooms.oc_p7.services.firestore_helpers.UserHelper;
 import com.openclassrooms.oc_p7.services.utils.OnDestinationChangedEvent;
 import com.openclassrooms.oc_p7.services.utils.OnQueryEvent;
-import com.openclassrooms.oc_p7.views.fragments.HomeFragment;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -56,7 +55,7 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
     private Toolbar toolbar;
     private final static int AUTOCOMPLETE_REQUEST_CODE = 1;
     private SearchView searchView;
-    private int fragmentNum;
+    private int currentFragment;
     private OnQueryEvent onQueryEvent = new OnQueryEvent();
     private Menu menu;
 
@@ -92,13 +91,8 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
     @Subscribe
     public void onDestinationChangedEvent(OnDestinationChangedEvent onDestinationChangedEvent) {
         invalidateOptionsMenu();
-        Log.d(TAG, "onDestinationChangedEvent : " + onDestinationChangedEvent.getDestinationDisplayName() + " ");
-    }
-
-
-    public int getCurrentfragment() {
-        Log.d(TAG, "PAGE INT = " + HomeFragment.getCurrentItemInt());
-        return HomeFragment.getCurrentItemInt();
+        currentFragment = onDestinationChangedEvent.getDestinationInt();
+        Log.d(TAG, "onDestinationChangedEvent : " + onDestinationChangedEvent.getDestinationInt() + " ");
     }
 
     private void initPlaces() {
@@ -161,7 +155,7 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
         MenuItem.OnActionExpandListener onActionExpandListener = new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
-                if (getCurrentfragment() == 0) {
+                if (currentFragment == 0) {
                     onSearchForMap();
                 } else {
                     searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -169,7 +163,7 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
                         public boolean onQueryTextSubmit(String query) {
                             if (query.length() >= 3) {
                                 //TODO: HANDLE QUERIES WITH EVENTBUS
-                                if (getCurrentfragment() == 1) {
+                                if (currentFragment == 1) {
                                     onQueryEvent.setQueryForRestaurants(query);
                                 } else {
                                     onQueryEvent.setQueryForWorkmates(query);
@@ -194,7 +188,7 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
 
                         @Override
                         public boolean onQueryTextChange(String newText) {
-                            if (getCurrentfragment() == 1) {
+                            if (currentFragment == 1) {
                                 Log.d(TAG, "onQueryTextChanged");
                                 onQueryEvent.setQueryForRestaurants(newText);
                                 //should sendEvent to FragmentActivity
