@@ -4,16 +4,10 @@ import com.google.android.libraries.places.api.model.Place;
 
 public class OnQueryEvent {
 
-    private String query;
+    private String queryForRestaurants;
+    private String queryForWorkmates;
     private Place requestedPlace;
 
-    public String getQuery() {
-        return query;
-    }
-
-    public void setQuery(String query) {
-        this.query = query;
-    }
 
     public Place getRequestedPlace() {
         return requestedPlace;
@@ -22,4 +16,22 @@ public class OnQueryEvent {
     public void setRequestedPlace(Place requestedPlace) {
         this.requestedPlace = requestedPlace;
     }
+
+    public String getQueryForRestaurants() {
+        return queryForRestaurants;
+    }
+
+    public void setQueryForRestaurants(String query) {
+        this.queryForRestaurants = query;
+    }
+
+    public String getQueryForWorkmates() {
+        return queryForWorkmates;
+    }
+
+    public void setQueryForWorkmates(String query) {
+        this.queryForWorkmates = query;
+    }
+
+
 }

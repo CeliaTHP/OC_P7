@@ -11,7 +11,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -22,10 +21,13 @@ import com.openclassrooms.oc_p7.databinding.FragmentListWorkmatesBinding;
 import com.openclassrooms.oc_p7.injections.Injection;
 import com.openclassrooms.oc_p7.models.Workmate;
 import com.openclassrooms.oc_p7.services.factories.WorkmateViewModelFactory;
+import com.openclassrooms.oc_p7.services.utils.OnQueryEvent;
 import com.openclassrooms.oc_p7.view_models.WorkmateViewModel;
 import com.openclassrooms.oc_p7.views.activities.DetailsActivity;
 import com.openclassrooms.oc_p7.views.adapters.WorkmateAdapter;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -43,13 +45,13 @@ public class WorkmateListFragment extends Fragment {
     private WorkmateViewModel workmateViewModel;
     private WorkmateAdapter adapter;
 
-    public static MutableLiveData<String> query = new MutableLiveData<>();
-
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
         fragmentListWorkmatesBinding = FragmentListWorkmatesBinding.inflate(LayoutInflater.from(getContext()));
+
+        EventBus.getDefault().register(this);
 
         initViewModels();
         initObservers();
@@ -59,6 +61,22 @@ public class WorkmateListFragment extends Fragment {
 
 
         return fragmentListWorkmatesBinding.getRoot();
+    }
+
+    @Subscribe
+    public void onQueryEvent(OnQueryEvent onQueryEvent) {
+        String query = onQueryEvent.getQueryForWorkmates();
+        filteredList.clear();
+        for (Workmate workmate : workmateList) {
+            if (workmate.getName().toLowerCase().contains(query.toLowerCase()) ||
+                    workmate.getRestaurantName() != null && workmate.getRestaurantName().toLowerCase().contains(query.toLowerCase())) {
+                filteredList.add(workmate);
+            }
+        }
+        if (adapter != null) {
+            adapter.setData(filteredList);
+            adapter.notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -85,6 +103,7 @@ public class WorkmateListFragment extends Fragment {
             adapter.notifyDataSetChanged();
         });
 
+        /*
         query.observe(getViewLifecycleOwner(), query -> {
             filteredList.clear();
             for (Workmate workmate : workmateList) {
@@ -98,6 +117,8 @@ public class WorkmateListFragment extends Fragment {
                 adapter.notifyDataSetChanged();
             }
         });
+
+         */
     }
 
 
@@ -122,5 +143,10 @@ public class WorkmateListFragment extends Fragment {
 
     }
 
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().unregister(this);
+    }
 }

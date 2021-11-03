@@ -38,7 +38,6 @@ import com.openclassrooms.oc_p7.databinding.DrawerHeaderBinding;
 import com.openclassrooms.oc_p7.services.firestore_helpers.UserHelper;
 import com.openclassrooms.oc_p7.services.utils.OnQueryEvent;
 import com.openclassrooms.oc_p7.views.fragments.HomeFragment;
-import com.openclassrooms.oc_p7.views.fragments.WorkmateListFragment;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -163,11 +162,12 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
                             if (query.length() >= 3) {
                                 //TODO: HANDLE QUERIES WITH EVENTBUS
                                 if (getCurrentfragment() == 1) {
-                                    //should sendEvent to FragmentActivity
-                                    //RestaurantListFragment.query.postValue(query);
-                                } else
-                                    WorkmateListFragment.query.postValue(query);
-
+                                    onQueryEvent.setQueryForRestaurants(query);
+                                } else {
+                                    onQueryEvent.setQueryForWorkmates(query);
+                                    //WorkmateListFragment.query.postValue(query);
+                                }
+                                EventBus.getDefault().post(onQueryEvent);
                                 Log.d(TAG, "Can start query : " + query);
                             } else if (query.length() != 0) {
                                 Toast toast = Toast.makeText(DashboardActivity.this, R.string.toolbar_query_too_short, Toast.LENGTH_LONG);
@@ -188,12 +188,13 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
                         public boolean onQueryTextChange(String newText) {
                             if (getCurrentfragment() == 1) {
                                 Log.d(TAG, "onQueryTextChanged");
-                                onQueryEvent.setQuery(newText);
-                                EventBus.getDefault().post(onQueryEvent);
+                                onQueryEvent.setQueryForRestaurants(newText);
                                 //should sendEvent to FragmentActivity
                                 //RestaurantListFragment.query.postValue(newText);
-                            } else
-                                WorkmateListFragment.query.postValue(newText);
+                            } else {
+                                onQueryEvent.setQueryForWorkmates(newText);
+                            }
+                            EventBus.getDefault().post(onQueryEvent);
                             return true;
                         }
                     });
