@@ -4,9 +4,9 @@ import com.google.android.libraries.places.api.model.Place;
 
 public class OnQueryEvent {
 
-    private String queryForRestaurants;
-    private String queryForWorkmates;
-    private Place requestedPlace;
+    private String queryForRestaurants = null;
+    private String queryForWorkmates = null;
+    private Place requestedPlace = null;
 
 
     public Place getRequestedPlace() {

@@ -100,16 +100,20 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     @Subscribe
-    public void setOnQueryEvent(OnQueryEvent onQueryEvent) {
-        Log.d(TAG, "onQueryEvent " + onQueryEvent.getRequestedPlace().getName() + " " + onQueryEvent.getRequestedPlace().getAddress());
-        focusMap(onQueryEvent.getRequestedPlace(), 10);
+    public void onQueryEvent(OnQueryEvent onQueryEvent) {
+        if (onQueryEvent.getRequestedPlace() != null) {
+            Log.d(TAG, "onQueryEvent " + onQueryEvent.getRequestedPlace().getName() + " " + onQueryEvent.getRequestedPlace().getAddress());
+            focusToQuery(onQueryEvent.getRequestedPlace());
+        }
     }
 
-    public void focusMap(Place place, int zoom) {
-        LatLng latLng = new LatLng(place.getLatLng().latitude, place.getLatLng().longitude);
-        googleMap.addMarker(new MarkerOptions().position(latLng).title(place.getName())
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET))).showInfoWindow();
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
+    public void focusToQuery(Place place) {
+        if (place.getLatLng() != null) {
+            LatLng latLng = new LatLng(place.getLatLng().latitude, place.getLatLng().longitude);
+            googleMap.addMarker(new MarkerOptions().position(latLng).title(place.getName())
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET))).showInfoWindow();
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+        }
 
     }
 
@@ -280,7 +284,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(@NonNull @NotNull Marker marker) {
-                Log.d(TAG, marker.getTitle() + " ");
+                Log.d(TAG, marker.getTitle() + " " + marker.getId() + " " + marker.getSnippet() + " " + marker.getAlpha() + " " + marker.getPosition());
 
                 startDetailsActivityForRestaurant(marker.getTitle());
 
@@ -395,8 +399,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (EventBus.getDefault().isRegistered(this))
+        if (EventBus.getDefault().isRegistered(this)) {
+
             EventBus.getDefault().unregister(this);
+
+
+        }
         if (mapView != null) mapView.onDestroy();
         Log.d(TAG, "onDestroy");
 

@@ -36,10 +36,12 @@ import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.databinding.ActivityDashboardBinding;
 import com.openclassrooms.oc_p7.databinding.DrawerHeaderBinding;
 import com.openclassrooms.oc_p7.services.firestore_helpers.UserHelper;
+import com.openclassrooms.oc_p7.services.utils.OnDestinationChangedEvent;
 import com.openclassrooms.oc_p7.services.utils.OnQueryEvent;
 import com.openclassrooms.oc_p7.views.fragments.HomeFragment;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Arrays;
 import java.util.List;
@@ -56,10 +58,10 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
     private SearchView searchView;
     private int fragmentNum;
     private OnQueryEvent onQueryEvent = new OnQueryEvent();
+    private Menu menu;
 
-
-    ActivityDashboardBinding activityDashboardBinding;
-    DrawerHeaderBinding drawerHeaderBinding;
+    private ActivityDashboardBinding activityDashboardBinding;
+    private DrawerHeaderBinding drawerHeaderBinding;
 
     /*
         public static final int RESULT_CANCELED    = 0;
@@ -76,6 +78,7 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
         activityDashboardBinding = ActivityDashboardBinding.inflate(getLayoutInflater());
         drawerHeaderBinding = DrawerHeaderBinding.bind(activityDashboardBinding.drawerNavView.getHeaderView(0));
         setContentView(activityDashboardBinding.getRoot());
+        EventBus.getDefault().register(this);
 
 
         initPlaces();
@@ -84,6 +87,12 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
         setHeaderInfos();
 
 
+    }
+
+    @Subscribe
+    public void onDestinationChangedEvent(OnDestinationChangedEvent onDestinationChangedEvent) {
+        invalidateOptionsMenu();
+        Log.d(TAG, "onDestinationChangedEvent : " + onDestinationChangedEvent.getDestinationDisplayName() + " ");
     }
 
 
@@ -129,7 +138,7 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
+        this.menu = menu;
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu);// set drawable icon
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -148,7 +157,6 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
      */
 
     public void setUpSearchView(Menu menu) {
-
 
         MenuItem.OnActionExpandListener onActionExpandListener = new MenuItem.OnActionExpandListener() {
             @Override
@@ -296,21 +304,13 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-
-            case android.R.id.home:
-                Log.d(TAG, item.getItemId() + "");
-                activityDashboardBinding.drawerLayout.open();
-                return true;
-            case R.id.toolbar_search:
-                Log.d(TAG, "SEARCH CHOSEN");
-                return true;
-
-
-            default:
-                Log.d(TAG, item.getItemId() + "");
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {
+            Log.d(TAG, item.getItemId() + "");
+            activityDashboardBinding.drawerLayout.open();
+            return true;
         }
+        Log.d(TAG, item.getItemId() + "");
+        return super.onOptionsItemSelected(item);
     }
 
 
@@ -401,7 +401,13 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
         super.onResume();
         setToolbar();
         setDrawerLayout();
+
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().unregister(this);
+    }
 }

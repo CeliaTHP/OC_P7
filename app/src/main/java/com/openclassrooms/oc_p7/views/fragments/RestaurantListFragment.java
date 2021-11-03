@@ -67,8 +67,10 @@ public class RestaurantListFragment extends Fragment implements OnRestaurantClic
 
     @Subscribe
     public void onQueryEvent(OnQueryEvent onQueryEvent) {
-        mapViewModel.filterList(onQueryEvent.getQueryForRestaurants());
-        Log.d(TAG, "onQueryEvent : " + onQueryEvent.getQueryForRestaurants());
+        if (onQueryEvent.getQueryForRestaurants() != null) {
+            Log.d(TAG, "onQueryEvent : " + onQueryEvent.getQueryForRestaurants());
+            mapViewModel.filterList(onQueryEvent.getQueryForRestaurants());
+        }
 
     }
 

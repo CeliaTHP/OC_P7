@@ -16,19 +16,24 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.databinding.FragmentHomeBinding;
+import com.openclassrooms.oc_p7.services.utils.OnDestinationChangedEvent;
 
+import org.greenrobot.eventbus.EventBus;
 import org.jetbrains.annotations.NotNull;
 
 public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding fragmentHomeBinding;
     private static String pageName;
+    private OnDestinationChangedEvent onDestinationChangedEvent = new OnDestinationChangedEvent();
+
     private String TAG = "HomeFragment";
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         fragmentHomeBinding = FragmentHomeBinding.inflate(inflater, container, false);
+
 
         return fragmentHomeBinding.getRoot();
 
@@ -52,12 +57,15 @@ public class HomeFragment extends Fragment {
                 public void onDestinationChanged(@NonNull @NotNull NavController controller, @NonNull @NotNull NavDestination destination, @Nullable @org.jetbrains.annotations.Nullable Bundle arguments) {
                     Log.d(TAG, "onDestinationChanged name : " + destination.getDisplayName() + "navName : " + destination.getNavigatorName() + navController.getClass());
                     pageName = destination.getDisplayName();
+                    onDestinationChangedEvent.setDestinationDisplayName(destination.getDisplayName());
+                    EventBus.getDefault().post(onDestinationChangedEvent);
                 }
             });
             NavigationUI.setupWithNavController(fragmentHomeBinding.bottomNavView, navController);
 
         }
     }
+
 
     public static int getCurrentItemInt() {
         switch (pageName) {
@@ -69,4 +77,6 @@ public class HomeFragment extends Fragment {
                 return 2;
         }
     }
+
+
 }

@@ -65,17 +65,20 @@ public class WorkmateListFragment extends Fragment {
 
     @Subscribe
     public void onQueryEvent(OnQueryEvent onQueryEvent) {
-        String query = onQueryEvent.getQueryForWorkmates();
-        filteredList.clear();
-        for (Workmate workmate : workmateList) {
-            if (workmate.getName().toLowerCase().contains(query.toLowerCase()) ||
-                    workmate.getRestaurantName() != null && workmate.getRestaurantName().toLowerCase().contains(query.toLowerCase())) {
-                filteredList.add(workmate);
+        if (onQueryEvent.getQueryForWorkmates() != null) {
+            Log.d(TAG, "onQueryEvent " + onQueryEvent.getQueryForWorkmates());
+            String query = onQueryEvent.getQueryForWorkmates();
+            filteredList.clear();
+            for (Workmate workmate : workmateList) {
+                if (workmate.getName().toLowerCase().contains(query.toLowerCase()) ||
+                        workmate.getRestaurantName() != null && workmate.getRestaurantName().toLowerCase().contains(query.toLowerCase())) {
+                    filteredList.add(workmate);
+                }
             }
-        }
-        if (adapter != null) {
-            adapter.setData(filteredList);
-            adapter.notifyDataSetChanged();
+            if (adapter != null) {
+                adapter.setData(filteredList);
+                adapter.notifyDataSetChanged();
+            }
         }
     }
 

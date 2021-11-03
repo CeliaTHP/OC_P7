@@ -51,7 +51,7 @@
     <string name="map_here">VOUS</string>
     <string name="map_response_error">Une erreur a été rencontrée lors de la recherche de restaurants ( vérifiez votre connexion internet ).</string>
     <string name="map_data_format_error">Une erreur a été rencontrée lors de la lecture des restaurants ! </string>
-    <string name="map_no_restaurant">Ce n\'est pas un restaurant !</string>
+    <string name="map_no_restaurant">Ce n\'est pas un restaurant proche!</string>
 
 
     <!--DETAILS-->
