@@ -19,7 +19,6 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -41,12 +40,15 @@ import com.openclassrooms.oc_p7.models.ErrorCode;
 import com.openclassrooms.oc_p7.models.Restaurant;
 import com.openclassrooms.oc_p7.services.factories.MapViewModelFactory;
 import com.openclassrooms.oc_p7.services.factories.WorkmateViewModelFactory;
+import com.openclassrooms.oc_p7.services.utils.OnQueryEvent;
 import com.openclassrooms.oc_p7.services.utils.ReminderBroadcast;
 import com.openclassrooms.oc_p7.view_models.LoginViewModel;
 import com.openclassrooms.oc_p7.view_models.MapViewModel;
 import com.openclassrooms.oc_p7.view_models.WorkmateViewModel;
 import com.openclassrooms.oc_p7.views.activities.DetailsActivity;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -72,7 +74,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private LoginViewModel loginViewModel;
 
     private GoogleMap googleMap;
-    public static MutableLiveData<Place> requestedPlace = new MutableLiveData<>();
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -81,8 +82,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         this.savedInstanceState = savedInstanceState;
 
 
-        //initBinding
+        //init Binding
         fragmentMapBinding = FragmentMapBinding.inflate(LayoutInflater.from(this.getContext()), null, false);
+
+        //init EventBus
+        EventBus.getDefault().register(this);
+
 
         if (getArguments() != null) initBundle();
         initViewModels();
@@ -92,6 +97,20 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         workmateViewModel.getWorkmateList();
 
         return fragmentMapBinding.getRoot();
+    }
+
+    @Subscribe
+    public void setOnQueryEvent(OnQueryEvent onQueryEvent) {
+        Log.d(TAG, "onQueryEvent " + onQueryEvent.getRequestedPlace().getName() + " " + onQueryEvent.getRequestedPlace().getAddress());
+        focusMap(onQueryEvent.getRequestedPlace(), 10);
+    }
+
+    public void focusMap(Place place, int zoom) {
+        LatLng latLng = new LatLng(place.getLatLng().latitude, place.getLatLng().longitude);
+        googleMap.addMarker(new MarkerOptions().position(latLng).title(place.getName())
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET))).showInfoWindow();
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
+
     }
 
     private void initBundle() {
@@ -148,6 +167,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
 
     }
+
 
     public void initListeners() {
 
@@ -217,12 +237,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
                 }
             }
-            requestedPlace.observe(getViewLifecycleOwner(), requestedPlace -> {
-                LatLng requestedLatLng = new LatLng(requestedPlace.getLatLng().latitude, requestedPlace.getLatLng().longitude);
-                googleMap.moveCamera(CameraUpdateFactory.newLatLng(requestedLatLng));
-                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(requestedLatLng, 14));
-                googleMap.addMarker(new MarkerOptions().position(requestedLatLng).title(requestedPlace.getName())).showInfoWindow();
-            });
 
         });
 
@@ -230,7 +244,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void initMap(Bundle savedInstanceState) {
-        requestedPlace = new MutableLiveData<>();
+        //requestedPlace = new MutableLiveData<>();
         mapView = fragmentMapBinding.googleMap;
         mapView.getMapAsync(this);
         mapView.onCreate(savedInstanceState);
@@ -381,6 +395,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if (EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().unregister(this);
         if (mapView != null) mapView.onDestroy();
         Log.d(TAG, "onDestroy");
 

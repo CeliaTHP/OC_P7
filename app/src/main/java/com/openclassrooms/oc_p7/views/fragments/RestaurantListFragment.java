@@ -10,7 +10,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -23,10 +22,14 @@ import com.openclassrooms.oc_p7.models.ErrorCode;
 import com.openclassrooms.oc_p7.models.Restaurant;
 import com.openclassrooms.oc_p7.services.factories.MapViewModelFactory;
 import com.openclassrooms.oc_p7.services.factories.WorkmateViewModelFactory;
+import com.openclassrooms.oc_p7.services.utils.OnQueryEvent;
 import com.openclassrooms.oc_p7.view_models.MapViewModel;
 import com.openclassrooms.oc_p7.view_models.WorkmateViewModel;
 import com.openclassrooms.oc_p7.views.activities.DetailsActivity;
 import com.openclassrooms.oc_p7.views.adapters.RestaurantAdapter;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,7 +42,6 @@ public class RestaurantListFragment extends Fragment implements OnRestaurantClic
     private MapViewModel mapViewModel;
     private FragmentListRestaurantsBinding fragmentListRestaurantsBinding;
     private RestaurantAdapter adapter;
-    public static MutableLiveData<String> query = new MutableLiveData<>();
     private List<Restaurant> restaurantList = new ArrayList<>();
     private List<Restaurant> filteredList = new ArrayList<>();
 
@@ -49,6 +51,9 @@ public class RestaurantListFragment extends Fragment implements OnRestaurantClic
 
         fragmentListRestaurantsBinding = FragmentListRestaurantsBinding.inflate(LayoutInflater.from(this.getContext()));
 
+        //init EventBus
+
+        EventBus.getDefault().register(this);
 
         initViewModels();
         initPlaces();
@@ -58,6 +63,13 @@ public class RestaurantListFragment extends Fragment implements OnRestaurantClic
 
 
         return fragmentListRestaurantsBinding.getRoot();
+    }
+
+    @Subscribe
+    public void onQueryEvent(OnQueryEvent onQueryEvent) {
+        mapViewModel.filterList(onQueryEvent.getQuery());
+        Log.d(TAG, "onQueryEvent : " + onQueryEvent.getQuery());
+
     }
 
 
@@ -112,11 +124,6 @@ public class RestaurantListFragment extends Fragment implements OnRestaurantClic
 
         });
 
-        query.observe(getViewLifecycleOwner(), query -> {
-            // if (query != null)
-            // mapViewModel.filterList(query);
-
-        });
     }
 
 
@@ -135,5 +142,12 @@ public class RestaurantListFragment extends Fragment implements OnRestaurantClic
         intent.putExtra("restaurantId", restaurant.getId());
         startActivity(intent);
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().unregister(this);
     }
 }

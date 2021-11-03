@@ -36,10 +36,11 @@ import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.databinding.ActivityDashboardBinding;
 import com.openclassrooms.oc_p7.databinding.DrawerHeaderBinding;
 import com.openclassrooms.oc_p7.services.firestore_helpers.UserHelper;
+import com.openclassrooms.oc_p7.services.utils.OnQueryEvent;
 import com.openclassrooms.oc_p7.views.fragments.HomeFragment;
-import com.openclassrooms.oc_p7.views.fragments.MapFragment;
-import com.openclassrooms.oc_p7.views.fragments.RestaurantListFragment;
 import com.openclassrooms.oc_p7.views.fragments.WorkmateListFragment;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.Arrays;
 import java.util.List;
@@ -55,6 +56,8 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
     private final static int AUTOCOMPLETE_REQUEST_CODE = 1;
     private SearchView searchView;
     private int fragmentNum;
+    private OnQueryEvent onQueryEvent = new OnQueryEvent();
+
 
     ActivityDashboardBinding activityDashboardBinding;
     DrawerHeaderBinding drawerHeaderBinding;
@@ -75,12 +78,15 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
         drawerHeaderBinding = DrawerHeaderBinding.bind(activityDashboardBinding.drawerNavView.getHeaderView(0));
         setContentView(activityDashboardBinding.getRoot());
 
+
         initPlaces();
         setToolbar();
         setDrawerLayout();
         setHeaderInfos();
 
+
     }
+
 
     public int getCurrentfragment() {
         Log.d(TAG, "PAGE INT = " + HomeFragment.getCurrentItemInt());
@@ -148,17 +154,18 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
         MenuItem.OnActionExpandListener onActionExpandListener = new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
-                if (getCurrentfragment() == 0)
+                if (getCurrentfragment() == 0) {
                     onSearchForMap();
-                else {
+                } else {
                     searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                         @Override
                         public boolean onQueryTextSubmit(String query) {
                             if (query.length() >= 3) {
-                                //TODO: this one useless if already set onQueryTextChanged ?
-                                if (getCurrentfragment() == 1)
-                                    RestaurantListFragment.query.postValue(query);
-                                else
+                                //TODO: HANDLE QUERIES WITH EVENTBUS
+                                if (getCurrentfragment() == 1) {
+                                    //should sendEvent to FragmentActivity
+                                    //RestaurantListFragment.query.postValue(query);
+                                } else
                                     WorkmateListFragment.query.postValue(query);
 
                                 Log.d(TAG, "Can start query : " + query);
@@ -179,9 +186,13 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
 
                         @Override
                         public boolean onQueryTextChange(String newText) {
-                            if (getCurrentfragment() == 1)
-                                RestaurantListFragment.query.postValue(newText);
-                            else
+                            if (getCurrentfragment() == 1) {
+                                Log.d(TAG, "onQueryTextChanged");
+                                onQueryEvent.setQuery(newText);
+                                EventBus.getDefault().post(onQueryEvent);
+                                //should sendEvent to FragmentActivity
+                                //RestaurantListFragment.query.postValue(newText);
+                            } else
                                 WorkmateListFragment.query.postValue(newText);
                             return true;
                         }
@@ -244,10 +255,10 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
                 toolbar.collapseActionView();
                 Place place = Autocomplete.getPlaceFromIntent(data);
                 Log.d(TAG, "Place: " + place.getName() + ", " + place.getId());
-                //TODO : Choose one
-                MapFragment.requestedPlace.postValue(place);
+                onQueryEvent.setRequestedPlace(place);
+                EventBus.getDefault().post(onQueryEvent);
+                //MapFragment.requestedPlace.postValue(place);
                 //startDetailsActivity(place.getId());
-                handleSearch(getCurrentfragment());
             } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
                 // TODO: Handle the error.
                 Status status = Autocomplete.getStatusFromIntent(data);
@@ -263,9 +274,6 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void handleSearch(int pageNum) {
-
-    }
 
     private void startDetailsActivity(String restaurantId) {
         Intent intent = new Intent(this, DetailsActivity.class);
