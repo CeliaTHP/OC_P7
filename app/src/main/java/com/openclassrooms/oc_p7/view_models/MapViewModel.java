@@ -99,6 +99,10 @@ public class MapViewModel extends ViewModel {
         placeRepository.updateRestaurantDetails(restaurant.getId());
     }
 
+    public void getRequestedRestaurants(String request) {
+        placeRepository.getRequestedRestaurants(request);
+    }
+
     public void getLocationInformations(Context context) {
         loadMap();
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {

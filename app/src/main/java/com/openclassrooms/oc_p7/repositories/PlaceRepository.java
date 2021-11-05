@@ -1,14 +1,16 @@
 package com.openclassrooms.oc_p7.repositories;
 
 import android.location.Location;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.openclassrooms.oc_p7.models.ErrorCode;
 import com.openclassrooms.oc_p7.models.Restaurant;
+import com.openclassrooms.oc_p7.models.pojo_models.prediction_pojo.PredictionPojo;
+import com.openclassrooms.oc_p7.models.pojo_models.responses.AutocompleteResponse;
 import com.openclassrooms.oc_p7.models.pojo_models.responses.DetailsPlaceResponse;
-import com.openclassrooms.oc_p7.models.pojo_models.responses.NearbyPlaceResponse;
 import com.openclassrooms.oc_p7.models.pojo_models.restaurant_pojo.Photo;
 import com.openclassrooms.oc_p7.models.pojo_models.restaurant_pojo.RestaurantPojo;
 import com.openclassrooms.oc_p7.services.apis.PlacesApi;
@@ -16,6 +18,7 @@ import com.openclassrooms.oc_p7.services.apis.PlacesApi;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.Executor;
 
 import retrofit2.Call;
@@ -65,7 +68,7 @@ public class PlaceRepository {
     }
 
     public void getNearbyPlaces(Location location) {
-
+/*
         String locationStringQuery = location.getLatitude() + "," + location.getLongitude();
 
         //Executor to execute the following code in the same thread (easier for tests)
@@ -87,6 +90,8 @@ public class PlaceRepository {
 
             }
         });
+
+ */
     }
 
     public void updateRestaurantDetails(String restaurantId) {
@@ -120,9 +125,6 @@ public class PlaceRepository {
             } catch (IOException e) {
                 errorCode.postValue(ErrorCode.CONNECTION_ERROR);
             }
-            //restaurantListMutableLiveData.postValue(restaurantList);
-
-
         });
     }
 
@@ -147,6 +149,35 @@ public class PlaceRepository {
             }
         });
 
+    }
+
+    public void getRequestedRestaurants(String input) {
+        String language = Locale.getDefault().getLanguage();
+        Log.d(TAG, language);
+        executor.execute(() -> {
+
+            Call<AutocompleteResponse> call =
+                    placesApi.getRequestedPlaces(apiKey, language, input);
+            try {
+                Response<AutocompleteResponse> response = call.execute();
+                if (response.isSuccessful()) {
+                    for (PredictionPojo predictionPojo : response.body().predictions) {
+                        Log.d(TAG, "place id: " + predictionPojo.placeId);
+                        Log.d(TAG, "place description: " + predictionPojo.description);
+                        Log.d(TAG, "place types: " + predictionPojo.types);
+
+                    }
+
+
+                } else {
+                    errorCode.postValue(ErrorCode.UNSUCCESSFUL_RESPONSE);
+                }
+            } catch (IOException e) {
+                errorCode.postValue(ErrorCode.CONNECTION_ERROR);
+            }
+
+
+        });
     }
 
 

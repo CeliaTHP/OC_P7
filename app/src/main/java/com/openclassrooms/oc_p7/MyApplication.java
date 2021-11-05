@@ -12,6 +12,7 @@ public class MyApplication extends MultiDexApplication {
         super.onCreate();
         instance = this;
         initNotificationService();
+        //Fresco.initialize(this);
 
     }
 

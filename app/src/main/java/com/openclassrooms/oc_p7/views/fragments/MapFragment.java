@@ -105,7 +105,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             Log.d(TAG, "onQueryEvent " + onQueryEvent.getRequestedPlace().getName() + " " + onQueryEvent.getRequestedPlace().getAddress());
             focusToQuery(onQueryEvent.getRequestedPlace());
         }
+        if (onQueryEvent.getQueryForMap() != null) {
+            mapViewModel.getRequestedRestaurants(onQueryEvent.getQueryForMap());
+        }
+
     }
+
 
     public void focusToQuery(Place place) {
         if (place.getLatLng() != null) {

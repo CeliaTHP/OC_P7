@@ -35,6 +35,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.databinding.ActivityDashboardBinding;
 import com.openclassrooms.oc_p7.databinding.DrawerHeaderBinding;
+import com.openclassrooms.oc_p7.models.Restaurant;
 import com.openclassrooms.oc_p7.services.firestore_helpers.UserHelper;
 import com.openclassrooms.oc_p7.services.utils.OnDestinationChangedEvent;
 import com.openclassrooms.oc_p7.services.utils.OnQueryEvent;
@@ -42,6 +43,7 @@ import com.openclassrooms.oc_p7.services.utils.OnQueryEvent;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -56,6 +58,7 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
     private final static int AUTOCOMPLETE_REQUEST_CODE = 1;
     private SearchView searchView;
     private int currentFragment;
+    private List<Restaurant> filteredList = new ArrayList<>();
     private OnQueryEvent onQueryEvent = new OnQueryEvent();
     private Menu menu;
 
@@ -155,54 +158,61 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
         MenuItem.OnActionExpandListener onActionExpandListener = new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
-                if (currentFragment == 0) {
-                    onSearchForMap();
-                } else {
-                    searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                        @Override
-                        public boolean onQueryTextSubmit(String query) {
-                            if (query.length() >= 3) {
-                                //TODO: HANDLE QUERIES WITH EVENTBUS
-                                if (currentFragment == 1) {
-                                    onQueryEvent.setQueryForRestaurants(query);
-                                } else {
-                                    onQueryEvent.setQueryForWorkmates(query);
-                                    //WorkmateListFragment.query.postValue(query);
-                                }
-                                EventBus.getDefault().post(onQueryEvent);
-                                Log.d(TAG, "Can start query : " + query);
-                            } else if (query.length() != 0) {
-                                Toast toast = Toast.makeText(DashboardActivity.this, R.string.toolbar_query_too_short, Toast.LENGTH_LONG);
-                                toast.setGravity(Gravity.BOTTOM, 0, 20);
-                                toast.show();
-                                Log.d(TAG, "Query too short " + query);
-                            } else {
-                                Toast toast = Toast.makeText(DashboardActivity.this, R.string.toolbar_query_too_short, Toast.LENGTH_LONG);
-                                toast.setGravity(Gravity.BOTTOM, 0, 20);
-                                toast.show();
-                                Log.d(TAG, "Empty query " + query);
-                            }
+                //    if (currentFragment == 0) {
+                //CASE MAP
+                //onSearchForMap();
+                //  } else {
+                //CASE RESTAURANTS & WORKMATES
+                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                    @Override
+                    public boolean onQueryTextSubmit(String query) {
+                        if (query.length() >= 3) {
+                            //TODO: HANDLE QUERIES WITH EVENTBUS
 
-                            return true;
-                        }
+                            if (currentFragment == 0) {
+                                onQueryEvent.setQueryForMap(query);
 
-                        @Override
-                        public boolean onQueryTextChange(String newText) {
-                            if (currentFragment == 1) {
-                                Log.d(TAG, "onQueryTextChanged");
-                                onQueryEvent.setQueryForRestaurants(newText);
-                                //should sendEvent to FragmentActivity
-                                //RestaurantListFragment.query.postValue(newText);
+                            } else if (currentFragment == 1) {
+                                onQueryEvent.setQueryForRestaurants(query);
                             } else {
-                                onQueryEvent.setQueryForWorkmates(newText);
+                                onQueryEvent.setQueryForWorkmates(query);
+                                //WorkmateListFragment.query.postValue(query);
                             }
                             EventBus.getDefault().post(onQueryEvent);
-                            return true;
+                            Log.d(TAG, "Can start query : " + query);
+                        } else if (query.length() != 0) {
+                            Toast toast = Toast.makeText(DashboardActivity.this, R.string.toolbar_query_too_short, Toast.LENGTH_LONG);
+                            toast.setGravity(Gravity.BOTTOM, 0, 20);
+                            toast.show();
+                            Log.d(TAG, "Query too short " + query);
+                        } else {
+                            Toast toast = Toast.makeText(DashboardActivity.this, R.string.toolbar_query_too_short, Toast.LENGTH_LONG);
+                            toast.setGravity(Gravity.BOTTOM, 0, 20);
+                            toast.show();
+                            Log.d(TAG, "Empty query " + query);
                         }
-                    });
 
-                    //Filter
-                }
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onQueryTextChange(String newText) {
+                        if (currentFragment == 1) {
+                            //CASE RESTAURANTS
+                            Log.d(TAG, "onQueryTextChanged");
+                            onQueryEvent.setQueryForRestaurants(newText);
+                        } else {
+                            //CASE WORKMATES
+                            onQueryEvent.setQueryForWorkmates(newText);
+                        }
+                        //TODO: need different OnQueryEvent for each fragment
+                        //EventBus.getDefault().post(onQueryEvent);
+                        return true;
+                    }
+                });
+
+                //Filter
+                // }
                 return true;
             }
 
@@ -236,7 +246,7 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
 
     public void onSearchForMap() {
         // Set the fields to specify which types of place data to return.
-        List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG);
+        List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG, Place.Field.TYPES);
         // Start the autocomplete intent.
         Intent intent = new Autocomplete.IntentBuilder(
                 AutocompleteActivityMode.OVERLAY, fields).setCountry("FR")

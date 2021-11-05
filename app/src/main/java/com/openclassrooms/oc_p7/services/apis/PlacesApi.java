@@ -1,5 +1,6 @@
 package com.openclassrooms.oc_p7.services.apis;
 
+import com.openclassrooms.oc_p7.models.pojo_models.responses.AutocompleteResponse;
 import com.openclassrooms.oc_p7.models.pojo_models.responses.DetailsPlaceResponse;
 import com.openclassrooms.oc_p7.models.pojo_models.responses.NearbyPlaceResponse;
 
@@ -21,6 +22,13 @@ public interface PlacesApi {
     Call<DetailsPlaceResponse> getDetailsById(
             @Query("key") String googleApiKey,
             @Query("place_id") String placeId
+    );
+
+    @GET("place/autocomplete/json")
+    Call<AutocompleteResponse> getRequestedPlaces(
+            @Query("key") String googleApiKey,
+            @Query("language") String language,
+            @Query("input") String input
     );
 
 

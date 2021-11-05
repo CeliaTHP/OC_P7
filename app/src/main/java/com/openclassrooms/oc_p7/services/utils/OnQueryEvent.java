@@ -7,6 +7,7 @@ public class OnQueryEvent {
     private String queryForRestaurants = null;
     private String queryForWorkmates = null;
     private Place requestedPlace = null;
+    private String queryForMap = null;
 
 
     public Place getRequestedPlace() {
@@ -15,6 +16,14 @@ public class OnQueryEvent {
 
     public void setRequestedPlace(Place requestedPlace) {
         this.requestedPlace = requestedPlace;
+    }
+
+    public String getQueryForMap() {
+        return queryForMap;
+    }
+
+    public void setQueryForMap(String queryForMap) {
+        this.queryForMap = queryForMap;
     }
 
     public String getQueryForRestaurants() {

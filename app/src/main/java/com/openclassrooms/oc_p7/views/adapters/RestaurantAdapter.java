@@ -141,6 +141,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
 
     public void setData(List<Restaurant> restaurantList) {
         this.restaurantList = restaurantList;
+        notifyDataSetChanged();
     }
 
 

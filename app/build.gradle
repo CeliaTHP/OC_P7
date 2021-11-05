@@ -99,6 +99,9 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
     //Picasso
     implementation 'com.squareup.picasso:picasso:2.71828'
+    //Fresco
+    implementation 'com.facebook.fresco:fresco:2.6.0'
+
 
 
     //ImageSlider

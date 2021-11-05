@@ -120,7 +120,6 @@ public class RestaurantListFragment extends Fragment implements OnRestaurantClic
             this.restaurantList = restaurantList;
             workmateViewModel.getWorkmateForRestaurantList(mapViewModel.restaurantListLiveData);
             adapter.setData(restaurantList);
-            adapter.notifyDataSetChanged();
 
             Log.d(TAG, "nearbyPlacesObserver from Restaurant");
 
