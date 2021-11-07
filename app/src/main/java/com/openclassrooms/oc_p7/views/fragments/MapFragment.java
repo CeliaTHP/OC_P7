@@ -73,6 +73,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private LoginViewModel loginViewModel;
 
+    private LatLng currentLatLng;
     private GoogleMap googleMap;
 
 
@@ -106,7 +107,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             focusToQuery(onQueryEvent.getRequestedPlace());
         }
         if (onQueryEvent.getQueryForMap() != null) {
-            mapViewModel.getRequestedRestaurants(onQueryEvent.getQueryForMap());
+            mapViewModel.getRequestedRestaurants(onQueryEvent.getQueryForMap(), currentLatLng);
         }
 
     }
@@ -216,7 +217,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         });
 
         mapViewModel.currentLocationLiveData.observe(getViewLifecycleOwner(), location -> {
-            LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+            currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(currentLatLng));
             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 14));
             if (googleMap != null) {

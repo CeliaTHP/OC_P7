@@ -28,6 +28,8 @@ public interface PlacesApi {
     Call<AutocompleteResponse> getRequestedPlaces(
             @Query("key") String googleApiKey,
             @Query("language") String language,
+            @Query("location") String location,
+            @Query("radius") String radius,
             @Query("input") String input
     );
 

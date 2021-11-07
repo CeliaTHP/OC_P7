@@ -6,6 +6,7 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.openclassrooms.oc_p7.models.ErrorCode;
 import com.openclassrooms.oc_p7.models.Restaurant;
 import com.openclassrooms.oc_p7.models.pojo_models.prediction_pojo.PredictionPojo;
@@ -36,6 +37,12 @@ public class PlaceRepository {
     private final String apiKey;
 
 
+    private List<String> requestedRestaurantIdList;
+    public MutableLiveData<List<Restaurant>> restaurantListMutableLiveData;
+    public MutableLiveData<Restaurant> restaurantMutableLiveData;
+    public MutableLiveData<Location> currentLocationLiveData = new MutableLiveData<>();
+
+
     public PlaceRepository(PlacesApi placesApi,
                            String apiKey,
                            Executor executor,
@@ -52,11 +59,6 @@ public class PlaceRepository {
         this.restaurantQuery = restaurantQuery;
         this.errorCode = errorCode;
     }
-
-    public MutableLiveData<List<Restaurant>> restaurantListMutableLiveData;
-    public MutableLiveData<Restaurant> restaurantMutableLiveData;
-
-    public MutableLiveData<Location> currentLocationLiveData = new MutableLiveData<>();
 
 
     public LiveData<List<Restaurant>> getRestaurantListMutableLiveData() {
@@ -151,20 +153,25 @@ public class PlaceRepository {
 
     }
 
-    public void getRequestedRestaurants(String input) {
+    public void getRequestedRestaurants(String input, LatLng latLng) {
         String language = Locale.getDefault().getLanguage();
-        Log.d(TAG, language);
+
+        String locationStringQuery = latLng.latitude + "," + latLng.longitude;
+
+
+        Log.d(TAG, language + locationStringQuery);
         executor.execute(() -> {
 
             Call<AutocompleteResponse> call =
-                    placesApi.getRequestedPlaces(apiKey, language, input);
+                    placesApi.getRequestedPlaces(apiKey, language, locationStringQuery, radiusQuery, input);
             try {
                 Response<AutocompleteResponse> response = call.execute();
                 if (response.isSuccessful()) {
                     for (PredictionPojo predictionPojo : response.body().predictions) {
-                        Log.d(TAG, "place id: " + predictionPojo.placeId);
-                        Log.d(TAG, "place description: " + predictionPojo.description);
-                        Log.d(TAG, "place types: " + predictionPojo.types);
+                        if (predictionPojo.types.contains("restaurant")) {
+                            requestedRestaurantIdList.add(predictionPojo.placeId);
+                            Log.d(TAG, "isRestaurant" + predictionPojo.description);
+                        }
 
                     }
 
@@ -191,8 +198,16 @@ public class PlaceRepository {
     }
 
     static private Restaurant createRestaurant(RestaurantPojo restaurantPojo) {
-        return new Restaurant(restaurantPojo.place_id, restaurantPojo.name, restaurantPojo.vicinity, restaurantPojo.geometry.location.lat, restaurantPojo.geometry.location.lng);
+        return new Restaurant(restaurantPojo.placeId, restaurantPojo.name, restaurantPojo.vicinity, restaurantPojo.geometry.location.lat, restaurantPojo.geometry.location.lng);
     }
+
+    /*
+    static private Restaurant createRestaurantWithPrediction(PredictionPojo predictionPojo) {
+        return new Restaurant(predictionPojo.placeId, predictionPojo.description, predictionPojo.ad, predictionPojo.geometry.location.lat, predictionPojo.geometry.location.lng);
+    }
+
+
+     */
 
     private void setRestaurantInfos(RestaurantPojo restaurantPojo, Restaurant restaurant) {
 
@@ -203,8 +218,8 @@ public class PlaceRepository {
             if (restaurantPojo.name != null)
                 restaurant.setName(restaurantPojo.name);
 
-            if (restaurantPojo.formatted_address != null)
-                restaurant.setAddress(restaurantPojo.formatted_address);
+            if (restaurantPojo.formattedAddress != null)
+                restaurant.setAddress(restaurantPojo.formattedAddress);
 
             if (restaurantPojo.geometry.location.lat != 0.0)
                 restaurant.setLat(restaurantPojo.geometry.location.lat);
@@ -212,17 +227,17 @@ public class PlaceRepository {
             if (restaurantPojo.geometry.location.lng != 0.0)
                 restaurant.setLng(restaurantPojo.geometry.location.lng);
 
-            if (restaurantPojo.place_id != null)
-                restaurant.setId(restaurantPojo.place_id);
+            if (restaurantPojo.placeId != null)
+                restaurant.setId(restaurantPojo.placeId);
 
             if (restaurantPojo.rating != 0.0)
                 restaurant.setRating(restaurantPojo.rating);
 
-            if (restaurantPojo.opening_hours != null)
-                restaurant.setOpeningHours(restaurantPojo.opening_hours.weekday_text);
+            if (restaurantPojo.openingHours != null)
+                restaurant.setOpeningHours(restaurantPojo.openingHours.weekday_text);
 
-            if (restaurantPojo.international_phone_number != null)
-                restaurant.setPhone(restaurantPojo.international_phone_number);
+            if (restaurantPojo.internationalPhoneNumber != null)
+                restaurant.setPhone(restaurantPojo.internationalPhoneNumber);
 
             if (restaurantPojo.website != null)
                 restaurant.setWebsite(restaurantPojo.website);

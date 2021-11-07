@@ -12,6 +12,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.Task;
 import com.openclassrooms.oc_p7.models.ErrorCode;
 import com.openclassrooms.oc_p7.models.Restaurant;
@@ -99,8 +100,8 @@ public class MapViewModel extends ViewModel {
         placeRepository.updateRestaurantDetails(restaurant.getId());
     }
 
-    public void getRequestedRestaurants(String request) {
-        placeRepository.getRequestedRestaurants(request);
+    public void getRequestedRestaurants(String request, LatLng latLng) {
+        placeRepository.getRequestedRestaurants(request, latLng);
     }
 
     public void getLocationInformations(Context context) {

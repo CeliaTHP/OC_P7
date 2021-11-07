@@ -1,31 +1,44 @@
 package com.openclassrooms.oc_p7.models.pojo_models.restaurant_pojo;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 public class RestaurantPojo {
 
-    public List<AddressComponent> address_components;
-    public String adr_address;
-    public String business_status;
-    public String formatted_address;
-    public String formatted_phone_number;
+    @SerializedName("address_components")
+    public List<AddressComponent> addressComponents;
+    @SerializedName("adr_address")
+    public String adrAddress;
+    @SerializedName("business_status")
+    public String businessStatus;
+    @SerializedName("formatted_address")
+    public String formattedAddress;
+    @SerializedName("formatted_phone_number")
+    public String formattedPhoneNumber;
     public Geometry geometry;
     public String icon;
-    public String international_phone_number;
+    @SerializedName("international_phone_number")
+    public String internationalPhoneNumber;
     public String name;
-    public OpeningHours opening_hours;
+    @SerializedName("opening_hours")
+    public OpeningHours openingHours;
     public List<Photo> photos;
-    public String place_id;
+    @SerializedName("place_id")
+    public String placeId;
     public PlusCode plus_code;
-    public int price_level;
+    @SerializedName("price_level")
+    public int priceLevel;
     public double rating;
     public String reference;
     public List<Review> reviews;
     public String scope;
     public List<String> types;
     public String url;
-    public int user_ratings_total;
-    public int utc_offset;
+    @SerializedName("user_ratings_total")
+    public int userRatingsTotal;
+    @SerializedName("utc_offset")
+    public int utcOffset;
     public String vicinity;
     public String website;
 
