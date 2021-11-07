@@ -12,6 +12,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -40,6 +42,7 @@ import com.openclassrooms.oc_p7.models.ErrorCode;
 import com.openclassrooms.oc_p7.models.Restaurant;
 import com.openclassrooms.oc_p7.services.factories.MapViewModelFactory;
 import com.openclassrooms.oc_p7.services.factories.WorkmateViewModelFactory;
+import com.openclassrooms.oc_p7.services.utils.OnMapQueryEvent;
 import com.openclassrooms.oc_p7.services.utils.OnQueryEvent;
 import com.openclassrooms.oc_p7.services.utils.ReminderBroadcast;
 import com.openclassrooms.oc_p7.view_models.LoginViewModel;
@@ -63,7 +66,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private MapViewModel mapViewModel;
     private WorkmateViewModel workmateViewModel;
 
-    private List<Restaurant> restaurantList = new ArrayList<Restaurant>();
+    private List<Restaurant> restaurantList = new ArrayList<>();
 
     private FragmentMapBinding fragmentMapBinding;
     private MapView mapView;
@@ -75,6 +78,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private LatLng currentLatLng;
     private GoogleMap googleMap;
+
+    private List<String> requestedRestaurantNameList = new ArrayList<>();
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -102,6 +107,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     @Subscribe
     public void onQueryEvent(OnQueryEvent onQueryEvent) {
+/*
         if (onQueryEvent.getRequestedPlace() != null) {
             Log.d(TAG, "onQueryEvent " + onQueryEvent.getRequestedPlace().getName() + " " + onQueryEvent.getRequestedPlace().getAddress());
             focusToQuery(onQueryEvent.getRequestedPlace());
@@ -110,6 +116,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             mapViewModel.getRequestedRestaurants(onQueryEvent.getQueryForMap(), currentLatLng);
         }
 
+
+ */
+    }
+
+    @Subscribe
+    public void onMapQueryEvent(OnMapQueryEvent onMapQueryEvent) {
+        mapViewModel.getRequestedRestaurants(onMapQueryEvent.getQueryForMap(), currentLatLng);
+        Log.d(TAG, "onMapQuery Event : " + onMapQueryEvent.getQueryForMap());
     }
 
 
@@ -227,7 +241,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         });
 
         mapViewModel.restaurantListLiveData.observe(getViewLifecycleOwner(), restaurantList -> {
-
             this.restaurantList = restaurantList;
             Log.d(TAG, "observer,  size : " + restaurantList.size());
 
@@ -250,6 +263,27 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         });
 
+        mapViewModel.requestedRestaurantIdList.observe(getViewLifecycleOwner(), restaurantList -> {
+            requestedRestaurantNameList.clear();
+            for (Restaurant restaurant : restaurantList)
+                requestedRestaurantNameList.add(restaurant.getName());
+
+            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(fragmentMapBinding.getRoot().getContext(), R.layout.dropdown_list, requestedRestaurantNameList);
+            arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            fragmentMapBinding.mapListView.setVisibility(View.VISIBLE);
+            fragmentMapBinding.mapListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    startDetailsActivity(restaurantList.get(position).getId());
+                    fragmentMapBinding.mapListView.setVisibility(View.GONE);
+
+
+                }
+            });
+            fragmentMapBinding.mapListView.setClickable(true);
+            fragmentMapBinding.mapListView.setAdapter(arrayAdapter);
+
+        });
 
     }
 
@@ -331,6 +365,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     }
 
+    private void startDetailsActivity(String restaurantId) {
+        Intent intent = new Intent(fragmentMapBinding.getRoot().getContext(), DetailsActivity.class);
+        intent.putExtra("restaurantId", restaurantId);
+        startActivity(intent);
+    }
 
     private void refreshMap() {
         Log.d(TAG, "Refresh Map");

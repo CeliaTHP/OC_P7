@@ -37,9 +37,9 @@ public class PlaceRepository {
     private final String apiKey;
 
 
-    private List<String> requestedRestaurantIdList;
     public MutableLiveData<List<Restaurant>> restaurantListMutableLiveData;
     public MutableLiveData<Restaurant> restaurantMutableLiveData;
+    public MutableLiveData<List<Restaurant>> requestedRestaurantsListMutableLiveData;
     public MutableLiveData<Location> currentLocationLiveData = new MutableLiveData<>();
 
 
@@ -48,6 +48,7 @@ public class PlaceRepository {
                            Executor executor,
                            MutableLiveData<List<Restaurant>> restaurantListMutableLiveData,
                            MutableLiveData<Restaurant> restaurantMutableLiveData,
+                           MutableLiveData<List<Restaurant>> requestedRestaurantsListMutableLiveData,
                            String radiusQuery,
                            String restaurantQuery, MutableLiveData<ErrorCode> errorCode) {
         this.placesApi = placesApi;
@@ -55,6 +56,7 @@ public class PlaceRepository {
         this.executor = executor;
         this.restaurantListMutableLiveData = restaurantListMutableLiveData;
         this.restaurantMutableLiveData = restaurantMutableLiveData;
+        this.requestedRestaurantsListMutableLiveData = requestedRestaurantsListMutableLiveData;
         this.radiusQuery = radiusQuery;
         this.restaurantQuery = restaurantQuery;
         this.errorCode = errorCode;
@@ -63,6 +65,10 @@ public class PlaceRepository {
 
     public LiveData<List<Restaurant>> getRestaurantListMutableLiveData() {
         return restaurantListMutableLiveData;
+    }
+
+    public LiveData<List<Restaurant>> getRequestedRestaurantIdListMutableLiveData() {
+        return requestedRestaurantsListMutableLiveData;
     }
 
     public LiveData<ErrorCode> getErrorCode() {
@@ -155,8 +161,8 @@ public class PlaceRepository {
 
     public void getRequestedRestaurants(String input, LatLng latLng) {
         String language = Locale.getDefault().getLanguage();
-
         String locationStringQuery = latLng.latitude + "," + latLng.longitude;
+        List<Restaurant> requestedRestaurantList = new ArrayList<>();
 
 
         Log.d(TAG, language + locationStringQuery);
@@ -169,12 +175,14 @@ public class PlaceRepository {
                 if (response.isSuccessful()) {
                     for (PredictionPojo predictionPojo : response.body().predictions) {
                         if (predictionPojo.types.contains("restaurant")) {
-                            requestedRestaurantIdList.add(predictionPojo.placeId);
+                            requestedRestaurantList.add(new Restaurant(predictionPojo.placeId, predictionPojo.description, null, 0.0, 0.0));
                             Log.d(TAG, "isRestaurant" + predictionPojo.description);
+
                         }
-
                     }
+                    Log.d(TAG, "requestedId List : " + requestedRestaurantList.size());
 
+                    requestedRestaurantsListMutableLiveData.postValue(requestedRestaurantList);
 
                 } else {
                     errorCode.postValue(ErrorCode.UNSUCCESSFUL_RESPONSE);

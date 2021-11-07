@@ -29,7 +29,7 @@ public class Injection {
         String radiusQuery = MyApplication.getInstance().getApplicationContext().getString(R.string.query_radius);
         String restaurantQuery = MyApplication.getInstance().getApplicationContext().getString(R.string.query_restaurant);
         String apiKey = context.getString(R.string.GOOGLE_MAP_API_KEY_DEV);
-        return new PlaceRepository(Injection.provideApiClient(), apiKey, Executors.newSingleThreadExecutor(), new MutableLiveData<>(), new MutableLiveData<>(), radiusQuery, restaurantQuery, new MutableLiveData<>());
+        return new PlaceRepository(Injection.provideApiClient(), apiKey, Executors.newSingleThreadExecutor(), new MutableLiveData<>(), new MutableLiveData<>(), new MutableLiveData<>(), radiusQuery, restaurantQuery, new MutableLiveData<>());
     }
 
     public static WorkmateRepository provideWorkmateRepository(FirebaseFirestore firebaseFirestore, Context context) {

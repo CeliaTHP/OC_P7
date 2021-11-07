@@ -30,6 +30,8 @@ public class PlaceRepositoryTests {
     private final PlacesApi placesApiMock = Mockito.mock(PlacesApi.class);
     private final MutableLiveData<List<Restaurant>> restaurantListLiveDataMock = (MutableLiveData<List<Restaurant>>) Mockito.mock(MutableLiveData.class);
     private final MutableLiveData<Restaurant> restaurantLiveDataMock = (MutableLiveData<Restaurant>) Mockito.mock(MutableLiveData.class);
+    private final MutableLiveData<List<Restaurant>> requestedRestaurantIdList = (MutableLiveData<List<Restaurant>>) Mockito.mock(MutableLiveData.class);
+
 
     private final Executor executor = MoreExecutors.newDirectExecutorService();
     private final String expectedRadiusQuery = "2000";
@@ -43,7 +45,7 @@ public class PlaceRepositoryTests {
 
     @Before
     public void setUp() {
-        placeRepository = new PlaceRepository(placesApiMock, fakeApiKey, executor, restaurantListLiveDataMock, restaurantLiveDataMock, expectedRadiusQuery, expectedRestaurantQuery, errorCodeMutableLiveDataMock);
+        placeRepository = new PlaceRepository(placesApiMock, fakeApiKey, executor, restaurantListLiveDataMock, restaurantLiveDataMock, requestedRestaurantIdList, expectedRadiusQuery, expectedRestaurantQuery, errorCodeMutableLiveDataMock);
         Mockito.when(expectedLocation.getLatitude()).thenReturn(49.0249d);
         Mockito.when(expectedLocation.getLongitude()).thenReturn(2.4640d);
     }

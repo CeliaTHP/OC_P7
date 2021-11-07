@@ -35,6 +35,9 @@ public class MapViewModel extends ViewModel {
 
 
     public MutableLiveData<List<Restaurant>> restaurantListLiveData = new MutableLiveData<>();
+    public MutableLiveData<List<Restaurant>> requestedRestaurantIdList = new MutableLiveData<>();
+
+
     public MutableLiveData<Location> currentLocationLiveData;
     public MutableLiveData<ErrorCode> placeRepositoryErrorCodeMutableLiveData = new MutableLiveData<>();
     public MutableLiveData<ErrorCode> workmateRepositoryErrorCodeMutableLiveData = new MutableLiveData<>();
@@ -68,6 +71,10 @@ public class MapViewModel extends ViewModel {
             filterList();
             restaurantListLiveData.postValue(restaurantList);
 
+        });
+
+        placeRepository.getRequestedRestaurantIdListMutableLiveData().observe(this.lifecycleOwner, idList -> {
+            requestedRestaurantIdList.postValue(idList);
         });
 
 

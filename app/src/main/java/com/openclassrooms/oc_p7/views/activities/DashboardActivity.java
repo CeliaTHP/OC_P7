@@ -38,6 +38,7 @@ import com.openclassrooms.oc_p7.databinding.DrawerHeaderBinding;
 import com.openclassrooms.oc_p7.models.Restaurant;
 import com.openclassrooms.oc_p7.services.firestore_helpers.UserHelper;
 import com.openclassrooms.oc_p7.services.utils.OnDestinationChangedEvent;
+import com.openclassrooms.oc_p7.services.utils.OnMapQueryEvent;
 import com.openclassrooms.oc_p7.services.utils.OnQueryEvent;
 
 import org.greenrobot.eventbus.EventBus;
@@ -60,6 +61,7 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
     private int currentFragment;
     private List<Restaurant> filteredList = new ArrayList<>();
     private OnQueryEvent onQueryEvent = new OnQueryEvent();
+    private OnMapQueryEvent onMapQueryEvent = new OnMapQueryEvent();
     private Menu menu;
 
     private ActivityDashboardBinding activityDashboardBinding;
@@ -170,7 +172,7 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
                             //TODO: HANDLE QUERIES WITH EVENTBUS
 
                             if (currentFragment == 0) {
-                                onQueryEvent.setQueryForMap(query);
+                                onMapQueryEvent.setQueryForMap(query);
 
                             } else if (currentFragment == 1) {
                                 onQueryEvent.setQueryForRestaurants(query);
@@ -178,6 +180,7 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
                                 onQueryEvent.setQueryForWorkmates(query);
                                 //WorkmateListFragment.query.postValue(query);
                             }
+                            EventBus.getDefault().post(onMapQueryEvent);
                             EventBus.getDefault().post(onQueryEvent);
                             Log.d(TAG, "Can start query : " + query);
                         } else if (query.length() != 0) {
@@ -226,6 +229,17 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
         menu.findItem(R.id.toolbar_search).setOnActionExpandListener(onActionExpandListener);
         searchView = (SearchView) menu.findItem(R.id.toolbar_search).getActionView();
         searchView.setQueryHint("Search location...");
+
+        View closeButton = searchView.findViewById(androidx.appcompat.R.id.search_close_btn);
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchView.setQuery(null, false);
+                onMapQueryEvent.setQueryForMap(null);
+                EventBus.getDefault().post(onMapQueryEvent);
+                //handle click
+            }
+        });
 
 
         searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
