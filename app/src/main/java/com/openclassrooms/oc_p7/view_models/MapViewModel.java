@@ -68,7 +68,7 @@ public class MapViewModel extends ViewModel {
 
         placeRepository.getRestaurantListMutableLiveData().observe(this.lifecycleOwner, restaurantList -> {
             Log.d(TAG, " getRestaurantLiveData observer ");
-            filterList();
+            //filterList();
             restaurantListLiveData.postValue(restaurantList);
 
         });
@@ -90,30 +90,34 @@ public class MapViewModel extends ViewModel {
 
     }
 
-    private void filterList() {
-        originalList = placeRepository.getRestaurantListMutableLiveData().getValue();
-        filteredRestaurantList.clear();
-        if (originalList != null) {
-            if (query != null) {
-                for (Restaurant restaurant : originalList) {
-                    if (restaurant.getName().toLowerCase().contains(query.toLowerCase())) {
-                        filteredRestaurantList.add(restaurant);
+    /*
+        private void filterList() {
+            originalList = placeRepository.getRestaurantListMutableLiveData().getValue();
+            filteredRestaurantList.clear();
+            if (originalList != null) {
+                if (query != null) {
+                    for (Restaurant restaurant : originalList) {
+                        if (restaurant.getName().toLowerCase().contains(query.toLowerCase())) {
+                            filteredRestaurantList.add(restaurant);
+                        }
                     }
+                    restaurantListLiveData.postValue(filteredRestaurantList);
+                } else {
+                    restaurantListLiveData.postValue(originalList);
                 }
-                restaurantListLiveData.postValue(filteredRestaurantList);
-            } else {
-                restaurantListLiveData.postValue(originalList);
             }
         }
-    }
 
+
+     */
     public void filterList(String query) {
         this.query = query;
-        filterList();
+        //filterList();
     }
 
 
     public void updateRestaurantDetails(Restaurant restaurant) {
+        Log.d(TAG, "updateRestaurantDetails");
         placeRepository.updateRestaurantDetails(restaurant.getId());
     }
 

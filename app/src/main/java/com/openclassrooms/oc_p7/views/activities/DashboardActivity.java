@@ -172,11 +172,15 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
                             //TODO: HANDLE QUERIES WITH EVENTBUS
 
                             if (currentFragment == 0) {
+                                //MAP FRAGMENT
                                 onMapQueryEvent.setQueryForMap(query);
 
                             } else if (currentFragment == 1) {
+                                //LIST FRAGMENT
                                 onQueryEvent.setQueryForRestaurants(query);
                             } else {
+                                //WORKMATES FRAGMENT
+
                                 onQueryEvent.setQueryForWorkmates(query);
                                 //WorkmateListFragment.query.postValue(query);
                             }

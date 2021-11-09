@@ -32,7 +32,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class RestaurantListFragment extends Fragment implements OnRestaurantClickListener {
@@ -57,6 +56,7 @@ public class RestaurantListFragment extends Fragment implements OnRestaurantClic
 
         initViewModels();
         initPlaces();
+        initRecyclerView();
         initObservers();
 
         workmateViewModel.getWorkmateList();
@@ -92,7 +92,7 @@ public class RestaurantListFragment extends Fragment implements OnRestaurantClic
     private void initObservers() {
 
         mapViewModel.currentLocationLiveData.observe(getViewLifecycleOwner(), currentLocation -> {
-            initRecyclerView();
+            adapter.setCurrentLocation(currentLocation);
 
         });
 
@@ -117,11 +117,9 @@ public class RestaurantListFragment extends Fragment implements OnRestaurantClic
         });
 
         mapViewModel.restaurantListLiveData.observe(getViewLifecycleOwner(), restaurantList -> {
-            this.restaurantList = restaurantList;
-            workmateViewModel.getWorkmateForRestaurantList(mapViewModel.restaurantListLiveData);
             adapter.setData(restaurantList);
-
-            Log.d(TAG, "nearbyPlacesObserver from Restaurant");
+            workmateViewModel.getWorkmateForRestaurantList(mapViewModel.restaurantListLiveData);
+            Log.d(TAG, "nearbyPlacesObserver from Restaurant" + restaurantList.size());
 
         });
 
@@ -129,7 +127,7 @@ public class RestaurantListFragment extends Fragment implements OnRestaurantClic
 
 
     private void initRecyclerView() {
-        adapter = new RestaurantAdapter(Collections.emptyList(), mapViewModel.currentLocationLiveData.getValue(), this, mapViewModel);
+        adapter = new RestaurantAdapter(new ArrayList<>(20), this, mapViewModel);
         fragmentListRestaurantsBinding.restaurantRecyclerView.setAdapter(adapter);
         fragmentListRestaurantsBinding.restaurantRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }

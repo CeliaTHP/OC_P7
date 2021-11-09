@@ -20,10 +20,12 @@ import com.openclassrooms.oc_p7.view_models.MapViewModel;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.List;
 
-public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder.ViewHolder> {
+public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder> {
 
     private final static String TAG = "RestaurantAdapter";
 
@@ -34,25 +36,43 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
     private Context context;
     private MapViewModel mapViewModel;
 
-    public RestaurantAdapter(List<Restaurant> restaurantList, Location currentLocation, OnRestaurantClickListener onRestaurantClickListener, MapViewModel mapViewModel) {
-        this.restaurantList = restaurantList;
-        this.currentLocation = currentLocation;
+    public RestaurantAdapter(List<Restaurant> restaurantList, OnRestaurantClickListener onRestaurantClickListener, MapViewModel mapViewModel) {
+        this.restaurantList = new ArrayList<>(restaurantList.size());
+        for (Restaurant restaurant : restaurantList) {
+            this.restaurantList.add(restaurant.clone());
+            /*
+            Restaurant restaurantToCreate = new Restaurant(restaurant.getId(),restaurant.getName(),restaurant.getAddress(),restaurant.getLat(),restaurant.getLng());
+            restaurantToCreate.setHasWorkmates(restaurant.getHasWorkmates());
+            restaurantToCreate.setHasDetails(restaurant.getHasDetails());
+            restaurantToCreate.setPhotoReference(restaurant.getPhotoReferences());
+            restaurantToCreate.setDistance(restaurant.getDistance());
+            restaurantToCreate.setIsLiked(restaurant.getIsLiked());
+            restaurantToCreate.setAttendees(restaurant.getAttendees());
+            restaurantToCreate.setIsChosen(restaurant.getIsChosen());
+            restaurantToCreate.setWebsite(restaurant.getWebsite());
+            restaurantToCreate.set(restaurant.getDistance());
+
+
+
+*/
+
+        }
         this.onRestaurantClickListener = onRestaurantClickListener;
         this.mapViewModel = mapViewModel;
-
     }
 
     @NonNull
     @Override
-    public RestaurantViewHolder.ViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
+    public RestaurantViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
         ItemLayoutRestaurantBinding itemLayoutRestaurantBinding = ItemLayoutRestaurantBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
         context = parent.getContext();
-        return new RestaurantViewHolder.ViewHolder(itemLayoutRestaurantBinding);
+        return new RestaurantViewHolder(itemLayoutRestaurantBinding);
     }
 
 
     @Override
-    public void onBindViewHolder(@NonNull @NotNull RestaurantViewHolder.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull @NotNull RestaurantViewHolder holder, int position) {
+
         Restaurant restaurant = restaurantList.get(position);
         Log.d(TAG, "onBind :  " + restaurant.toString());
 
@@ -72,7 +92,13 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
         holder.itemLayoutRestaurantBinding.itemRestaurantRating.setStepSize(0.01f);
         holder.itemLayoutRestaurantBinding.itemRestaurantRating.setRating((float) (restaurant.getRating() * 3.0 / 5.0));
         holder.itemLayoutRestaurantBinding.itemRestaurantRating.invalidate();
-        holder.itemLayoutRestaurantBinding.itemRestaurantDistance.setText(holder.itemView.getContext().getString(R.string.item_restaurant_distance, location.distanceTo(currentLocation)));
+        if (currentLocation != null)
+            holder.itemLayoutRestaurantBinding.itemRestaurantDistance.setText(holder.itemView.getContext().getString(R.string.item_restaurant_distance, location.distanceTo(currentLocation)));
+        else {
+            holder.itemLayoutRestaurantBinding.itemRestaurantDistance.setText(holder.itemView.getContext().getString(R.string.item_restaurant_no_info));
+
+        }
+
         holder.itemLayoutRestaurantBinding.itemRestaurantHours.setText(setCorrespondingHours(restaurant));
         if (restaurant.getAttendees() != null)
             holder.itemLayoutRestaurantBinding.itemRestaurantAttendees.setText(holder.itemView.getContext().getString(R.string.item_restaurant_attendees, restaurant.getAttendees().size()));
@@ -104,6 +130,13 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
 
         holder.itemLayoutRestaurantBinding.getRoot().setOnClickListener(v -> onRestaurantClickListener.onRestaurantClick(restaurant));
 
+
+    }
+
+
+    public void setCurrentLocation(Location location) {
+        this.currentLocation = location;
+        notifyDataSetChanged();
 
     }
 
@@ -139,14 +172,44 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
         return hours;
     }
 
-    public void setData(List<Restaurant> restaurantList) {
-        this.restaurantList = restaurantList;
-        notifyDataSetChanged();
-    }
+    public void setData(List<Restaurant> newRestaurantList) {
+        Iterator<Restaurant> newIterator = newRestaurantList.iterator();
+        Iterator<Restaurant> iterator = this.restaurantList.iterator();
+        int count = 0;
 
+        while (newIterator.hasNext() && iterator.hasNext()) {
+            Restaurant restaurant = iterator.next();
+            Restaurant newRestaurant = newIterator.next();
+
+            if (!restaurant.equals(newRestaurant)) {
+                this.restaurantList.set(count, newRestaurant.clone());
+                notifyItemChanged(count);
+
+            }
+            count++;
+
+        }
+        int oldSize = this.restaurantList.size();
+
+        if (newRestaurantList.size() > oldSize) {
+            for (Restaurant restaurant : newRestaurantList.subList(oldSize, newRestaurantList.size())) {
+                this.restaurantList.add(restaurant.clone());
+                notifyItemInserted(this.restaurantList.size());
+            }
+
+        } else if (oldSize > newRestaurantList.size()) {
+            this.restaurantList.removeAll(this.restaurantList.subList(newRestaurantList.size(), oldSize));
+            notifyItemRangeRemoved(newRestaurantList.size(), oldSize - newRestaurantList.size());
+        }
+
+        //notifyDataSetChanged();
+        Log.d(TAG, "setData   " + oldSize + " " + newRestaurantList.size());
+    }
 
     @Override
     public int getItemCount() {
         return restaurantList.size();
     }
+
+
 }

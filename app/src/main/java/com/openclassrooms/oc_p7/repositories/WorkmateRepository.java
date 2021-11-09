@@ -86,6 +86,7 @@ public class WorkmateRepository {
     }
 
     public void getWorkmatesForRestaurant(MutableLiveData<Restaurant> restaurantMutableLiveData) {
+
         //FILTER VIA FIREBASE
         Restaurant restaurant = restaurantMutableLiveData.getValue();
 
@@ -121,11 +122,13 @@ public class WorkmateRepository {
             });
         }
 
+
     }
 
 
     public void getWorkmatesForRestaurantList(MutableLiveData<List<Restaurant>> restaurantListMutableLiveData) {
         //FILTER VIA FIREBASE
+
 
         List<Restaurant> restaurantList = restaurantListMutableLiveData.getValue();
 
@@ -148,6 +151,7 @@ public class WorkmateRepository {
 
                             restaurant.setAttendees(workmatesFiltered);
                             restaurant.setHasWorkmates(true);
+                            //why the fuck in the loop ?
                             restaurantListMutableLiveData.postValue(restaurantList);
 
                         } catch (ExecutionException e) {
@@ -161,6 +165,8 @@ public class WorkmateRepository {
             });
 
         }
+
+
     }
 
 

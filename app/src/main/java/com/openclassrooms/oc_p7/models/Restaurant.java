@@ -1,10 +1,14 @@
 package com.openclassrooms.oc_p7.models;
 
+import androidx.annotation.NonNull;
+
+import org.jetbrains.annotations.NotNull;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
-public class Restaurant implements Serializable {
+public class Restaurant implements Serializable, Cloneable {
 
     private String id;
     private String name;
@@ -36,6 +40,18 @@ public class Restaurant implements Serializable {
         this.lng = lng;
         isChosen = false;
         isLiked = false;
+    }
+
+    @NonNull
+    @NotNull
+    @Override
+    public Restaurant clone() {
+        try {
+            return (Restaurant) super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+            return new Restaurant(id, name, address, lat, lng);
+        }
     }
 
     public Boolean getHasWorkmates() {
@@ -217,12 +233,15 @@ public class Restaurant implements Serializable {
                 Objects.equals(openingHours, that.openingHours) &&
                 Objects.equals(attendees, that.attendees) &&
                 Objects.equals(isChosen, that.isChosen) &&
-                Objects.equals(isLiked, that.isLiked);
+                Objects.equals(isLiked, that.isLiked) &&
+                Objects.equals(hasDetails, that.hasDetails) &&
+                Objects.equals(hasWorkmates, that.hasWorkmates);
+
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, address, lat, lng, type, phone, website, photoReferences, distance, rating, openingHours, attendees, isChosen, isLiked);
+        return Objects.hash(id, name, address, lat, lng, type, phone, website, photoReferences, distance, rating, openingHours, attendees, isChosen, isLiked, hasDetails);
     }
 }
 

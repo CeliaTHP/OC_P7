@@ -259,12 +259,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 //getDetails
                 if (googleMap != null) {
                     LatLng latLng = new LatLng(restaurant.getLat(), restaurant.getLng());
+
                     if (restaurant.getAttendees() != null && restaurant.getAttendees().size() >= 1) {
                         Log.d(TAG, "getAttendees != null " + restaurant.getName());
-                        googleMap.addMarker(new MarkerOptions().position(latLng).title(restaurant.getName()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+                        Marker marker = googleMap.addMarker(new MarkerOptions().position(latLng).title(restaurant.getName()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+                        marker.setTag(restaurant.getId());
+
                         Log.d(TAG, "a workmate chosed : " + restaurant.getName());
-                    } else
-                        googleMap.addMarker(new MarkerOptions().position(latLng).title(restaurant.getName()));
+                    } else {
+                        Marker marker = googleMap.addMarker(new MarkerOptions().position(latLng).title(restaurant.getName()));
+                        marker.setTag(restaurant.getId());
+
+                    }
+
 
                 }
             }
@@ -340,12 +347,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             public void onInfoWindowClick(@NonNull @NotNull Marker marker) {
                 Log.d(TAG, marker.getTitle() + " " + marker.getId() + " " + marker.getSnippet() +
                         " " + marker.getAlpha() + " " + marker.getPosition() + " " + marker.getTag());
-
                 if (marker.getTag() != null)
-                    startDetailsActivityForRestaurant(marker.getTag().toString());
-                else {
-                    Toast.makeText(fragmentMapBinding.getRoot().getContext(), R.string.map_no_restaurant, Toast.LENGTH_LONG).show();
-                }
+                    if (marker.getTag() != null)
+                        startDetailsActivityForRestaurant(marker.getTag().toString());
+                    else {
+                        Toast.makeText(fragmentMapBinding.getRoot().getContext(), R.string.map_no_restaurant, Toast.LENGTH_LONG).show();
+                    }
 
             }
         });
