@@ -67,7 +67,7 @@ public class PlaceRepository {
         return restaurantListMutableLiveData;
     }
 
-    public LiveData<List<Restaurant>> getRequestedRestaurantIdListMutableLiveData() {
+    public LiveData<List<Restaurant>> getRequestedRestaurantListMutableLiveData() {
         return requestedRestaurantsListMutableLiveData;
     }
 
@@ -124,6 +124,39 @@ public class PlaceRepository {
 
                         }
                     }
+
+                } else {
+                    errorCode.postValue(ErrorCode.UNSUCCESSFUL_RESPONSE);
+
+                }
+
+            } catch (IOException e) {
+                errorCode.postValue(ErrorCode.CONNECTION_ERROR);
+            }
+        });
+    }
+
+    public void updateRequestedRestaurantDetails(String restaurantId) {
+        //Executor to execute the following code in the same thread (easier for tests)
+        List<Restaurant> restaurantList = requestedRestaurantsListMutableLiveData.getValue();
+        executor.execute(() -> {
+            Call<DetailsPlaceResponse> call =
+                    placesApi.getDetailsById(apiKey, restaurantId);
+            try {
+                Response<DetailsPlaceResponse> response = call.execute();
+                if (response.isSuccessful()) {
+                    if (response.body() == null || restaurantList == null)
+                        return;
+                    for (Restaurant restaurant : restaurantList) {
+                        if (restaurant.getId().equals(restaurantId)) {
+                            {
+                                setRestaurantInfos(response.body().result, restaurant);
+                                Log.d(TAG, restaurant.toString());
+                            }
+                        }
+                    }
+                    requestedRestaurantsListMutableLiveData.postValue(restaurantList);
+
 
                 } else {
                     errorCode.postValue(ErrorCode.UNSUCCESSFUL_RESPONSE);
@@ -261,8 +294,10 @@ public class PlaceRepository {
         }
 
         restaurant.setHasDetails(true);
+        Log.d(TAG, "setRestaurantInfos for : " + restaurant.toString());
 
     }
+
 
 }
 

@@ -33,7 +33,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.libraries.places.api.model.Place;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.databinding.FragmentMapBinding;
@@ -79,6 +78,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private LatLng currentLatLng;
     private GoogleMap googleMap;
 
+
+    private Marker requestedMarker = null;
     private List<String> requestedRestaurantNameList = new ArrayList<>();
 
 
@@ -127,12 +128,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
 
-    public void focusToQuery(Place place) {
-        if (place.getLatLng() != null) {
-            LatLng latLng = new LatLng(place.getLatLng().latitude, place.getLatLng().longitude);
-            googleMap.addMarker(new MarkerOptions().position(latLng).title(place.getName())
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET))).showInfoWindow();
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+    public void focusToQuery(Restaurant restaurant) {
+        if (restaurant.getLat() != null && restaurant.getLng() != 0.0) {
+            LatLng latLng = new LatLng(restaurant.getLat(), restaurant.getLng());
+            if (requestedMarker != null) {
+                requestedMarker.remove();
+                requestedMarker = null;
+
+            }
+            requestedMarker = googleMap.addMarker(new MarkerOptions().position(latLng).title(restaurant.getName())
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)));
+            requestedMarker.showInfoWindow();
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14));
         }
 
     }
@@ -263,10 +270,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         });
 
-        mapViewModel.requestedRestaurantIdList.observe(getViewLifecycleOwner(), restaurantList -> {
+        mapViewModel.requestedRestaurantList.observe(getViewLifecycleOwner(), requestedRestaurantList -> {
             requestedRestaurantNameList.clear();
-            for (Restaurant restaurant : restaurantList)
-                requestedRestaurantNameList.add(restaurant.getName());
+
+            for (Restaurant restaurant : requestedRestaurantList) {
+                Log.d(TAG, "observer " + restaurant.toString());
+                requestedRestaurantNameList.add(restaurant.getName() + " , " + restaurant.getAddress());
+
+
+            }
 
             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(fragmentMapBinding.getRoot().getContext(), R.layout.dropdown_list, requestedRestaurantNameList);
             arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -274,7 +286,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             fragmentMapBinding.mapListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    startDetailsActivity(restaurantList.get(position).getId());
+                    focusToQuery(requestedRestaurantList.get(position));
+                    //startDetailsActivity(restaurantList.get(position).getId());
                     fragmentMapBinding.mapListView.setVisibility(View.GONE);
 
 

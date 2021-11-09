@@ -9,8 +9,8 @@ public class Restaurant implements Serializable {
     private String id;
     private String name;
     private String address;
-    private double lat;
-    private double lng;
+    private Double lat;
+    private Double lng;
     private String type;
     private String phone;
     private String website;
@@ -78,15 +78,15 @@ public class Restaurant implements Serializable {
         return hasWorkmates + " " + hasDetails + " " + id + " " + name + " " + attendees + " " + address + " " + distance + " " + rating + " " + isChosen + " " + isLiked + " " + openingHours + " " + photoReferences;
     }
 
-    public double getLat() {
+    public Double getLat() {
         return lat;
     }
 
-    public void setLat(double lat) {
+    public void setLat(Double lat) {
         this.lat = lat;
     }
 
-    public double getLng() {
+    public Double getLng() {
         return lng;
     }
 

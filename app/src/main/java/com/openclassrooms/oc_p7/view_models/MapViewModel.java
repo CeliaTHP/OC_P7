@@ -35,7 +35,7 @@ public class MapViewModel extends ViewModel {
 
 
     public MutableLiveData<List<Restaurant>> restaurantListLiveData = new MutableLiveData<>();
-    public MutableLiveData<List<Restaurant>> requestedRestaurantIdList = new MutableLiveData<>();
+    public MutableLiveData<List<Restaurant>> requestedRestaurantList = new MutableLiveData<>();
 
 
     public MutableLiveData<Location> currentLocationLiveData;
@@ -73,8 +73,18 @@ public class MapViewModel extends ViewModel {
 
         });
 
-        placeRepository.getRequestedRestaurantIdListMutableLiveData().observe(this.lifecycleOwner, idList -> {
-            requestedRestaurantIdList.postValue(idList);
+        placeRepository.getRequestedRestaurantListMutableLiveData().observe(this.lifecycleOwner, restaurantList -> {
+            for (Restaurant restaurant : restaurantList) {
+                Log.d(TAG, restaurant.toString());
+                if (!restaurant.getHasDetails()) {
+                    Log.d(TAG, "update details for " + restaurant.toString());
+                    updateRequestedRestaurantDetails(restaurant);
+
+
+                }
+            }
+
+            requestedRestaurantList.postValue(restaurantList);
         });
 
 
@@ -105,6 +115,10 @@ public class MapViewModel extends ViewModel {
 
     public void updateRestaurantDetails(Restaurant restaurant) {
         placeRepository.updateRestaurantDetails(restaurant.getId());
+    }
+
+    public void updateRequestedRestaurantDetails(Restaurant restaurant) {
+        placeRepository.updateRequestedRestaurantDetails(restaurant.getId());
     }
 
     public void getRequestedRestaurants(String request, LatLng latLng) {
