@@ -138,6 +138,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             }
             requestedMarker = googleMap.addMarker(new MarkerOptions().position(latLng).title(restaurant.getName())
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)));
+            requestedMarker.setTag(restaurant.getId());
             requestedMarker.showInfoWindow();
             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14));
         }
@@ -337,9 +338,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(@NonNull @NotNull Marker marker) {
-                Log.d(TAG, marker.getTitle() + " " + marker.getId() + " " + marker.getSnippet() + " " + marker.getAlpha() + " " + marker.getPosition());
+                Log.d(TAG, marker.getTitle() + " " + marker.getId() + " " + marker.getSnippet() +
+                        " " + marker.getAlpha() + " " + marker.getPosition() + " " + marker.getTag());
 
-                startDetailsActivityForRestaurant(marker.getTitle());
+                if (marker.getTag() != null)
+                    startDetailsActivityForRestaurant(marker.getTag().toString());
+                else {
+                    Toast.makeText(fragmentMapBinding.getRoot().getContext(), R.string.map_no_restaurant, Toast.LENGTH_LONG).show();
+                }
 
             }
         });
@@ -358,7 +364,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     }
 
-    private void startDetailsActivityForRestaurant(String title) {
+    private void startDetailsActivityForRestaurant(String restaurantId) {
+
+
+        Intent intent = new Intent(fragmentMapBinding.getRoot().getContext(), DetailsActivity.class);
+        intent.putExtra("restaurantId", restaurantId);
+        startActivity(intent);
+
+
+        /*
         String chosenRestaurantId = null;
 
         for (Restaurant restaurant : restaurantList) {
@@ -375,6 +389,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         } else {
             Toast.makeText(fragmentMapBinding.getRoot().getContext(), R.string.map_no_restaurant, Toast.LENGTH_LONG).show();
         }
+
+         */
 
     }
 

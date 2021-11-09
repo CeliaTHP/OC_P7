@@ -12,6 +12,7 @@ import com.openclassrooms.oc_p7.models.Restaurant;
 import com.openclassrooms.oc_p7.models.pojo_models.prediction_pojo.PredictionPojo;
 import com.openclassrooms.oc_p7.models.pojo_models.responses.AutocompleteResponse;
 import com.openclassrooms.oc_p7.models.pojo_models.responses.DetailsPlaceResponse;
+import com.openclassrooms.oc_p7.models.pojo_models.responses.NearbyPlaceResponse;
 import com.openclassrooms.oc_p7.models.pojo_models.restaurant_pojo.Photo;
 import com.openclassrooms.oc_p7.models.pojo_models.restaurant_pojo.RestaurantPojo;
 import com.openclassrooms.oc_p7.services.apis.PlacesApi;
@@ -76,7 +77,7 @@ public class PlaceRepository {
     }
 
     public void getNearbyPlaces(Location location) {
-/*
+
         String locationStringQuery = location.getLatitude() + "," + location.getLongitude();
 
         //Executor to execute the following code in the same thread (easier for tests)
@@ -99,7 +100,7 @@ public class PlaceRepository {
             }
         });
 
- */
+
     }
 
     public void updateRestaurantDetails(String restaurantId) {
