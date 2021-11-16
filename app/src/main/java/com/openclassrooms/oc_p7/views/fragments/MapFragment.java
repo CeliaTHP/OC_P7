@@ -123,8 +123,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     @Subscribe
     public void onMapQueryEvent(OnMapQueryEvent onMapQueryEvent) {
-        mapViewModel.getRequestedRestaurants(onMapQueryEvent.getQueryForMap(), currentLatLng);
-        Log.d(TAG, "onMapQuery Event : " + onMapQueryEvent.getQueryForMap());
+        if (onMapQueryEvent.getQueryForMap() != null) {
+            mapViewModel.getRequestedRestaurants(onMapQueryEvent.getQueryForMap(), currentLatLng);
+            Log.d(TAG, "onMapQuery Event : " + onMapQueryEvent.getQueryForMap());
+        }
+
     }
 
 
@@ -223,8 +226,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mapViewModel.placeRepositoryErrorCodeMutableLiveData.observe(getViewLifecycleOwner(), errorCode -> {
             if (errorCode == ErrorCode.CONNECTION_ERROR) {
                 Toast.makeText(fragmentMapBinding.getRoot().getContext(), getString(R.string.map_data_format_error), Toast.LENGTH_LONG).show();
-            } else {
+            } else if (errorCode == ErrorCode.UNSUCCESSFUL_RESPONSE) {
                 Toast.makeText(fragmentMapBinding.getRoot().getContext(), getString(R.string.map_response_error), Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(fragmentMapBinding.getRoot().getContext(), getString(R.string.map_not_found), Toast.LENGTH_SHORT).show();
 
             }
 
@@ -285,7 +290,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 Log.d(TAG, "observer " + restaurant.toString());
                 requestedRestaurantNameList.add(restaurant.getName() + " , " + restaurant.getAddress());
 
-
             }
 
             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(fragmentMapBinding.getRoot().getContext(), R.layout.dropdown_list, requestedRestaurantNameList);
@@ -294,6 +298,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             fragmentMapBinding.mapListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Log.d(TAG, "requestedRestaurantListSize onClick : " + position + " size : " + requestedRestaurantList.size());
                     focusToQuery(requestedRestaurantList.get(position));
                     //startDetailsActivity(restaurantList.get(position).getId());
                     fragmentMapBinding.mapListView.setVisibility(View.GONE);

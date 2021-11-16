@@ -103,6 +103,45 @@ public class PlaceRepository {
 
     }
 
+
+    public void getRequestedRestaurants(String input, LatLng latLng) {
+        String language = Locale.getDefault().getLanguage();
+        String locationStringQuery = latLng.latitude + "," + latLng.longitude;
+        List<Restaurant> requestedRestaurantList = new ArrayList<>();
+
+        Log.d(TAG, language + locationStringQuery);
+        executor.execute(() -> {
+
+            Call<AutocompleteResponse> call =
+                    placesApi.getRequestedPlaces(apiKey, language, locationStringQuery, radiusQuery, input);
+            try {
+                Response<AutocompleteResponse> response = call.execute();
+                if (response.isSuccessful()) {
+                    for (PredictionPojo predictionPojo : response.body().predictions) {
+                        if (predictionPojo.types.contains("restaurant")) {
+                            requestedRestaurantList.add(new Restaurant(predictionPojo.placeId, null, null, 0.0, 0.0));
+                            Log.d(TAG, "isRestaurant" + predictionPojo.description);
+
+                        }
+                    }
+                    Log.d(TAG, "requestedId List : " + requestedRestaurantList.size());
+
+                    if (requestedRestaurantList.isEmpty()) {
+                        errorCode.postValue(ErrorCode.NOT_FOUND);
+                    }
+                    requestedRestaurantsListMutableLiveData.postValue(requestedRestaurantList);
+
+                } else {
+                    errorCode.postValue(ErrorCode.UNSUCCESSFUL_RESPONSE);
+                }
+            } catch (IOException e) {
+                errorCode.postValue(ErrorCode.CONNECTION_ERROR);
+            }
+
+
+        });
+    }
+
     public void updateRestaurantDetails(String restaurantId) {
         //Executor to execute the following code in the same thread (easier for tests)
         List<Restaurant> restaurantList = restaurantListMutableLiveData.getValue();
@@ -191,42 +230,6 @@ public class PlaceRepository {
             }
         });
 
-    }
-
-    public void getRequestedRestaurants(String input, LatLng latLng) {
-        String language = Locale.getDefault().getLanguage();
-        String locationStringQuery = latLng.latitude + "," + latLng.longitude;
-        List<Restaurant> requestedRestaurantList = new ArrayList<>();
-
-
-        Log.d(TAG, language + locationStringQuery);
-        executor.execute(() -> {
-
-            Call<AutocompleteResponse> call =
-                    placesApi.getRequestedPlaces(apiKey, language, locationStringQuery, radiusQuery, input);
-            try {
-                Response<AutocompleteResponse> response = call.execute();
-                if (response.isSuccessful()) {
-                    for (PredictionPojo predictionPojo : response.body().predictions) {
-                        if (predictionPojo.types.contains("restaurant")) {
-                            requestedRestaurantList.add(new Restaurant(predictionPojo.placeId, predictionPojo.description, null, 0.0, 0.0));
-                            Log.d(TAG, "isRestaurant" + predictionPojo.description);
-
-                        }
-                    }
-                    Log.d(TAG, "requestedId List : " + requestedRestaurantList.size());
-
-                    requestedRestaurantsListMutableLiveData.postValue(requestedRestaurantList);
-
-                } else {
-                    errorCode.postValue(ErrorCode.UNSUCCESSFUL_RESPONSE);
-                }
-            } catch (IOException e) {
-                errorCode.postValue(ErrorCode.CONNECTION_ERROR);
-            }
-
-
-        });
     }
 
 
