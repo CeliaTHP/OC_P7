@@ -15,7 +15,7 @@ import com.openclassrooms.oc_p7.views.activities.MainActivity;
 public class ReminderBroadcast extends BroadcastReceiver {
 
     private final static String TAG = "ReminderBroadcast";
-    private final static String CANAL = "myNotifCanal";
+    private final static String CANAL = "myCanal";
 
     public static String RESTAURANT_NAME;
     public static String RESTAURANT_ADDRESS;
@@ -31,6 +31,7 @@ public class ReminderBroadcast extends BroadcastReceiver {
 
     public static void createNotification(Context context, String restaurantName, String restaurantPic, String restaurantAddress, String restaurantWorkmates) {
 
+        Log.d(TAG, "createNotification");
 
         Intent intent = new Intent(context, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

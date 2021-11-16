@@ -56,23 +56,27 @@ public class MainActivity extends BaseActivity {
 
     private void initAlarmManager() {
 
-
         // Quote in Morning at 08:32:00 AM
         Calendar calendar = Calendar.getInstance();
 
-        calendar.set(Calendar.HOUR_OF_DAY, 4);
-        calendar.set(Calendar.MINUTE, 53);
+        calendar.set(Calendar.HOUR_OF_DAY, 13);
+        calendar.set(Calendar.MINUTE, 59);
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
 
         Calendar currentDate = Calendar.getInstance();
-
+/*
         if (currentDate.after(calendar)) {
             calendar.add(Calendar.DATE, 1);
         }
 
 
+ */
+
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+        //if(alarmManager != null && alarmManager.getNextAlarmClock() != null)
+        //Log.d(TAG, alarmManager.getNextAlarmClock().getTriggerTime() + " ");
 
         Intent myIntent = new Intent(this, ReminderBroadcast.class);
 
@@ -82,50 +86,6 @@ public class MainActivity extends BaseActivity {
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
 
 
-        /*
-
-        int hour = 4;
-        int minute = 23;
-        String myTime = String.valueOf(hour) + ":" + String.valueOf(minute);
-
-        Date date = null;
-        Long timeInMs = null;
-
-        Calendar calendar = new GregorianCalendar();
-        calendar.set(Calendar.HOUR_OF_DAY, hour);
-        calendar.set(Calendar.MINUTE, minute);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-
-        Date customDate = calendar.getTime();
-
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
-
-        try {
-
-            date = simpleDateFormat.parse(myTime);
-
-        } catch (ParseException e) {
-
-            e.printStackTrace();
-        }
-
-        if (date != null) {
-            timeInMs = customDate.getTime();
-        }
-
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-
-        Intent intent = new Intent(MainActivity.this, ReminderBroadcast.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, intent, 0);
-
-
-        if(timeInMs != null)
-        alarmManager.set(AlarmManager.RTC_WAKEUP, timeInMs, pendingIntent);
-
-
-
-         */
     }
 
     private void verifyAuth() {
