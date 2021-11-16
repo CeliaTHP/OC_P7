@@ -107,9 +107,7 @@ public class PlaceRepository {
     public void getRequestedRestaurants(String input, LatLng latLng) {
         String language = Locale.getDefault().getLanguage();
         String locationStringQuery = latLng.latitude + "," + latLng.longitude;
-        List<Restaurant> requestedRestaurantList = new ArrayList<>();
 
-        Log.d(TAG, language + locationStringQuery);
         executor.execute(() -> {
 
             Call<AutocompleteResponse> call =
@@ -117,15 +115,7 @@ public class PlaceRepository {
             try {
                 Response<AutocompleteResponse> response = call.execute();
                 if (response.isSuccessful()) {
-                    for (PredictionPojo predictionPojo : response.body().predictions) {
-                        if (predictionPojo.types.contains("restaurant")) {
-                            requestedRestaurantList.add(new Restaurant(predictionPojo.placeId, null, null, 0.0, 0.0));
-                            Log.d(TAG, "isRestaurant" + predictionPojo.description);
-
-                        }
-                    }
-                    Log.d(TAG, "requestedId List : " + requestedRestaurantList.size());
-
+                    List<Restaurant> requestedRestaurantList = getRequestedRestaurantList(response.body().predictions);
                     requestedRestaurantsListMutableLiveData.postValue(requestedRestaurantList);
 
                 } else {
@@ -239,8 +229,25 @@ public class PlaceRepository {
         return restaurantList;
     }
 
+    static public List<Restaurant> getRequestedRestaurantList(List<PredictionPojo> predictionPojoList) {
+        List<Restaurant> restaurantList = new ArrayList<>();
+        for (PredictionPojo predictionPojo : predictionPojoList) {
+            if (predictionPojo.types.contains("restaurant")) {
+                Restaurant restaurant = createRequestedRestaurant(predictionPojo);
+                restaurantList.add(restaurant);
+            }
+
+        }
+        return restaurantList;
+    }
+
+
     static private Restaurant createRestaurant(RestaurantPojo restaurantPojo) {
         return new Restaurant(restaurantPojo.placeId, restaurantPojo.name, restaurantPojo.vicinity, restaurantPojo.geometry.location.lat, restaurantPojo.geometry.location.lng);
+    }
+
+    static private Restaurant createRequestedRestaurant(PredictionPojo predictionPojo) {
+        return new Restaurant(predictionPojo.placeId, null, null, 0.0, 0.0);
     }
 
     /*

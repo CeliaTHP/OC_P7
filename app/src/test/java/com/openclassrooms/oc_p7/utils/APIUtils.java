@@ -1,5 +1,7 @@
 package com.openclassrooms.oc_p7.utils;
 
+import com.openclassrooms.oc_p7.models.pojo_models.prediction_pojo.PredictionPojo;
+import com.openclassrooms.oc_p7.models.pojo_models.responses.AutocompleteResponse;
 import com.openclassrooms.oc_p7.models.pojo_models.responses.DetailsPlaceResponse;
 import com.openclassrooms.oc_p7.models.pojo_models.responses.NearbyPlaceResponse;
 import com.openclassrooms.oc_p7.models.pojo_models.restaurant_pojo.Geometry;
@@ -33,6 +35,12 @@ public class APIUtils {
         return nearByPlaceResponse;
     }
 
+    public static AutocompleteResponse getRequestedPlaceResponse() {
+        AutocompleteResponse autocompleteResponse = new AutocompleteResponse();
+        autocompleteResponse.predictions = getPredictionPojoList();
+        return autocompleteResponse;
+    }
+
     public static DetailsPlaceResponse getDetailsPlaceResponse() {
         DetailsPlaceResponse detailsPlaceResponse = new DetailsPlaceResponse();
         detailsPlaceResponse.result = getRestaurantPojoList().get(0);
@@ -42,7 +50,7 @@ public class APIUtils {
     public static List<RestaurantPojo> getRestaurantPojoList() {
         List<RestaurantPojo> restaurantPojoList = new ArrayList<>();
         RestaurantPojo restaurantPojo = new RestaurantPojo();
-        restaurantPojo.place_id = "place_id";
+        restaurantPojo.placeId = "place_id";
         restaurantPojo.name = "name";
         restaurantPojo.vicinity = "vicinity";
         Location location = new Location();
@@ -53,6 +61,20 @@ public class APIUtils {
         restaurantPojo.geometry = geometry;
         restaurantPojoList.add(restaurantPojo);
         return restaurantPojoList;
+    }
+
+    public static List<PredictionPojo> getPredictionPojoList() {
+        List<PredictionPojo> predictionPojoList = new ArrayList<>();
+        PredictionPojo predictionPojo = new PredictionPojo();
+        predictionPojo.placeId = "place_id";
+        predictionPojo.description = "name";
+
+        List<String> typeList = new ArrayList<>();
+        typeList.add("restaurant");
+        predictionPojo.types = typeList;
+        Location location = new Location();
+        predictionPojoList.add(predictionPojo);
+        return predictionPojoList;
     }
 
 }
