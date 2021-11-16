@@ -43,7 +43,6 @@ import com.openclassrooms.oc_p7.models.Restaurant;
 import com.openclassrooms.oc_p7.services.factories.MapViewModelFactory;
 import com.openclassrooms.oc_p7.services.factories.WorkmateViewModelFactory;
 import com.openclassrooms.oc_p7.services.utils.OnMapQueryEvent;
-import com.openclassrooms.oc_p7.services.utils.OnQueryEvent;
 import com.openclassrooms.oc_p7.services.utils.ReminderBroadcast;
 import com.openclassrooms.oc_p7.view_models.LoginViewModel;
 import com.openclassrooms.oc_p7.view_models.MapViewModel;
@@ -108,21 +107,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         workmateViewModel.getWorkmateList();
 
         return fragmentMapBinding.getRoot();
-    }
-
-    @Subscribe
-    public void onQueryEvent(OnQueryEvent onQueryEvent) {
-/*
-        if (onQueryEvent.getRequestedPlace() != null) {
-            Log.d(TAG, "onQueryEvent " + onQueryEvent.getRequestedPlace().getName() + " " + onQueryEvent.getRequestedPlace().getAddress());
-            focusToQuery(onQueryEvent.getRequestedPlace());
-        }
-        if (onQueryEvent.getQueryForMap() != null) {
-            mapViewModel.getRequestedRestaurants(onQueryEvent.getQueryForMap(), currentLatLng);
-        }
-
-
- */
     }
 
     @Subscribe

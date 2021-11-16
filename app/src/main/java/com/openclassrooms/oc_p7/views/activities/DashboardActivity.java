@@ -36,7 +36,6 @@ import com.openclassrooms.oc_p7.models.Restaurant;
 import com.openclassrooms.oc_p7.services.firestore_helpers.UserHelper;
 import com.openclassrooms.oc_p7.services.utils.OnDestinationChangedEvent;
 import com.openclassrooms.oc_p7.services.utils.OnMapQueryEvent;
-import com.openclassrooms.oc_p7.services.utils.OnQueryEvent;
 import com.openclassrooms.oc_p7.services.utils.OnRestaurantQueryEvent;
 import com.openclassrooms.oc_p7.services.utils.OnWorkmateQueryEvent;
 
@@ -59,7 +58,6 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
     private SearchView searchView;
     private int currentFragment;
     private List<Restaurant> filteredList = new ArrayList<>();
-    private OnQueryEvent onQueryEvent = new OnQueryEvent();
     private OnRestaurantQueryEvent onRestaurantQueryEvent = new OnRestaurantQueryEvent();
     private OnWorkmateQueryEvent onWorkmateQueryEvent = new OnWorkmateQueryEvent();
     private OnMapQueryEvent onMapQueryEvent = new OnMapQueryEvent();
@@ -177,19 +175,15 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
                                 onMapQueryEvent.setQueryForMap(query);
                                 EventBus.getDefault().post(onMapQueryEvent);
 
-
                             } else if (currentFragment == 1) {
                                 //LIST FRAGMENT
-                                onQueryEvent.setQueryForRestaurants(query);
+                                onRestaurantQueryEvent.setQueryForRestaurant(query);
+                                EventBus.getDefault().post(onRestaurantQueryEvent);
                             } else {
                                 //WORKMATES FRAGMENT
                                 onWorkmateQueryEvent.setQueryForWorkmate(query);
                                 EventBus.getDefault().post(onWorkmateQueryEvent);
-                                // onQueryEvent.setQueryForWorkmates(query);
-                                //WorkmateListFragment.query.postValue(query);
                             }
-
-                            EventBus.getDefault().post(onQueryEvent);
                             Log.d(TAG, "Can start query : " + query);
                         } else if (query.length() != 0) {
                             Toast toast = Toast.makeText(DashboardActivity.this, R.string.toolbar_query_too_short, Toast.LENGTH_LONG);
@@ -208,24 +202,16 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
 
                     @Override
                     public boolean onQueryTextChange(String newText) {
-                        if (currentFragment == 1) {
-                            //CASE RESTAURANTS
-                            Log.d(TAG, "onQueryTextChanged");
-                            onQueryEvent.setQueryForRestaurants(newText);
-                        } else {
-                            //CASE WORKMATES
+                        if (currentFragment == 2) {
+                            //WORKMATES FRAGMENT
                             onWorkmateQueryEvent.setQueryForWorkmate(newText);
                             EventBus.getDefault().post(onWorkmateQueryEvent);
-                            //onQueryEvent.setQueryForWorkmates(newText);
                         }
-                        //TODO: need different OnQueryEvent for each fragment
-                        //EventBus.getDefault().post(onQueryEvent);
+
                         return true;
                     }
                 });
 
-                //Filter
-                // }
                 return true;
             }
 
@@ -233,8 +219,13 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 Log.d(TAG, "onMenuItemActionCollapse");
                 searchView.setQuery(null, false);
+
                 onMapQueryEvent.setQueryForMap(null);
                 EventBus.getDefault().post(onMapQueryEvent);
+
+                onRestaurantQueryEvent.setQueryForRestaurant(null);
+                EventBus.getDefault().post(onRestaurantQueryEvent);
+
 
                 return true;
             }
@@ -250,9 +241,14 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
             @Override
             public void onClick(View v) {
                 searchView.setQuery(null, false);
+
                 onMapQueryEvent.setQueryForMap(null);
                 EventBus.getDefault().post(onMapQueryEvent);
-                //handle click
+
+                onRestaurantQueryEvent.setQueryForRestaurant(null);
+                EventBus.getDefault().post(onRestaurantQueryEvent);
+
+
             }
         });
 

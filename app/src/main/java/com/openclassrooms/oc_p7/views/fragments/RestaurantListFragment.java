@@ -11,8 +11,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.callbacks.OnRestaurantClickListener;
@@ -22,10 +24,11 @@ import com.openclassrooms.oc_p7.models.ErrorCode;
 import com.openclassrooms.oc_p7.models.Restaurant;
 import com.openclassrooms.oc_p7.services.factories.MapViewModelFactory;
 import com.openclassrooms.oc_p7.services.factories.WorkmateViewModelFactory;
-import com.openclassrooms.oc_p7.services.utils.OnQueryEvent;
+import com.openclassrooms.oc_p7.services.utils.OnRestaurantQueryEvent;
 import com.openclassrooms.oc_p7.view_models.MapViewModel;
 import com.openclassrooms.oc_p7.view_models.WorkmateViewModel;
 import com.openclassrooms.oc_p7.views.activities.DetailsActivity;
+import com.openclassrooms.oc_p7.views.adapters.RequestAdapter;
 import com.openclassrooms.oc_p7.views.adapters.RestaurantAdapter;
 
 import org.greenrobot.eventbus.EventBus;
@@ -40,7 +43,9 @@ public class RestaurantListFragment extends Fragment implements OnRestaurantClic
     private WorkmateViewModel workmateViewModel;
     private MapViewModel mapViewModel;
     private FragmentListRestaurantsBinding fragmentListRestaurantsBinding;
-    private RestaurantAdapter adapter;
+    private RestaurantAdapter restaurantAdapter;
+
+    private RequestAdapter requestAdapter;
     private List<Restaurant> restaurantList = new ArrayList<>();
     private List<Restaurant> filteredList = new ArrayList<>();
 
@@ -57,6 +62,7 @@ public class RestaurantListFragment extends Fragment implements OnRestaurantClic
         initViewModels();
         initPlaces();
         initRecyclerView();
+        initRequestRecyclerView();
         initObservers();
 
         workmateViewModel.getWorkmateList();
@@ -66,14 +72,36 @@ public class RestaurantListFragment extends Fragment implements OnRestaurantClic
     }
 
     @Subscribe
-    public void onQueryEvent(OnQueryEvent onQueryEvent) {
-        if (onQueryEvent.getQueryForRestaurants() != null) {
-            Log.d(TAG, "onQueryEvent : " + onQueryEvent.getQueryForRestaurants());
-            mapViewModel.filterList(onQueryEvent.getQueryForRestaurants());
+    public void onQueryEvent(OnRestaurantQueryEvent onQueryEvent) {
+        Log.d(TAG, "onRestaurantQuery Event : " + onQueryEvent.getQueryForRestaurant());
+        if (onQueryEvent.getQueryForRestaurant() != null) {
+            LatLng currentLatLng = new LatLng(mapViewModel.currentLocationLiveData.getValue().getLatitude(), mapViewModel.currentLocationLiveData.getValue().getLongitude());
+            mapViewModel.getRequestedRestaurants(onQueryEvent.getQueryForRestaurant(), currentLatLng);
+        } else {
+            requestAdapter.setData(new ArrayList<>());
         }
+    }
+
+
+    public void initRequestRecyclerView() {
+        requestAdapter = new RequestAdapter(new ArrayList<>(), new OnRestaurantClickListener() {
+            @Override
+            public void onRestaurantClick(Restaurant restaurant) {
+                requestAdapter.setData(new ArrayList<>());
+                startDetailsActivity(restaurant.getId());
+            }
+        });
+        fragmentListRestaurantsBinding.requestRecyclerView.setAdapter(requestAdapter);
+        fragmentListRestaurantsBinding.requestRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        fragmentListRestaurantsBinding.requestRecyclerView.addItemDecoration(new DividerItemDecoration(fragmentListRestaurantsBinding.getRoot().getContext(), LinearLayoutManager.VERTICAL));
 
     }
 
+    private void startDetailsActivity(String restaurantId) {
+        Intent intent = new Intent(fragmentListRestaurantsBinding.getRoot().getContext(), DetailsActivity.class);
+        intent.putExtra("restaurantId", restaurantId);
+        startActivity(intent);
+    }
 
     private void initViewModels() {
 
@@ -92,7 +120,7 @@ public class RestaurantListFragment extends Fragment implements OnRestaurantClic
     private void initObservers() {
 
         mapViewModel.currentLocationLiveData.observe(getViewLifecycleOwner(), currentLocation -> {
-            adapter.setCurrentLocation(currentLocation);
+            restaurantAdapter.setCurrentLocation(currentLocation);
 
         });
 
@@ -117,18 +145,25 @@ public class RestaurantListFragment extends Fragment implements OnRestaurantClic
         });
 
         mapViewModel.restaurantListLiveData.observe(getViewLifecycleOwner(), restaurantList -> {
-            adapter.setData(restaurantList);
+            restaurantAdapter.setData(restaurantList);
             workmateViewModel.getWorkmateForRestaurantList(mapViewModel.restaurantListLiveData);
             Log.d(TAG, "nearbyPlacesObserver from Restaurant" + restaurantList.size());
 
+        });
+
+        mapViewModel.requestedRestaurantList.observe(getViewLifecycleOwner(), requestedRestaurantList -> {
+            if (requestedRestaurantList.isEmpty())
+                Toast.makeText(fragmentListRestaurantsBinding.getRoot().getContext(), getString(R.string.map_not_found), Toast.LENGTH_SHORT).show();
+
+            requestAdapter.setData(requestedRestaurantList);
         });
 
     }
 
 
     private void initRecyclerView() {
-        adapter = new RestaurantAdapter(new ArrayList<>(20), this, mapViewModel);
-        fragmentListRestaurantsBinding.restaurantRecyclerView.setAdapter(adapter);
+        restaurantAdapter = new RestaurantAdapter(new ArrayList<>(20), this, mapViewModel);
+        fragmentListRestaurantsBinding.restaurantRecyclerView.setAdapter(restaurantAdapter);
         fragmentListRestaurantsBinding.restaurantRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
