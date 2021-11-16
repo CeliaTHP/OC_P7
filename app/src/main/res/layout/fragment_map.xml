@@ -34,13 +34,13 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <ListView
-            android:id="@+id/mapListView"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/mapRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:listitem="@layout/dropdown_list" />
+            tools:listitem="@layout/item_layout_request" />
 
 
         <!-- BUTTONS

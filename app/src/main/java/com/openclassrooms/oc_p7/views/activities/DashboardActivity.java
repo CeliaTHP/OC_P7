@@ -225,6 +225,11 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
+                Log.d(TAG, "onMenuItemActionCollapse");
+                searchView.setQuery(null, false);
+                onMapQueryEvent.setQueryForMap(null);
+                EventBus.getDefault().post(onMapQueryEvent);
+
                 return true;
             }
 
@@ -246,19 +251,6 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
         });
 
 
-        searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
-            @Override
-            public boolean onSuggestionSelect(int position) {
-                Log.d(TAG, "onSuggestionSelected : ");
-                return false;
-            }
-
-            @Override
-            public boolean onSuggestionClick(int position) {
-                Log.d(TAG, "onSuggestionClick : ");
-                return false;
-            }
-        });
     }
 
 

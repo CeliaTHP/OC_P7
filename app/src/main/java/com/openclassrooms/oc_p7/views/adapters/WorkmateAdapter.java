@@ -64,6 +64,8 @@ public class WorkmateAdapter extends RecyclerView.Adapter<WorkmateViewHolder.Vie
 
     public void setData(List<Workmate> workmateList) {
         this.workmateList = workmateList;
+        notifyDataSetChanged();
+
     }
 
     @Override

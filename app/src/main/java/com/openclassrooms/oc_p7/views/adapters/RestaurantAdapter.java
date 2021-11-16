@@ -40,21 +40,6 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
         this.restaurantList = new ArrayList<>(restaurantList.size());
         for (Restaurant restaurant : restaurantList) {
             this.restaurantList.add(restaurant.clone());
-            /*
-            Restaurant restaurantToCreate = new Restaurant(restaurant.getId(),restaurant.getName(),restaurant.getAddress(),restaurant.getLat(),restaurant.getLng());
-            restaurantToCreate.setHasWorkmates(restaurant.getHasWorkmates());
-            restaurantToCreate.setHasDetails(restaurant.getHasDetails());
-            restaurantToCreate.setPhotoReference(restaurant.getPhotoReferences());
-            restaurantToCreate.setDistance(restaurant.getDistance());
-            restaurantToCreate.setIsLiked(restaurant.getIsLiked());
-            restaurantToCreate.setAttendees(restaurant.getAttendees());
-            restaurantToCreate.setIsChosen(restaurant.getIsChosen());
-            restaurantToCreate.setWebsite(restaurant.getWebsite());
-            restaurantToCreate.set(restaurant.getDistance());
-
-
-
-*/
 
         }
         this.onRestaurantClickListener = onRestaurantClickListener;
@@ -80,7 +65,6 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
         if (!restaurant.getHasDetails()) {
             mapViewModel.updateRestaurantDetails(restaurant);
         }
-
 
         Location location = new Location("");
         location.setLatitude(restaurant.getLat());

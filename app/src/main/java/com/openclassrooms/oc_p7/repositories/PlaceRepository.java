@@ -126,9 +126,6 @@ public class PlaceRepository {
                     }
                     Log.d(TAG, "requestedId List : " + requestedRestaurantList.size());
 
-                    if (requestedRestaurantList.isEmpty()) {
-                        errorCode.postValue(ErrorCode.NOT_FOUND);
-                    }
                     requestedRestaurantsListMutableLiveData.postValue(requestedRestaurantList);
 
                 } else {

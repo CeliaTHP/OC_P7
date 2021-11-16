@@ -77,7 +77,6 @@ public class WorkmateListFragment extends Fragment {
             }
             if (adapter != null) {
                 adapter.setData(filteredList);
-                adapter.notifyDataSetChanged();
             }
         }
     }
@@ -103,7 +102,6 @@ public class WorkmateListFragment extends Fragment {
                 Log.d(TAG, workmate.getName() + " " + workmate.getPicUrl());
             }
             adapter.setData(workmateList);
-            adapter.notifyDataSetChanged();
         });
 
         /*

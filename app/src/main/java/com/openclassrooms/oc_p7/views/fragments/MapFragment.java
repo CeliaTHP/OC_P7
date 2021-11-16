@@ -12,8 +12,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -23,6 +21,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -35,6 +34,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.openclassrooms.oc_p7.R;
+import com.openclassrooms.oc_p7.callbacks.OnRestaurantClickListener;
 import com.openclassrooms.oc_p7.databinding.FragmentMapBinding;
 import com.openclassrooms.oc_p7.injections.Injection;
 import com.openclassrooms.oc_p7.models.ErrorCode;
@@ -48,6 +48,7 @@ import com.openclassrooms.oc_p7.view_models.LoginViewModel;
 import com.openclassrooms.oc_p7.view_models.MapViewModel;
 import com.openclassrooms.oc_p7.view_models.WorkmateViewModel;
 import com.openclassrooms.oc_p7.views.activities.DetailsActivity;
+import com.openclassrooms.oc_p7.views.adapters.RequestAdapter;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -64,6 +65,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private MapViewModel mapViewModel;
     private WorkmateViewModel workmateViewModel;
+    private RequestAdapter adapter;
 
     private List<Restaurant> restaurantList = new ArrayList<>();
 
@@ -101,6 +103,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         initMap(savedInstanceState);
         initObservers();
         initListeners();
+        initRecyclerView();
         workmateViewModel.getWorkmateList();
 
         return fragmentMapBinding.getRoot();
@@ -123,15 +126,29 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     @Subscribe
     public void onMapQueryEvent(OnMapQueryEvent onMapQueryEvent) {
-        if (onMapQueryEvent.getQueryForMap() != null) {
+        Log.d(TAG, "onMapQuery Event : " + onMapQueryEvent.getQueryForMap());
+        if (onMapQueryEvent.getQueryForMap() != null)
             mapViewModel.getRequestedRestaurants(onMapQueryEvent.getQueryForMap(), currentLatLng);
-            Log.d(TAG, "onMapQuery Event : " + onMapQueryEvent.getQueryForMap());
+        else {
+            adapter.setData(new ArrayList<>());
         }
 
     }
 
+    public void initRecyclerView() {
+        adapter = new RequestAdapter(new ArrayList<>(), new OnRestaurantClickListener() {
+            @Override
+            public void onRestaurantClick(Restaurant restaurant) {
+                focusToQuery(restaurant);
+            }
+        });
+        fragmentMapBinding.mapRecyclerView.setAdapter(adapter);
+        fragmentMapBinding.mapRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+    }
+
 
     public void focusToQuery(Restaurant restaurant) {
+        adapter.setData(new ArrayList<>());
         if (restaurant.getLat() != null && restaurant.getLng() != 0.0) {
             LatLng latLng = new LatLng(restaurant.getLat(), restaurant.getLng());
             if (requestedMarker != null) {
@@ -226,11 +243,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mapViewModel.placeRepositoryErrorCodeMutableLiveData.observe(getViewLifecycleOwner(), errorCode -> {
             if (errorCode == ErrorCode.CONNECTION_ERROR) {
                 Toast.makeText(fragmentMapBinding.getRoot().getContext(), getString(R.string.map_data_format_error), Toast.LENGTH_LONG).show();
-            } else if (errorCode == ErrorCode.UNSUCCESSFUL_RESPONSE) {
-                Toast.makeText(fragmentMapBinding.getRoot().getContext(), getString(R.string.map_response_error), Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(fragmentMapBinding.getRoot().getContext(), getString(R.string.map_not_found), Toast.LENGTH_SHORT).show();
-
+                Toast.makeText(fragmentMapBinding.getRoot().getContext(), getString(R.string.map_response_error), Toast.LENGTH_LONG).show();
             }
 
         });
@@ -284,6 +298,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         });
 
         mapViewModel.requestedRestaurantList.observe(getViewLifecycleOwner(), requestedRestaurantList -> {
+            if (requestedRestaurantList.isEmpty())
+                Toast.makeText(fragmentMapBinding.getRoot().getContext(), getString(R.string.map_not_found), Toast.LENGTH_SHORT).show();
+
+            adapter.setData(requestedRestaurantList);
+
+
+            /*
             requestedRestaurantNameList.clear();
 
             for (Restaurant restaurant : requestedRestaurantList) {
@@ -309,6 +330,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             fragmentMapBinding.mapListView.setClickable(true);
             fragmentMapBinding.mapListView.setAdapter(arrayAdapter);
 
+
+             */
         });
 
     }
