@@ -21,7 +21,7 @@ import com.openclassrooms.oc_p7.databinding.FragmentListWorkmatesBinding;
 import com.openclassrooms.oc_p7.injections.Injection;
 import com.openclassrooms.oc_p7.models.Workmate;
 import com.openclassrooms.oc_p7.services.factories.WorkmateViewModelFactory;
-import com.openclassrooms.oc_p7.services.utils.OnQueryEvent;
+import com.openclassrooms.oc_p7.services.utils.OnWorkmateQueryEvent;
 import com.openclassrooms.oc_p7.view_models.WorkmateViewModel;
 import com.openclassrooms.oc_p7.views.activities.DetailsActivity;
 import com.openclassrooms.oc_p7.views.adapters.WorkmateAdapter;
@@ -64,10 +64,10 @@ public class WorkmateListFragment extends Fragment {
     }
 
     @Subscribe
-    public void onQueryEvent(OnQueryEvent onQueryEvent) {
-        if (onQueryEvent.getQueryForWorkmates() != null) {
-            Log.d(TAG, "onQueryEvent " + onQueryEvent.getQueryForWorkmates());
-            String query = onQueryEvent.getQueryForWorkmates();
+    public void onQueryEvent(OnWorkmateQueryEvent onWorkmateQueryEvent) {
+        if (onWorkmateQueryEvent.getQueryForWorkmate() != null) {
+            Log.d(TAG, "onQueryEvent " + onWorkmateQueryEvent.getQueryForWorkmate());
+            String query = onWorkmateQueryEvent.getQueryForWorkmate();
             filteredList.clear();
             for (Workmate workmate : workmateList) {
                 if (workmate.getName().toLowerCase().contains(query.toLowerCase()) ||
@@ -80,6 +80,7 @@ public class WorkmateListFragment extends Fragment {
             }
         }
     }
+
 
     @Override
     public void onAttach(@NonNull @NotNull Context context) {

@@ -21,6 +21,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -144,6 +145,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         });
         fragmentMapBinding.mapRecyclerView.setAdapter(adapter);
         fragmentMapBinding.mapRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        fragmentMapBinding.mapRecyclerView.addItemDecoration(new DividerItemDecoration(fragmentMapBinding.getRoot().getContext(), LinearLayoutManager.VERTICAL));
+
     }
 
 

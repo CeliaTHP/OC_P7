@@ -13,7 +13,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
@@ -24,11 +23,9 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.common.api.Status;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.Autocomplete;
-import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -40,6 +37,8 @@ import com.openclassrooms.oc_p7.services.firestore_helpers.UserHelper;
 import com.openclassrooms.oc_p7.services.utils.OnDestinationChangedEvent;
 import com.openclassrooms.oc_p7.services.utils.OnMapQueryEvent;
 import com.openclassrooms.oc_p7.services.utils.OnQueryEvent;
+import com.openclassrooms.oc_p7.services.utils.OnRestaurantQueryEvent;
+import com.openclassrooms.oc_p7.services.utils.OnWorkmateQueryEvent;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -61,6 +60,8 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
     private int currentFragment;
     private List<Restaurant> filteredList = new ArrayList<>();
     private OnQueryEvent onQueryEvent = new OnQueryEvent();
+    private OnRestaurantQueryEvent onRestaurantQueryEvent = new OnRestaurantQueryEvent();
+    private OnWorkmateQueryEvent onWorkmateQueryEvent = new OnWorkmateQueryEvent();
     private OnMapQueryEvent onMapQueryEvent = new OnMapQueryEvent();
     private Menu menu;
 
@@ -174,17 +175,20 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
                             if (currentFragment == 0) {
                                 //MAP FRAGMENT
                                 onMapQueryEvent.setQueryForMap(query);
+                                EventBus.getDefault().post(onMapQueryEvent);
+
 
                             } else if (currentFragment == 1) {
                                 //LIST FRAGMENT
                                 onQueryEvent.setQueryForRestaurants(query);
                             } else {
                                 //WORKMATES FRAGMENT
-
-                                onQueryEvent.setQueryForWorkmates(query);
+                                onWorkmateQueryEvent.setQueryForWorkmate(query);
+                                EventBus.getDefault().post(onWorkmateQueryEvent);
+                                // onQueryEvent.setQueryForWorkmates(query);
                                 //WorkmateListFragment.query.postValue(query);
                             }
-                            EventBus.getDefault().post(onMapQueryEvent);
+
                             EventBus.getDefault().post(onQueryEvent);
                             Log.d(TAG, "Can start query : " + query);
                         } else if (query.length() != 0) {
@@ -210,7 +214,9 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
                             onQueryEvent.setQueryForRestaurants(newText);
                         } else {
                             //CASE WORKMATES
-                            onQueryEvent.setQueryForWorkmates(newText);
+                            onWorkmateQueryEvent.setQueryForWorkmate(newText);
+                            EventBus.getDefault().post(onWorkmateQueryEvent);
+                            //onQueryEvent.setQueryForWorkmates(newText);
                         }
                         //TODO: need different OnQueryEvent for each fragment
                         //EventBus.getDefault().post(onQueryEvent);
@@ -270,34 +276,37 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
 
     }
 
+    /*
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                toolbar.collapseActionView();
-                Place place = Autocomplete.getPlaceFromIntent(data);
-                Log.d(TAG, "Place: " + place.getName() + ", " + place.getId());
-                onQueryEvent.setRequestedPlace(place);
-                EventBus.getDefault().post(onQueryEvent);
-                //MapFragment.requestedPlace.postValue(place);
-                //startDetailsActivity(place.getId());
-            } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
-                // TODO: Handle the error.
-                Status status = Autocomplete.getStatusFromIntent(data);
-                Log.i(TAG, status.getStatusMessage());
-            } else if (resultCode == RESULT_CANCELED) {
-                // The user canceled the operation.
-                toolbar.collapseActionView();
-                Log.d(TAG, "Autocomplete canceled");
+        @Override
+        protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+            if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
+                if (resultCode == RESULT_OK) {
+                    toolbar.collapseActionView();
+                    Place place = Autocomplete.getPlaceFromIntent(data);
+                    Log.d(TAG, "Place: " + place.getName() + ", " + place.getId());
+                    onQueryEvent.setRequestedPlace(place);
+                    EventBus.getDefault().post(onQueryEvent);
+                    //MapFragment.requestedPlace.postValue(place);
+                    //startDetailsActivity(place.getId());
+                } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+                    // TODO: Handle the error.
+                    Status status = Autocomplete.getStatusFromIntent(data);
+                    Log.i(TAG, status.getStatusMessage());
+                } else if (resultCode == RESULT_CANCELED) {
+                    // The user canceled the operation.
+                    toolbar.collapseActionView();
+                    Log.d(TAG, "Autocomplete canceled");
 
+                }
+                return;
             }
-            return;
+            super.onActivityResult(requestCode, resultCode, data);
         }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
 
 
+
+     */
     private void startDetailsActivity(String restaurantId) {
         Intent intent = new Intent(this, DetailsActivity.class);
         intent.putExtra("restaurantId", restaurantId);
