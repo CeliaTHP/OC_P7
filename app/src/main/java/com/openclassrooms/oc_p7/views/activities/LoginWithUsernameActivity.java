@@ -18,7 +18,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.auth.FirebaseUser;
 import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.databinding.ActivityLoginWithUsernameBinding;
-import com.openclassrooms.oc_p7.services.firestore_helpers.UserHelper;
+import com.openclassrooms.oc_p7.services.firestore_database.UserHelper;
 import com.openclassrooms.oc_p7.view_models.LoginViewModel;
 
 import org.jetbrains.annotations.NotNull;

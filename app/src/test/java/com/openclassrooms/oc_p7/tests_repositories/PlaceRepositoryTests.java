@@ -74,7 +74,7 @@ public class PlaceRepositoryTests {
     }
 
     @Test
-    public void getNearbyPlacesTestsUnsuccessfullResponse() throws IOException {
+    public void getNearbyPlacesTestsUnsuccessfulResponse() throws IOException {
         Call<NearbyPlaceResponse> call = APIUtils.getCallMock(false, APIUtils.getNearbyPlaceResponse());
         Mockito.when(placesApiMock.getNearbyPlaces(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(call);
         String expectedLocationStringQuery = expectedLocation.getLatitude() + "," + expectedLocation.getLongitude();
@@ -117,38 +117,41 @@ public class PlaceRepositoryTests {
         Mockito.verify(requestedRestaurantList).postValue(RepositoryUtils.getRequestedRestaurantList());
     }
 
-    /*
+
     @Test
-    public void getNearbyPlacesTestsUnsuccessfullResponse() throws IOException {
-        Call<NearbyPlaceResponse> call = APIUtils.getCallMock(false, APIUtils.getNearbyPlaceResponse());
-        Mockito.when(placesApiMock.getNearbyPlaces(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(call);
+    public void getRequestedPlacesTestsUnsuccessfulResponse() throws IOException {
+        String input = "input";
+        Call<AutocompleteResponse> call = APIUtils.getCallMock(false, APIUtils.getRequestedPlaceResponse());
         String expectedLocationStringQuery = expectedLocation.getLatitude() + "," + expectedLocation.getLongitude();
+        Mockito.when(placesApiMock.getRequestedPlaces(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(call);
+        LatLng latLng = new LatLng(expectedLocation.getLatitude(), expectedLocation.getLongitude());
 
-        placeRepository.getNearbyPlaces(expectedLocation);
+        placeRepository.getRequestedRestaurants(input, latLng);
 
-        Mockito.verify(placesApiMock).getNearbyPlaces(fakeApiKey, expectedLocationStringQuery, expectedRadiusQuery, expectedRestaurantQuery);
+        Mockito.verify(placesApiMock).getRequestedPlaces(fakeApiKey, language, expectedLocationStringQuery, expectedRadiusQuery, input);
         Mockito.verify(call).execute();
         Mockito.verify(errorCodeMutableLiveDataMock).postValue(ErrorCode.UNSUCCESSFUL_RESPONSE);
 
     }
 
     @Test
-    public void getNearbyPlacesTestIOException() throws IOException {
-
-        Call<NearbyPlaceResponse> call = APIUtils.getCallMock(true, APIUtils.getNearbyPlaceResponse());
+    public void getRequestedPlacesTestIOException() throws IOException {
+        String input = "input";
+        Call<AutocompleteResponse> call = APIUtils.getCallMock(false, APIUtils.getRequestedPlaceResponse());
         String expectedLocationStringQuery = expectedLocation.getLatitude() + "," + expectedLocation.getLongitude();
-        Mockito.when(placesApiMock.getNearbyPlaces(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(call);
+        LatLng latLng = new LatLng(expectedLocation.getLatitude(), expectedLocation.getLongitude());
+        Mockito.when(placesApiMock.getRequestedPlaces(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(call);
         Mockito.doThrow(new IOException()).when(call).execute();
 
-        placeRepository.getNearbyPlaces(expectedLocation);
 
-        Mockito.verify(placesApiMock).getNearbyPlaces(fakeApiKey, expectedLocationStringQuery, expectedRadiusQuery, expectedRestaurantQuery);
+        placeRepository.getRequestedRestaurants(input, latLng);
+
+        Mockito.verify(placesApiMock).getRequestedPlaces(fakeApiKey, language, expectedLocationStringQuery, expectedRadiusQuery, input);
+        Mockito.verify(call).execute();
         Mockito.verify(errorCodeMutableLiveDataMock).postValue(ErrorCode.CONNECTION_ERROR);
-
     }
 
 
-     */
     @Test
     public void updateRestaurantDetailsTestSuccess() throws IOException {
 
@@ -170,23 +173,7 @@ public class PlaceRepositoryTests {
     }
 
     @Test
-    public void getRestaurantDetailsTestSuccess() throws IOException {
-
-        Call<DetailsPlaceResponse> call = APIUtils.getCallMock(true, APIUtils.getDetailsPlaceResponse());
-        String expectedRestaurantId = "42";
-        Restaurant expectedRestaurant = RepositoryUtils.getRestaurantList().get(0);
-        Mockito.when(placesApiMock.getDetailsById(fakeApiKey, expectedRestaurantId)).thenReturn(call);
-
-        placeRepository.getRestaurantDetails(expectedRestaurantId);
-
-        Mockito.verify(placesApiMock).getDetailsById(fakeApiKey, expectedRestaurantId);
-        Mockito.verify(call).execute();
-        Mockito.verify(restaurantLiveDataMock).postValue(expectedRestaurant);
-
-    }
-
-    @Test
-    public void updateRestaurantDetailsUnsuccessfullResponse() throws IOException {
+    public void updateRestaurantDetailsUnsuccessfulResponse() throws IOException {
 
         Call<DetailsPlaceResponse> call = APIUtils.getCallMock(false, APIUtils.getDetailsPlaceResponse());
         String expectedRestaurantId = "42";
@@ -198,21 +185,6 @@ public class PlaceRepositoryTests {
 
         Mockito.verify(placesApiMock).getDetailsById(fakeApiKey, expectedRestaurantId);
         Mockito.verify(restaurantListLiveDataMock).getValue();
-        Mockito.verify(call).execute();
-        Mockito.verify(errorCodeMutableLiveDataMock).postValue(ErrorCode.UNSUCCESSFUL_RESPONSE);
-
-    }
-
-    @Test
-    public void getRestaurantDetailsUnsuccessfullResponse() throws IOException {
-
-        Call<DetailsPlaceResponse> call = APIUtils.getCallMock(false, APIUtils.getDetailsPlaceResponse());
-        String expectedRestaurantId = "42";
-        Mockito.when(placesApiMock.getDetailsById(fakeApiKey, expectedRestaurantId)).thenReturn(call);
-
-        placeRepository.getRestaurantDetails(expectedRestaurantId);
-
-        Mockito.verify(placesApiMock).getDetailsById(fakeApiKey, expectedRestaurantId);
         Mockito.verify(call).execute();
         Mockito.verify(errorCodeMutableLiveDataMock).postValue(ErrorCode.UNSUCCESSFUL_RESPONSE);
 
@@ -237,6 +209,38 @@ public class PlaceRepositoryTests {
     }
 
     @Test
+    public void getRestaurantDetailsTestSuccess() throws IOException {
+
+        Call<DetailsPlaceResponse> call = APIUtils.getCallMock(true, APIUtils.getDetailsPlaceResponse());
+        String expectedRestaurantId = "42";
+        Mockito.when(placesApiMock.getDetailsById(fakeApiKey, expectedRestaurantId)).thenReturn(call);
+
+        placeRepository.getRestaurantDetails(expectedRestaurantId);
+
+        Mockito.verify(placesApiMock).getDetailsById(fakeApiKey, expectedRestaurantId);
+        Mockito.verify(call).execute();
+        //DOES NOT WORK WITH AN EXPECTED RESTAURANT BECAUSE THE HAS DETAILS CHANGE
+        Mockito.verify(restaurantLiveDataMock).postValue(Mockito.any());
+
+    }
+
+    @Test
+    public void getRestaurantDetailsUnsuccessfulResponse() throws IOException {
+
+        Call<DetailsPlaceResponse> call = APIUtils.getCallMock(false, APIUtils.getDetailsPlaceResponse());
+        String expectedRestaurantId = "42";
+        Mockito.when(placesApiMock.getDetailsById(fakeApiKey, expectedRestaurantId)).thenReturn(call);
+
+        placeRepository.getRestaurantDetails(expectedRestaurantId);
+
+        Mockito.verify(placesApiMock).getDetailsById(fakeApiKey, expectedRestaurantId);
+        Mockito.verify(call).execute();
+        Mockito.verify(errorCodeMutableLiveDataMock).postValue(ErrorCode.UNSUCCESSFUL_RESPONSE);
+
+    }
+
+
+    @Test
     public void getRestaurantDetailsIOException() throws IOException {
 
         Call<DetailsPlaceResponse> call = APIUtils.getCallMock(true, APIUtils.getDetailsPlaceResponse());
@@ -247,6 +251,57 @@ public class PlaceRepositoryTests {
         placeRepository.getRestaurantDetails(expectedRestaurantId);
 
         Mockito.verify(placesApiMock).getDetailsById(fakeApiKey, expectedRestaurantId);
+        Mockito.verify(errorCodeMutableLiveDataMock).postValue(ErrorCode.CONNECTION_ERROR);
+
+    }
+
+    @Test
+    public void updateRequestedRestaurantTestSuccess() throws IOException {
+
+        Call<DetailsPlaceResponse> detailsCall = APIUtils.getCallMock(true, APIUtils.getDetailsPlaceResponse());
+        String expectedRestaurantId = "42";
+        List<Restaurant> expectedRestaurantList = RepositoryUtils.getRestaurantList();
+        Mockito.when(placesApiMock.getDetailsById(fakeApiKey, expectedRestaurantId)).thenReturn(detailsCall);
+        Mockito.when(requestedRestaurantList.getValue()).thenReturn(expectedRestaurantList);
+
+        placeRepository.updateRequestedRestaurantDetails(expectedRestaurantId);
+
+        Mockito.verify(placesApiMock).getDetailsById(fakeApiKey, expectedRestaurantId);
+        Mockito.verify(requestedRestaurantList).getValue();
+        Mockito.verify(detailsCall).execute();
+        Mockito.verify(requestedRestaurantList).postValue(expectedRestaurantList);
+
+    }
+
+    @Test
+    public void updateRequestedRestaurantTestUnsuccessfulResponse() throws IOException {
+
+        Call<DetailsPlaceResponse> detailsCall = APIUtils.getCallMock(false, APIUtils.getDetailsPlaceResponse());
+        String expectedRestaurantId = "42";
+        Mockito.when(placesApiMock.getDetailsById(fakeApiKey, expectedRestaurantId)).thenReturn(detailsCall);
+
+        placeRepository.updateRequestedRestaurantDetails(expectedRestaurantId);
+
+        Mockito.verify(placesApiMock).getDetailsById(fakeApiKey, expectedRestaurantId);
+        Mockito.verify(requestedRestaurantList).getValue();
+        Mockito.verify(detailsCall).execute();
+        Mockito.verify(errorCodeMutableLiveDataMock).postValue(ErrorCode.UNSUCCESSFUL_RESPONSE);
+
+    }
+
+    @Test
+    public void updateRequestedRestaurantTestIOException() throws IOException {
+
+        Call<DetailsPlaceResponse> detailsCall = APIUtils.getCallMock(false, APIUtils.getDetailsPlaceResponse());
+        String expectedRestaurantId = "42";
+        Mockito.when(placesApiMock.getDetailsById(fakeApiKey, expectedRestaurantId)).thenReturn(detailsCall);
+        Mockito.doThrow(new IOException()).when(detailsCall).execute();
+
+        placeRepository.updateRequestedRestaurantDetails(expectedRestaurantId);
+
+        Mockito.verify(placesApiMock).getDetailsById(fakeApiKey, expectedRestaurantId);
+        Mockito.verify(requestedRestaurantList).getValue();
+        Mockito.verify(detailsCall).execute();
         Mockito.verify(errorCodeMutableLiveDataMock).postValue(ErrorCode.CONNECTION_ERROR);
 
     }

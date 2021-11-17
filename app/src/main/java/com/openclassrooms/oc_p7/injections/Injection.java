@@ -16,7 +16,7 @@ import com.openclassrooms.oc_p7.services.apis.PlacesApi;
 import com.openclassrooms.oc_p7.services.factories.DetailViewModelFactory;
 import com.openclassrooms.oc_p7.services.factories.MapViewModelFactory;
 import com.openclassrooms.oc_p7.services.factories.WorkmateViewModelFactory;
-import com.openclassrooms.oc_p7.services.firestore_helpers.WorkmateHelper;
+import com.openclassrooms.oc_p7.services.firestore_database.WorkmateHelper;
 
 import java.util.concurrent.Executors;
 

@@ -11,7 +11,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.openclassrooms.oc_p7.models.ErrorCode;
 import com.openclassrooms.oc_p7.models.Restaurant;
 import com.openclassrooms.oc_p7.models.Workmate;
-import com.openclassrooms.oc_p7.services.firestore_helpers.WorkmateHelper;
+import com.openclassrooms.oc_p7.services.firestore_database.WorkmateHelper;
 
 import java.util.ArrayList;
 import java.util.List;

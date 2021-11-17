@@ -22,7 +22,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
 import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.databinding.ActivityLoginBinding;
-import com.openclassrooms.oc_p7.services.firestore_helpers.UserHelper;
+import com.openclassrooms.oc_p7.services.firestore_database.UserHelper;
 import com.openclassrooms.oc_p7.services.utils.NetworkChecker;
 import com.openclassrooms.oc_p7.view_models.LoginViewModel;
 

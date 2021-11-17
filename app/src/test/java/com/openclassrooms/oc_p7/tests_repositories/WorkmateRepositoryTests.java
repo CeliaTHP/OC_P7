@@ -14,7 +14,7 @@ import com.openclassrooms.oc_p7.models.ErrorCode;
 import com.openclassrooms.oc_p7.models.Restaurant;
 import com.openclassrooms.oc_p7.models.Workmate;
 import com.openclassrooms.oc_p7.repositories.WorkmateRepository;
-import com.openclassrooms.oc_p7.services.firestore_helpers.WorkmateHelper;
+import com.openclassrooms.oc_p7.services.firestore_database.WorkmateHelper;
 import com.openclassrooms.oc_p7.utils.FirestoreUtils;
 import com.openclassrooms.oc_p7.utils.RepositoryUtils;
 

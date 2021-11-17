@@ -1,4 +1,4 @@
-package com.openclassrooms.oc_p7.services.firestore_helpers;
+package com.openclassrooms.oc_p7.services.firestore_database;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;

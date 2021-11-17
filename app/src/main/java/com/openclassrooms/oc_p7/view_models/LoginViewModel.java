@@ -27,7 +27,7 @@ import com.google.firebase.auth.OAuthProvider;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.openclassrooms.oc_p7.models.Workmate;
 import com.openclassrooms.oc_p7.services.dummies.DummyWorkmateGenerator;
-import com.openclassrooms.oc_p7.services.firestore_helpers.WorkmateHelper;
+import com.openclassrooms.oc_p7.services.firestore_database.WorkmateHelper;
 import com.openclassrooms.oc_p7.views.activities.LoginActivity;
 
 import org.jetbrains.annotations.NotNull;
