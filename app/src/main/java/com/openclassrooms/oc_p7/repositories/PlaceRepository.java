@@ -220,14 +220,14 @@ public class PlaceRepository {
     }
 
 
-     public static List<Restaurant> getRestaurantList(List<RestaurantPojo> restaurantPojoList) {
-         List<Restaurant> restaurantList = new ArrayList<>();
-         for (RestaurantPojo restaurantPojo : restaurantPojoList) {
-             Restaurant restaurant = createRestaurant(restaurantPojo);
-             restaurantList.add(restaurant);
-         }
-         return restaurantList;
-     }
+    public static List<Restaurant> getRestaurantList(List<RestaurantPojo> restaurantPojoList) {
+        List<Restaurant> restaurantList = new ArrayList<>();
+        for (RestaurantPojo restaurantPojo : restaurantPojoList) {
+            Restaurant restaurant = createRestaurant(restaurantPojo);
+            restaurantList.add(restaurant);
+        }
+        return restaurantList;
+    }
 
     static public List<Restaurant> getRequestedRestaurantList(List<PredictionPojo> predictionPojoList) {
         List<Restaurant> restaurantList = new ArrayList<>();

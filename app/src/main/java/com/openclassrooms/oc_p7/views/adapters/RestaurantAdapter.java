@@ -76,9 +76,17 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
         holder.itemLayoutRestaurantBinding.itemRestaurantRating.setStepSize(0.01f);
         holder.itemLayoutRestaurantBinding.itemRestaurantRating.setRating((float) (restaurant.getRating() * 3.0 / 5.0));
         holder.itemLayoutRestaurantBinding.itemRestaurantRating.invalidate();
-        if (currentLocation != null)
-            holder.itemLayoutRestaurantBinding.itemRestaurantDistance.setText(holder.itemView.getContext().getString(R.string.item_restaurant_distance, location.distanceTo(currentLocation)));
-        else {
+
+        if (currentLocation != null) {
+            restaurant.setDistance(location.distanceTo(currentLocation));
+            Log.d("DISTANCE", restaurant.getName() + " " + restaurant.getDistance() + " ");
+            if (restaurant.getDistance() < 1000)
+                holder.itemLayoutRestaurantBinding.itemRestaurantDistance.setText(holder.itemView.getContext().getString(R.string.item_restaurant_distance_meters, restaurant.getDistance()));
+            else {
+                holder.itemLayoutRestaurantBinding.itemRestaurantDistance.setText(holder.itemView.getContext().getString(R.string.item_restaurant_distance_kilometers, restaurant.getDistance() / 1000, restaurant.getDistance() % 1000));
+            }
+
+        } else {
             holder.itemLayoutRestaurantBinding.itemRestaurantDistance.setText(holder.itemView.getContext().getString(R.string.item_restaurant_no_info));
 
         }

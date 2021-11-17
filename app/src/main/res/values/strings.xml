@@ -70,7 +70,8 @@
     <!--LIST VIEW -->
     <string name="item_restaurant_address" translatable="false">%1$s</string>
     <string name="item_restaurant_name" translatable="false">%1$s</string>
-    <string name="item_restaurant_distance" translatable="false">%,.2f m</string>
+    <string name="item_restaurant_distance_meters" translatable="false">%,.2f m</string>
+    <string name="item_restaurant_distance_kilometers" translatable="false">%,.0f, %,.0f km</string>
     <string name="item_restaurant_attendees" translatable="false">( %1$d )</string>
     <string name="item_restaurant_hours">Ouvert jusqu\'à %1$s</string>
     <string name="item_restaurant_no_info">Non renseigné</string>

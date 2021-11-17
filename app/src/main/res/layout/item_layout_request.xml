@@ -6,6 +6,8 @@
     android:layout_height="wrap_content"
     android:background="@color/white_background"
     android:textSize="18sp"
+    android:padding="5dp"
+    android:layout_margin="10dp"
     android:textStyle="bold"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent"
