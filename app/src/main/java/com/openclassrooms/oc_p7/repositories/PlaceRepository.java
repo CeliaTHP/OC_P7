@@ -250,14 +250,6 @@ public class PlaceRepository {
         return new Restaurant(predictionPojo.placeId, null, null, 0.0, 0.0);
     }
 
-    /*
-    static private Restaurant createRestaurantWithPrediction(PredictionPojo predictionPojo) {
-        return new Restaurant(predictionPojo.placeId, predictionPojo.description, predictionPojo.ad, predictionPojo.geometry.location.lat, predictionPojo.geometry.location.lng);
-    }
-
-
-     */
-
     private void setRestaurantInfos(RestaurantPojo restaurantPojo, Restaurant restaurant) {
 
 

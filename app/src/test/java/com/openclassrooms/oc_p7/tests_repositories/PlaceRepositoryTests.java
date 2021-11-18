@@ -60,6 +60,8 @@ public class PlaceRepositoryTests {
         Mockito.verifyNoMoreInteractions(placesApiMock, restaurantListLiveDataMock);
     }
 
+
+    //region getNearbyPlaces
     @Test
     public void getNearbyPlacesTestsSuccess() throws IOException {
         Call<NearbyPlaceResponse> call = APIUtils.getCallMock(true, APIUtils.getNearbyPlaceResponse());
@@ -101,6 +103,10 @@ public class PlaceRepositoryTests {
         Mockito.verify(errorCodeMutableLiveDataMock).postValue(ErrorCode.CONNECTION_ERROR);
 
     }
+
+    //endregion
+
+    //region getRequestedPlaces
 
     @Test
     public void getRequestedPlacesTestsSuccess() throws IOException {
@@ -151,7 +157,9 @@ public class PlaceRepositoryTests {
         Mockito.verify(errorCodeMutableLiveDataMock).postValue(ErrorCode.CONNECTION_ERROR);
     }
 
+    //endregion
 
+    //region updateRestaurantDetails
     @Test
     public void updateRestaurantDetailsTestSuccess() throws IOException {
 
@@ -208,19 +216,24 @@ public class PlaceRepositoryTests {
 
     }
 
+    //endregion
+
+    //region getRestaurantDetails
     @Test
     public void getRestaurantDetailsTestSuccess() throws IOException {
 
         Call<DetailsPlaceResponse> call = APIUtils.getCallMock(true, APIUtils.getDetailsPlaceResponse());
         String expectedRestaurantId = "42";
+        Restaurant expectedRestaurant = RepositoryUtils.getRestaurantList().get(0);
         Mockito.when(placesApiMock.getDetailsById(fakeApiKey, expectedRestaurantId)).thenReturn(call);
 
         placeRepository.getRestaurantDetails(expectedRestaurantId);
+        expectedRestaurant.setHasDetails(true);
 
         Mockito.verify(placesApiMock).getDetailsById(fakeApiKey, expectedRestaurantId);
         Mockito.verify(call).execute();
         //DOES NOT WORK WITH AN EXPECTED RESTAURANT BECAUSE THE HAS DETAILS CHANGE
-        Mockito.verify(restaurantLiveDataMock).postValue(Mockito.any());
+        Mockito.verify(restaurantLiveDataMock).postValue(expectedRestaurant);
 
     }
 
@@ -255,6 +268,9 @@ public class PlaceRepositoryTests {
 
     }
 
+    //endregion
+
+    //region updateRequestedRestaurant
     @Test
     public void updateRequestedRestaurantTestSuccess() throws IOException {
 
@@ -305,6 +321,8 @@ public class PlaceRepositoryTests {
         Mockito.verify(errorCodeMutableLiveDataMock).postValue(ErrorCode.CONNECTION_ERROR);
 
     }
+
+    //endregion
 
 
 }

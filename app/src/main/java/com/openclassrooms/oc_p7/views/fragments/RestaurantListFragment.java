@@ -80,6 +80,25 @@ public class RestaurantListFragment extends Fragment implements OnRestaurantClic
         } else {
             requestAdapter.setData(new ArrayList<>());
         }
+        /*
+        if (onQueryEvent.getQueryForRestaurant() != null)  {
+            filteredList.clear();
+            for(Restaurant restaurant: restaurantList)  {
+                if(restaurant.getName().toLowerCase().contains(onQueryEvent.getQueryForRestaurant().toLowerCase())) {
+                    filteredList.add(restaurant);
+                }
+            }
+            Log.d(TAG, "onRestaurantQuery Event filteredListSize =  " + filteredList.size());
+            restaurantAdapter.setData(filteredList);
+
+
+        } else {
+            restaurantAdapter.setData(restaurantList);
+        }
+
+         */
+
+
     }
 
 
@@ -145,6 +164,7 @@ public class RestaurantListFragment extends Fragment implements OnRestaurantClic
         });
 
         mapViewModel.restaurantListLiveData.observe(getViewLifecycleOwner(), restaurantList -> {
+            this.restaurantList = restaurantList;
             restaurantAdapter.setData(restaurantList);
             workmateViewModel.getWorkmateForRestaurantList(mapViewModel.restaurantListLiveData);
             Log.d(TAG, "nearbyPlacesObserver from Restaurant" + restaurantList.size());
