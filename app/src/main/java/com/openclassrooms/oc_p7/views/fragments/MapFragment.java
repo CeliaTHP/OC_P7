@@ -190,17 +190,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
+        /*
         intent.putExtra(ReminderBroadcast.RESTAURANT_NAME, "restaurantName");
         intent.putExtra(ReminderBroadcast.RESTAURANT_ADDRESS, "restaurantAddress");
         intent.putExtra(ReminderBroadcast.RESTAURANT_WORKMATES, "list of workmates eating here");
         intent.putExtra(ReminderBroadcast.RESTAURANT_PIC, "https://i.pravatar.cc/150?img=5");
 
+
+         */
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                ReminderBroadcast.createNotification(fragmentMapBinding.getRoot().getContext(), "restaurantName",
-                        "restaurantPic", "restaurantAddress", "list of workmates eating here");
+                ReminderBroadcast.prepareToCreateNotification(fragmentMapBinding.getRoot().getContext());
             }
         }, 5000);
 

@@ -41,8 +41,8 @@ public class UserHelper {
     }
 
     // UPDATE
-    public static Task<Void> updateUserRestaurantType(String restaurantType, String uid) {
-        return UserHelper.getUsersCollection().document(uid).update("restaurantType", restaurantType);
+    public static Task<Void> updateUserRestaurantAddress(String restaurantAddress, String uid) {
+        return UserHelper.getUsersCollection().document(uid).update("restaurantAddress", restaurantAddress);
     }
 
     // DELETE

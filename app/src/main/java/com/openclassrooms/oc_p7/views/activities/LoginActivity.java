@@ -178,6 +178,7 @@ public class LoginActivity extends BaseActivity {
                 UserHelper.createUser(firebaseUser.getUid(), firebaseUser.getDisplayName(), firebaseUser.getEmail(), "" + firebaseUser.getPhotoUrl());
                 loginViewModel.initWorkmates();
 
+
                 goToDashboard();
 
             }

@@ -232,7 +232,6 @@ public class PlaceRepositoryTests {
 
         Mockito.verify(placesApiMock).getDetailsById(fakeApiKey, expectedRestaurantId);
         Mockito.verify(call).execute();
-        //DOES NOT WORK WITH AN EXPECTED RESTAURANT BECAUSE THE HAS DETAILS CHANGE
         Mockito.verify(restaurantLiveDataMock).postValue(expectedRestaurant);
 
     }

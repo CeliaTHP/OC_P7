@@ -1,7 +1,5 @@
 package com.openclassrooms.oc_p7.models;
 
-import java.util.List;
-
 public class User {
 
     private String uid;
@@ -10,8 +8,6 @@ public class User {
     private String picUrl;
     private String restaurantId;
     private String restaurantName;
-    private String restaurantType;
-    private List<Workmate> workmates;
 
     public User(String uid, String name, String email, String picUrl) {
         this.uid = uid;
@@ -52,14 +48,6 @@ public class User {
         this.picUrl = picUrl;
     }
 
-    public List<Workmate> getWorkmates() {
-        return workmates;
-    }
-
-    public void setWorkmates(List<Workmate> workmates) {
-        this.workmates = workmates;
-    }
-
     public String getRestaurantId() {
         return restaurantId;
     }
@@ -74,13 +62,5 @@ public class User {
 
     public void setRestaurantName(String restaurantName) {
         this.restaurantName = restaurantName;
-    }
-
-    public String getRestaurantType() {
-        return restaurantType;
-    }
-
-    public void setRestaurantType(String restaurantType) {
-        this.restaurantType = restaurantType;
     }
 }

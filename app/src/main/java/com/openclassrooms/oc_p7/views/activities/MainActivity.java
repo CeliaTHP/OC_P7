@@ -54,13 +54,14 @@ public class MainActivity extends BaseActivity {
 
     }
 
+
     private void initAlarmManager() {
 
         // Quote in Morning at 08:32:00 AM
         Calendar calendar = Calendar.getInstance();
 
-        calendar.set(Calendar.HOUR_OF_DAY, 13);
-        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.HOUR_OF_DAY, 18);
+        calendar.set(Calendar.MINUTE, 11);
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
 

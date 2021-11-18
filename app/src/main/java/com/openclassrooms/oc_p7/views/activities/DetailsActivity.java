@@ -175,11 +175,15 @@ public class DetailsActivity extends BaseActivity {
                     restaurant.setIsChosen(true);
                     UserHelper.updateUserRestaurantId(restaurant.getId(), FirebaseAuth.getInstance().getUid());
                     UserHelper.updateUserRestaurantName(restaurant.getName(), FirebaseAuth.getInstance().getUid());
+                    UserHelper.updateUserRestaurantAddress(restaurant.getAddress(), FirebaseAuth.getInstance().getUid());
+
                 } else {
                     activityDetailsBinding.detailsRestaurantCheck.setColorFilter(getResources().getColor(R.color.pastel_green));
                     restaurant.setIsChosen(false);
                     UserHelper.updateUserRestaurantId(null, FirebaseAuth.getInstance().getUid());
                     UserHelper.updateUserRestaurantName(null, FirebaseAuth.getInstance().getUid());
+                    UserHelper.updateUserRestaurantAddress(null, FirebaseAuth.getInstance().getUid());
+
                 }
             }
         });
