@@ -1,8 +1,6 @@
 package com.openclassrooms.oc_p7.views.fragments;
 
 import android.Manifest;
-import android.app.NotificationManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -183,28 +181,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private void testNotification() {
 
-        NotificationManager notificationManager = (NotificationManager) fragmentMapBinding.getRoot().getContext().getSystemService(Context.NOTIFICATION_SERVICE);
-
-        Intent intent = new Intent(fragmentMapBinding.getRoot().getContext(), ReminderBroadcast.class);
-
-
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-        /*
-        intent.putExtra(ReminderBroadcast.RESTAURANT_NAME, "restaurantName");
-        intent.putExtra(ReminderBroadcast.RESTAURANT_ADDRESS, "restaurantAddress");
-        intent.putExtra(ReminderBroadcast.RESTAURANT_WORKMATES, "list of workmates eating here");
-        intent.putExtra(ReminderBroadcast.RESTAURANT_PIC, "https://i.pravatar.cc/150?img=5");
-
-
-         */
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                ReminderBroadcast.prepareToCreateNotification(fragmentMapBinding.getRoot().getContext());
+                ReminderBroadcast.getUserInfosToCreateNotification(fragmentMapBinding.getRoot().getContext());
             }
-        }, 5000);
+        }, 3000);
 
 
     }

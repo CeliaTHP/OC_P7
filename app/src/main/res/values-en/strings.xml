@@ -71,6 +71,7 @@
     <!--NOTIFICATION -->
     <string name="notification_title">Grub\'s up !</string>
     <string name="notification_content">Go to %1$s at %2$s with %3$s</string>
+    <string name="notification_content_no_restaurant">Find out about nearby restaurants !</string>
     <string name="notification_content_no_workmates">Go to %1$s at %2$s</string>
 
 

@@ -41,6 +41,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void createNotificationChannel() {
+        //TEST UNDER O
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel notificationChannel =
                     new NotificationChannel(
@@ -54,38 +55,33 @@ public class MainActivity extends BaseActivity {
 
     }
 
-
     private void initAlarmManager() {
 
-        // Quote in Morning at 08:32:00 AM
-        Calendar calendar = Calendar.getInstance();
-
-        calendar.set(Calendar.HOUR_OF_DAY, 18);
-        calendar.set(Calendar.MINUTE, 11);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-
-        Calendar currentDate = Calendar.getInstance();
-/*
-        if (currentDate.after(calendar)) {
-            calendar.add(Calendar.DATE, 1);
-        }
-
-
- */
-
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-
-        //if(alarmManager != null && alarmManager.getNextAlarmClock() != null)
-        //Log.d(TAG, alarmManager.getNextAlarmClock().getTriggerTime() + " ");
-
         Intent myIntent = new Intent(this, ReminderBroadcast.class);
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(
                 this, 0, myIntent, 0);
 
+        // Triggers every day at 12:00 AM
+        Calendar calendar = Calendar.getInstance();
+
+        calendar.set(Calendar.MILLISECOND, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MINUTE, 13);
+        calendar.set(Calendar.HOUR_OF_DAY, 12);
+
+        if (Calendar.getInstance().after(calendar)) {
+            calendar.add(Calendar.DATE, 1);
+        }
+
+        Log.d(TAG, calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE));
+        Log.d(TAG, Calendar.getInstance().get(Calendar.HOUR_OF_DAY) + ":" + Calendar.getInstance().get(Calendar.MINUTE));
+
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
 
+        Log.d(TAG, "actual timeInMillis : " + Calendar.getInstance().getTimeInMillis());
+        Log.d(TAG, "timeInMillis : " + calendar.getTimeInMillis());
 
     }
 

@@ -225,10 +225,10 @@ public class PlaceRepositoryTests {
         Call<DetailsPlaceResponse> call = APIUtils.getCallMock(true, APIUtils.getDetailsPlaceResponse());
         String expectedRestaurantId = "42";
         Restaurant expectedRestaurant = RepositoryUtils.getRestaurantList().get(0);
+        expectedRestaurant.setHasDetails(true);
         Mockito.when(placesApiMock.getDetailsById(fakeApiKey, expectedRestaurantId)).thenReturn(call);
 
         placeRepository.getRestaurantDetails(expectedRestaurantId);
-        expectedRestaurant.setHasDetails(true);
 
         Mockito.verify(placesApiMock).getDetailsById(fakeApiKey, expectedRestaurantId);
         Mockito.verify(call).execute();
