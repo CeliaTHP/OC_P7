@@ -35,20 +35,17 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class RestaurantListFragment extends Fragment implements OnRestaurantClickListener {
 
     private final static String TAG = "RestaurantListFragment";
+
     private WorkmateViewModel workmateViewModel;
     private MapViewModel mapViewModel;
     private FragmentListRestaurantsBinding fragmentListRestaurantsBinding;
     private RestaurantAdapter restaurantAdapter;
 
     private RequestAdapter requestAdapter;
-    private List<Restaurant> restaurantList = new ArrayList<>();
-    private List<Restaurant> filteredList = new ArrayList<>();
-
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -56,7 +53,6 @@ public class RestaurantListFragment extends Fragment implements OnRestaurantClic
         fragmentListRestaurantsBinding = FragmentListRestaurantsBinding.inflate(LayoutInflater.from(this.getContext()));
 
         //init EventBus
-
         EventBus.getDefault().register(this);
 
         initViewModels();
@@ -67,38 +63,17 @@ public class RestaurantListFragment extends Fragment implements OnRestaurantClic
 
         workmateViewModel.getWorkmateList();
 
-
         return fragmentListRestaurantsBinding.getRoot();
     }
 
     @Subscribe
     public void onQueryEvent(OnRestaurantQueryEvent onQueryEvent) {
-        Log.d(TAG, "onRestaurantQuery Event : " + onQueryEvent.getQueryForRestaurant());
         if (onQueryEvent.getQueryForRestaurant() != null) {
             LatLng currentLatLng = new LatLng(mapViewModel.currentLocationLiveData.getValue().getLatitude(), mapViewModel.currentLocationLiveData.getValue().getLongitude());
             mapViewModel.getRequestedRestaurants(onQueryEvent.getQueryForRestaurant(), currentLatLng);
         } else {
             requestAdapter.setData(new ArrayList<>());
         }
-        /*
-        if (onQueryEvent.getQueryForRestaurant() != null)  {
-            filteredList.clear();
-            for(Restaurant restaurant: restaurantList)  {
-                if(restaurant.getName().toLowerCase().contains(onQueryEvent.getQueryForRestaurant().toLowerCase())) {
-                    filteredList.add(restaurant);
-                }
-            }
-            Log.d(TAG, "onRestaurantQuery Event filteredListSize =  " + filteredList.size());
-            restaurantAdapter.setData(filteredList);
-
-
-        } else {
-            restaurantAdapter.setData(restaurantList);
-        }
-
-         */
-
-
     }
 
 
@@ -151,7 +126,6 @@ public class RestaurantListFragment extends Fragment implements OnRestaurantClic
 
             }
 
-
         });
 
         mapViewModel.workmateRepositoryErrorCodeMutableLiveData.observe(getViewLifecycleOwner(), errorCode -> {
@@ -164,7 +138,6 @@ public class RestaurantListFragment extends Fragment implements OnRestaurantClic
         });
 
         mapViewModel.restaurantListLiveData.observe(getViewLifecycleOwner(), restaurantList -> {
-            this.restaurantList = restaurantList;
             restaurantAdapter.setData(restaurantList);
             workmateViewModel.getWorkmateForRestaurantList(mapViewModel.restaurantListLiveData);
             Log.d(TAG, "nearbyPlacesObserver from Restaurant" + restaurantList.size());
@@ -180,7 +153,6 @@ public class RestaurantListFragment extends Fragment implements OnRestaurantClic
 
     }
 
-
     private void initRecyclerView() {
         restaurantAdapter = new RestaurantAdapter(new ArrayList<>(20), this, mapViewModel);
         fragmentListRestaurantsBinding.restaurantRecyclerView.setAdapter(restaurantAdapter);
@@ -190,8 +162,6 @@ public class RestaurantListFragment extends Fragment implements OnRestaurantClic
 
     @Override
     public void onRestaurantClick(Restaurant restaurant) {
-
-        Log.d(TAG, "click on : " + restaurant.getName());
         Intent intent = new Intent(this.getActivity(), DetailsActivity.class);
         intent.putExtra("restaurantId", restaurant.getId());
         startActivity(intent);

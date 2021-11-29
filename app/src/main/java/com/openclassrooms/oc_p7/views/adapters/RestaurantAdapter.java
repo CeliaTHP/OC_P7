@@ -2,7 +2,6 @@ package com.openclassrooms.oc_p7.views.adapters;
 
 import android.content.Context;
 import android.location.Location;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -59,8 +58,6 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
     public void onBindViewHolder(@NonNull @NotNull RestaurantViewHolder holder, int position) {
 
         Restaurant restaurant = restaurantList.get(position);
-        Log.d(TAG, "onBind :  " + restaurant.toString());
-
 
         if (!restaurant.getHasDetails()) {
             mapViewModel.updateRestaurantDetails(restaurant);
@@ -79,7 +76,6 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
 
         if (currentLocation != null) {
             restaurant.setDistance(location.distanceTo(currentLocation));
-            Log.d("DISTANCE", restaurant.getName() + " " + restaurant.getDistance() + " ");
             if (restaurant.getDistance() < 1000)
                 holder.itemLayoutRestaurantBinding.itemRestaurantDistance.setText(holder.itemView.getContext().getString(R.string.item_restaurant_distance_meters, restaurant.getDistance()));
             else {
@@ -97,16 +93,6 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
 
         if (restaurant.getPhotoReferences() != null) {
             String picUrl = holder.itemView.getContext().getString(R.string.place_photo_url, holder.itemLayoutRestaurantBinding.getRoot().getContext().getString(R.string.GOOGLE_MAP_API_KEY_DEV), restaurant.getPhotoReferences().get(0));
-            //Blinks with picasso too
-
-            /*
-            Picasso.get()
-                    .load(picUrl)
-                    .resize(100,100)
-                    .centerCrop()
-                    .into(holder.itemLayoutRestaurantBinding.itemRestaurantPic);
-
-             */
 
             Glide.with(holder.itemView.getContext())
                     .load(picUrl)
@@ -115,16 +101,13 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
                     .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL))
                     .into(holder.itemLayoutRestaurantBinding.itemRestaurantPic);
 
-
         } else {
             holder.itemLayoutRestaurantBinding.itemRestaurantPic.setImageResource(R.drawable.ic_cutlery);
         }
 
         holder.itemLayoutRestaurantBinding.getRoot().setOnClickListener(v -> onRestaurantClickListener.onRestaurantClick(restaurant));
 
-
     }
-
 
     public void setCurrentLocation(Location location) {
         this.currentLocation = location;
@@ -165,6 +148,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
     }
 
     public void setData(List<Restaurant> newRestaurantList) {
+        // Updating data if our list has been updated
         Iterator<Restaurant> newIterator = newRestaurantList.iterator();
         Iterator<Restaurant> iterator = this.restaurantList.iterator();
         int count = 0;
@@ -194,8 +178,6 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
             notifyItemRangeRemoved(newRestaurantList.size(), oldSize - newRestaurantList.size());
         }
 
-        //notifyDataSetChanged();
-        Log.d(TAG, "setData   " + oldSize + " " + newRestaurantList.size());
     }
 
     @Override

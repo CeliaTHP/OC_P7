@@ -24,7 +24,6 @@ import org.jetbrains.annotations.NotNull;
 public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding fragmentHomeBinding;
-    private static String pageName;
     private OnDestinationChangedEvent onDestinationChangedEvent = new OnDestinationChangedEvent();
 
     private String TAG = "HomeFragment";
@@ -32,11 +31,10 @@ public class HomeFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
         fragmentHomeBinding = FragmentHomeBinding.inflate(inflater, container, false);
 
-
         return fragmentHomeBinding.getRoot();
-
     }
 
     @Override
@@ -49,7 +47,6 @@ public class HomeFragment extends Fragment {
     private void setBottomNavigation() {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
-        //Verifnonull
         if (getActivity() != null) {
             NavController navController = ((NavHostFragment) getChildFragmentManager().findFragmentById(R.id.bottom_nav_host_fragment)).getNavController();
             navController.addOnDestinationChangedListener(new NavController.OnDestinationChangedListener() {

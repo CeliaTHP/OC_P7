@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -29,7 +30,7 @@ import com.openclassrooms.oc_p7.view_models.LoginViewModel;
 import java.util.Arrays;
 
 
-public class LoginActivity extends BaseActivity {
+public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "LoginActivity";
     private static final int RC_GOOGLE_SIGN_IN = 1;
@@ -132,7 +133,6 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void signInWithUsername() {
-        // loginViewModel.getUsernameAccount();
         Intent intent = new Intent(LoginActivity.this, LoginWithUsernameActivity.class);
         startActivity(intent);
     }
@@ -141,7 +141,6 @@ public class LoginActivity extends BaseActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_GOOGLE_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
@@ -170,11 +169,9 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void initObservers() {
-        Log.d(TAG, "initObservers");
         loginViewModel.authenticatedUserLiveData.observe(this, new Observer<FirebaseUser>() {
             @Override
             public void onChanged(FirebaseUser firebaseUser) {
-                Log.d(TAG, "onChanged");
                 UserDatabase.createUser(firebaseUser.getUid(), firebaseUser.getDisplayName(), firebaseUser.getEmail(), "" + firebaseUser.getPhotoUrl());
                 loginViewModel.initWorkmates();
                 goToDashboard();

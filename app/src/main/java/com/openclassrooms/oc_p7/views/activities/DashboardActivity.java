@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
@@ -24,15 +25,11 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.bumptech.glide.Glide;
 import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.widget.Autocomplete;
-import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.databinding.ActivityDashboardBinding;
 import com.openclassrooms.oc_p7.databinding.DrawerHeaderBinding;
-import com.openclassrooms.oc_p7.models.Restaurant;
 import com.openclassrooms.oc_p7.services.firestore_database.UserDatabase;
 import com.openclassrooms.oc_p7.services.utils.OnDestinationChangedEvent;
 import com.openclassrooms.oc_p7.services.utils.OnMapQueryEvent;
@@ -42,37 +39,25 @@ import com.openclassrooms.oc_p7.services.utils.OnWorkmateQueryEvent;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Locale;
 
-public class DashboardActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class DashboardActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = " DashboardActivity ";
-    private NavController drawerNavController;
-    private NavigationView navigationView;
-    private ActionBarDrawerToggle actionBarDrawerToggle;
-    private Toolbar toolbar;
-    private final static int AUTOCOMPLETE_REQUEST_CODE = 1;
+
     private SearchView searchView;
+    private Toolbar toolbar;
+
     private int currentFragment;
-    private List<Restaurant> filteredList = new ArrayList<>();
+
     private OnRestaurantQueryEvent onRestaurantQueryEvent = new OnRestaurantQueryEvent();
     private OnWorkmateQueryEvent onWorkmateQueryEvent = new OnWorkmateQueryEvent();
     private OnMapQueryEvent onMapQueryEvent = new OnMapQueryEvent();
-    private Menu menu;
 
     private ActivityDashboardBinding activityDashboardBinding;
     private DrawerHeaderBinding drawerHeaderBinding;
 
-    /*
-        public static final int RESULT_CANCELED    = 0;
-     Standard activity result: operation succeeded.
-    public static final int RESULT_OK           = -1;
-     Start of user-defined activity results.
-    public static final int RESULT_FIRST_USER   = 1;
-     */
+    private final static int AUTOCOMPLETE_REQUEST_CODE = 1;
 
 
     @Override
@@ -83,12 +68,10 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
         setContentView(activityDashboardBinding.getRoot());
         EventBus.getDefault().register(this);
 
-
         initPlaces();
         setToolbar();
         setDrawerLayout();
         setHeaderInfos();
-
 
     }
 
@@ -96,7 +79,6 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
     public void onDestinationChangedEvent(OnDestinationChangedEvent onDestinationChangedEvent) {
         invalidateOptionsMenu();
         currentFragment = onDestinationChangedEvent.getDestinationInt();
-        Log.d(TAG, "onDestinationChangedEvent : " + onDestinationChangedEvent.getDestinationInt() + " ");
     }
 
     private void initPlaces() {
@@ -108,35 +90,33 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
 
 
     private void setHeaderInfos() {
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            Log.d(TAG, "email " + FirebaseAuth.getInstance().getCurrentUser().getEmail());
-            if (FirebaseAuth.getInstance().getCurrentUser().getDisplayName() != null) {
-                drawerHeaderBinding.sideMenuName.setVisibility(View.VISIBLE);
-                drawerHeaderBinding.sideMenuName.setText(getString(R.string.drawer_header_name, FirebaseAuth.getInstance().getCurrentUser().getDisplayName()));
+        if (FirebaseAuth.getInstance().getCurrentUser() == null)
+            return;
 
-            }
-            if (FirebaseAuth.getInstance().getCurrentUser().getEmail() != null) {
-                drawerHeaderBinding.sideMenuEmail.setVisibility(View.VISIBLE);
-                drawerHeaderBinding.sideMenuEmail.setText(getString(R.string.drawer_header_email, FirebaseAuth.getInstance().getCurrentUser().getEmail()));
+        if (FirebaseAuth.getInstance().getCurrentUser().getDisplayName() != null) {
+            drawerHeaderBinding.sideMenuName.setVisibility(View.VISIBLE);
+            drawerHeaderBinding.sideMenuName.setText(getString(R.string.drawer_header_name, FirebaseAuth.getInstance().getCurrentUser().getDisplayName()));
 
-            }
-            if (FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl() != null) {
-                Glide.with(this)
-                        .load(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl())
-                        .centerCrop()
-                        .into(drawerHeaderBinding.sideMenuPicture);
-            }
-        } else {
-            Log.d(TAG, "User null");
+        }
+        if (FirebaseAuth.getInstance().getCurrentUser().getEmail() != null) {
+            drawerHeaderBinding.sideMenuEmail.setVisibility(View.VISIBLE);
+            drawerHeaderBinding.sideMenuEmail.setText(getString(R.string.drawer_header_email, FirebaseAuth.getInstance().getCurrentUser().getEmail()));
+
+        }
+        if (FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl() != null) {
+            Glide.with(this)
+                    .load(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl())
+                    .centerCrop()
+                    .into(drawerHeaderBinding.sideMenuPicture);
         }
     }
+
 
     /**
      * Setting up the toolbar
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        this.menu = menu;
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu);// set drawable icon
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -159,17 +139,10 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
         MenuItem.OnActionExpandListener onActionExpandListener = new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
-                //    if (currentFragment == 0) {
-                //CASE MAP
-                //onSearchForMap();
-                //  } else {
-                //CASE RESTAURANTS & WORKMATES
                 searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                     @Override
                     public boolean onQueryTextSubmit(String query) {
                         if (query.length() >= 3) {
-                            //TODO: HANDLE QUERIES WITH EVENTBUS
-
                             if (currentFragment == 0) {
                                 //MAP FRAGMENT
                                 onMapQueryEvent.setQueryForMap(query);
@@ -184,17 +157,14 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
                                 onWorkmateQueryEvent.setQueryForWorkmate(query);
                                 EventBus.getDefault().post(onWorkmateQueryEvent);
                             }
-                            Log.d(TAG, "Can start query : " + query);
                         } else if (query.length() != 0) {
                             Toast toast = Toast.makeText(DashboardActivity.this, R.string.toolbar_query_too_short, Toast.LENGTH_LONG);
                             toast.setGravity(Gravity.BOTTOM, 0, 20);
                             toast.show();
-                            Log.d(TAG, "Query too short " + query);
                         } else {
                             Toast toast = Toast.makeText(DashboardActivity.this, R.string.toolbar_query_too_short, Toast.LENGTH_LONG);
                             toast.setGravity(Gravity.BOTTOM, 0, 20);
                             toast.show();
-                            Log.d(TAG, "Empty query " + query);
                         }
 
                         return true;
@@ -217,7 +187,6 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                Log.d(TAG, "onMenuItemActionCollapse");
                 searchView.setQuery(null, false);
 
                 onMapQueryEvent.setQueryForMap(null);
@@ -226,7 +195,6 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
                 onRestaurantQueryEvent.setQueryForRestaurant(null);
                 EventBus.getDefault().post(onRestaurantQueryEvent);
 
-
                 return true;
             }
 
@@ -234,7 +202,7 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
 
         menu.findItem(R.id.toolbar_search).setOnActionExpandListener(onActionExpandListener);
         searchView = (SearchView) menu.findItem(R.id.toolbar_search).getActionView();
-        searchView.setQueryHint("Search location...");
+        searchView.setQueryHint(getString(R.string.searchview_hint));
 
         View closeButton = searchView.findViewById(androidx.appcompat.R.id.search_close_btn);
         closeButton.setOnClickListener(new View.OnClickListener() {
@@ -254,62 +222,6 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
 
 
     }
-
-
-    public void onSearchForMap() {
-        // Set the fields to specify which types of place data to return.
-        List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG, Place.Field.TYPES);
-        // Start the autocomplete intent.
-        Intent intent = new Autocomplete.IntentBuilder(
-                AutocompleteActivityMode.OVERLAY, fields).setCountry("FR")
-                .build(this);
-        startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
-
-        //add location bias
-
-        Log.d(TAG, "onSearchCalled");
-
-
-    }
-
-    /*
-
-        @Override
-        protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-            if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
-                if (resultCode == RESULT_OK) {
-                    toolbar.collapseActionView();
-                    Place place = Autocomplete.getPlaceFromIntent(data);
-                    Log.d(TAG, "Place: " + place.getName() + ", " + place.getId());
-                    onQueryEvent.setRequestedPlace(place);
-                    EventBus.getDefault().post(onQueryEvent);
-                    //MapFragment.requestedPlace.postValue(place);
-                    //startDetailsActivity(place.getId());
-                } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
-                    // TODO: Handle the error.
-                    Status status = Autocomplete.getStatusFromIntent(data);
-                    Log.i(TAG, status.getStatusMessage());
-                } else if (resultCode == RESULT_CANCELED) {
-                    // The user canceled the operation.
-                    toolbar.collapseActionView();
-                    Log.d(TAG, "Autocomplete canceled");
-
-                }
-                return;
-            }
-            super.onActivityResult(requestCode, resultCode, data);
-        }
-
-
-
-     */
-    private void startDetailsActivity(String restaurantId) {
-        Intent intent = new Intent(this, DetailsActivity.class);
-        intent.putExtra("restaurantId", restaurantId);
-        startActivity(intent);
-
-    }
-
 
     @Override
     public void onBackPressed() {
@@ -402,7 +314,6 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
     private void goToLunch() {
         UserDatabase.getUser(FirebaseAuth.getInstance().getUid())
                 .addOnSuccessListener(snapshot -> {
-                    Log.d(TAG, "onSuccess");
                     if (snapshot.get("restaurantId") != null) {
                         Intent intent = new Intent(this, DetailsActivity.class);
                         intent.putExtra("restaurantId", snapshot.get("restaurantId").toString());

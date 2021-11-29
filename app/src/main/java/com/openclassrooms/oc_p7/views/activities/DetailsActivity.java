@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -31,7 +32,7 @@ import com.smarteist.autoimageslider.SliderAnimations;
 import java.util.List;
 
 
-public class DetailsActivity extends BaseActivity {
+public class DetailsActivity extends AppCompatActivity {
 
     private final static String TAG = "DetailsActivity";
     private Restaurant restaurant = null;
@@ -45,17 +46,12 @@ public class DetailsActivity extends BaseActivity {
 
         activityDetailsBinding = ActivityDetailsBinding.inflate(LayoutInflater.from(this), null, false);
 
-        initViewModels();
-
         Intent intent = getIntent();
 
+        initViewModels();
         initListeners();
         initObservers();
-
-
         initExtras(intent);
-
-
         setContentView(activityDetailsBinding.getRoot());
     }
 
@@ -63,7 +59,6 @@ public class DetailsActivity extends BaseActivity {
         if (intent.getStringExtra("restaurantId") != null) {
             restaurant = new Restaurant(intent.getStringExtra("restaurantId"), null, null, 0.0, 0.0);
             detailsViewModel.getRestaurantDetails(restaurant.getId());
-
 
         }
     }
@@ -106,10 +101,8 @@ public class DetailsActivity extends BaseActivity {
             }
         });
 
-
         initRecyclerView(restaurant.getAttendees());
         initPicSlider();
-
 
     }
 
@@ -140,8 +133,6 @@ public class DetailsActivity extends BaseActivity {
 
     private void initRecyclerView(List<Workmate> workmateList) {
         if (workmateList != null) {
-            //detailsViewModel.getWorkmatesForRestaurant();
-
             activityDetailsBinding.detailsRestaurantWorkmatesRv.setAdapter(new WorkmateAdapter(workmateList, true, new OnWorkmateClickListener() {
                 @Override
                 public void onWorkmateClick(Workmate workmate) {
@@ -150,8 +141,6 @@ public class DetailsActivity extends BaseActivity {
             activityDetailsBinding.detailsRestaurantWorkmatesRv.setLayoutManager(new LinearLayoutManager(this));
             if (activityDetailsBinding.detailsRestaurantWorkmatesRv.getAdapter().getItemCount() < 1)
                 activityDetailsBinding.detailsEmptyList.setVisibility(View.VISIBLE);
-        } else {
-            Log.d(TAG, "emptyWorkmateList");
         }
     }
 
@@ -163,7 +152,6 @@ public class DetailsActivity extends BaseActivity {
         });
 
     }
-
 
     private void initListeners() {
 
@@ -187,6 +175,7 @@ public class DetailsActivity extends BaseActivity {
                 }
             }
         });
+
         activityDetailsBinding.detailsPhoneLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

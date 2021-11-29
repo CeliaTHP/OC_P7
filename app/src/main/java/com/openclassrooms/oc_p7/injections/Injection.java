@@ -8,7 +8,6 @@ import androidx.lifecycle.MutableLiveData;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.openclassrooms.oc_p7.MyApplication;
 import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.repositories.PlaceRepository;
 import com.openclassrooms.oc_p7.repositories.WorkmateRepository;
@@ -28,8 +27,8 @@ public class Injection {
     //Provide repositories and view model factories to views
 
     private static PlaceRepository providePlaceRepository(Context context) {
-        String radiusQuery = MyApplication.getInstance().getApplicationContext().getString(R.string.query_radius);
-        String restaurantQuery = MyApplication.getInstance().getApplicationContext().getString(R.string.query_restaurant);
+        String radiusQuery = context.getString(R.string.query_radius);
+        String restaurantQuery = context.getString(R.string.query_restaurant);
         String apiKey = context.getString(R.string.GOOGLE_MAP_API_KEY_DEV);
         return new PlaceRepository(Injection.provideApiClient(), apiKey, Executors.newSingleThreadExecutor(), new MutableLiveData<>(), new MutableLiveData<>(), new MutableLiveData<>(), radiusQuery, restaurantQuery, new MutableLiveData<>());
     }

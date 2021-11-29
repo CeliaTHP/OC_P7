@@ -13,10 +13,9 @@ import com.openclassrooms.oc_p7.models.Restaurant;
 
 import java.util.List;
 
-public class RequestAdapter extends RecyclerView.Adapter<RequestViewHolder.ViewHolder> {
+public class RequestAdapter extends RecyclerView.Adapter<RequestViewHolder> {
 
     private List<Restaurant> restaurantList;
-    private Boolean inDetails;
     private final OnRestaurantClickListener onRestaurantClickListener;
 
 
@@ -27,13 +26,13 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestViewHolder.ViewH
 
     @NonNull
     @Override
-    public RequestViewHolder.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RequestViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         ItemLayoutRequestBinding itemLayoutRequestBinding = ItemLayoutRequestBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
-        return new RequestViewHolder.ViewHolder(itemLayoutRequestBinding);
+        return new RequestViewHolder(itemLayoutRequestBinding);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RequestViewHolder.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RequestViewHolder holder, int position) {
         Restaurant restaurant = restaurantList.get(position);
         holder.itemLayoutRequestBinding.itemRequestName.setText(restaurant.getName());
         holder.itemLayoutRequestBinding.itemRequestAddress.setText(restaurant.getAddress());

@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -22,9 +23,8 @@ import com.openclassrooms.oc_p7.view_models.LoginViewModel;
 
 import org.jetbrains.annotations.NotNull;
 
-public class LoginWithUsernameActivity extends BaseActivity {
+public class LoginWithUsernameActivity extends AppCompatActivity {
 
-    private final static String TAG = "LoginWithUsername";
 
     private ActivityLoginWithUsernameBinding activityLoginWithUsernameBinding;
     private LoginViewModel loginViewModel;
@@ -37,7 +37,6 @@ public class LoginWithUsernameActivity extends BaseActivity {
         activityLoginWithUsernameBinding = ActivityLoginWithUsernameBinding.inflate(LayoutInflater.from(this));
 
         setContentView(activityLoginWithUsernameBinding.getRoot());
-
 
         initViewModels();
         initListeners();
@@ -89,6 +88,7 @@ public class LoginWithUsernameActivity extends BaseActivity {
                 }
             }
         });
+
         activityLoginWithUsernameBinding.loginCreateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -125,7 +125,6 @@ public class LoginWithUsernameActivity extends BaseActivity {
 
 
     private Boolean checkNotEmpty() {
-
         return !TextUtils.isEmpty(activityLoginWithUsernameBinding.loginEmailField.getText()) && !TextUtils.isEmpty(activityLoginWithUsernameBinding.loginPasswordField.getText())
                 && Patterns.EMAIL_ADDRESS.matcher(activityLoginWithUsernameBinding.loginEmailField.getText()).matches();
     }

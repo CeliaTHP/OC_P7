@@ -29,6 +29,7 @@
     <string name="toolbar_search">Search</string>
     <string name="location_button">Center view</string>.
     <string name="toolbar_query_too_short">Please, enter at least 3 caracters to start the query</string>
+    <string name="searchview_hint">Search for a restaurant…</string>
 
 
     <!--DRAWER-->

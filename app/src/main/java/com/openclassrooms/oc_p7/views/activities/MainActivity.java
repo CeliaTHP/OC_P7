@@ -10,6 +10,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.openclassrooms.oc_p7.R;
@@ -17,12 +19,11 @@ import com.openclassrooms.oc_p7.services.utils.ReminderBroadcast;
 
 import java.util.Calendar;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
 
     public static FirebaseAuth auth;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +42,6 @@ public class MainActivity extends BaseActivity {
     }
 
     private void createNotificationChannel() {
-        //TEST UNDER O
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel notificationChannel =
                     new NotificationChannel(
@@ -80,9 +80,6 @@ public class MainActivity extends BaseActivity {
 
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
 
-        Log.d(TAG, "actual timeInMillis : " + Calendar.getInstance().getTimeInMillis());
-        Log.d(TAG, "timeInMillis : " + calendar.getTimeInMillis());
-
     }
 
     private void verifyAuth() {
@@ -91,12 +88,9 @@ public class MainActivity extends BaseActivity {
         auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
         if (user != null) {
-            Log.d("USER_SERVICE", "synchUser : " + user.getDisplayName());
             goToActivity(new DashboardActivity());
-            Log.d(TAG, "User Logged : " + user.getDisplayName());
         } else {
             goToActivity(new LoginActivity());
-            Log.d(TAG, "User Not Found");
 
         }
     }

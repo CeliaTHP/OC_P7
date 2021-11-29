@@ -37,6 +37,7 @@ import java.util.List;
 public class WorkmateListFragment extends Fragment {
 
     private final String TAG = "WorkmatesFragment";
+
     private FragmentListWorkmatesBinding fragmentListWorkmatesBinding;
 
     private List<Workmate> workmateList = new ArrayList<>();
@@ -66,7 +67,6 @@ public class WorkmateListFragment extends Fragment {
     @Subscribe
     public void onQueryEvent(OnWorkmateQueryEvent onWorkmateQueryEvent) {
         if (onWorkmateQueryEvent.getQueryForWorkmate() != null) {
-            Log.d(TAG, "onQueryEvent " + onWorkmateQueryEvent.getQueryForWorkmate());
             String query = onWorkmateQueryEvent.getQueryForWorkmate();
             filteredList.clear();
             for (Workmate workmate : workmateList) {
@@ -84,7 +84,6 @@ public class WorkmateListFragment extends Fragment {
 
     @Override
     public void onAttach(@NonNull @NotNull Context context) {
-
         super.onAttach(context);
 
     }
@@ -98,29 +97,11 @@ public class WorkmateListFragment extends Fragment {
     private void initObservers() {
         workmateViewModel.workmateListLiveData.observe(getViewLifecycleOwner(), workmateList -> {
             this.workmateList = workmateList;
-            Log.d(TAG, "workmateList observer from Fragment");
             for (Workmate workmate : workmateList) {
                 Log.d(TAG, workmate.getName() + " " + workmate.getPicUrl());
             }
             adapter.setData(workmateList);
         });
-
-        /*
-        query.observe(getViewLifecycleOwner(), query -> {
-            filteredList.clear();
-            for (Workmate workmate : workmateList) {
-                if (workmate.getName().toLowerCase().contains(query.toLowerCase()) ||
-                        workmate.getRestaurantName() != null && workmate.getRestaurantName().toLowerCase().contains(query.toLowerCase())) {
-                    filteredList.add(workmate);
-                }
-            }
-            if (adapter != null) {
-                adapter.setData(filteredList);
-                adapter.notifyDataSetChanged();
-            }
-        });
-
-         */
     }
 
 
@@ -137,7 +118,6 @@ public class WorkmateListFragment extends Fragment {
                 }
 
             }
-
 
         });
         fragmentListWorkmatesBinding.workmateRecyclerView.setAdapter(adapter);

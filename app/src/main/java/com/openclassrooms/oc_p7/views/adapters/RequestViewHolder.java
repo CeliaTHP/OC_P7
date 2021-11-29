@@ -4,15 +4,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.openclassrooms.oc_p7.databinding.ItemLayoutRequestBinding;
 
-public class RequestViewHolder {
+public class RequestViewHolder extends RecyclerView.ViewHolder {
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public final ItemLayoutRequestBinding itemLayoutRequestBinding;
 
-        public final ItemLayoutRequestBinding itemLayoutRequestBinding;
-
-        public ViewHolder(ItemLayoutRequestBinding itemLayoutRequestBinding) {
-            super(itemLayoutRequestBinding.getRoot());
-            this.itemLayoutRequestBinding = itemLayoutRequestBinding;
-        }
+    public RequestViewHolder(ItemLayoutRequestBinding itemLayoutRequestBinding) {
+        super(itemLayoutRequestBinding.getRoot());
+        this.itemLayoutRequestBinding = itemLayoutRequestBinding;
     }
 }
