@@ -57,8 +57,6 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
     private ActivityDashboardBinding activityDashboardBinding;
     private DrawerHeaderBinding drawerHeaderBinding;
 
-    private final static int AUTOCOMPLETE_REQUEST_CODE = 1;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
