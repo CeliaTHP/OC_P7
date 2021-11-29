@@ -95,15 +95,14 @@ public class LoginWithUsernameActivity extends AppCompatActivity {
                 if (isCreatingAccount) {
                     isCreatingAccount = false;
                     activityLoginWithUsernameBinding.loginTextSwitcher.setText(getString(R.string.login_title));
-                    activityLoginWithUsernameBinding.loginCreateButton.setText(R.string.login_title_italic);
+                    activityLoginWithUsernameBinding.loginCreateButton.setText(R.string.login_create_account);
                     activityLoginWithUsernameBinding.loginLogButton.setText(R.string.login_title);
 
                 } else {
                     isCreatingAccount = true;
                     activityLoginWithUsernameBinding.loginTextSwitcher.setText(getString(R.string.signup_title));
-                    activityLoginWithUsernameBinding.loginCreateButton.setText(R.string.signup_title_italic);
+                    activityLoginWithUsernameBinding.loginCreateButton.setText(R.string.login_title_italic);
                     activityLoginWithUsernameBinding.loginLogButton.setText(R.string.signup_title);
-
 
                 }
 
