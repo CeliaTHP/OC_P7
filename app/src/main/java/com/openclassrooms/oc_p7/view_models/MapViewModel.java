@@ -73,16 +73,15 @@ public class MapViewModel extends ViewModel {
         });
 
         placeRepository.getRequestedRestaurantListMutableLiveData().observe(this.lifecycleOwner, restaurantList -> {
+
             for (Restaurant restaurant : restaurantList) {
                 Log.d(TAG, restaurant.toString());
                 if (!restaurant.getHasDetails()) {
                     Log.d(TAG, "update details for " + restaurant.toString());
                     updateRequestedRestaurantDetails(restaurant);
 
-
                 }
             }
-
             requestedRestaurantList.postValue(restaurantList);
         });
 

@@ -30,10 +30,13 @@ import retrofit2.Call;
 
 public class PlaceRepositoryTests {
 
+    private PlaceRepository placeRepository;
+
     private final PlacesApi placesApiMock = Mockito.mock(PlacesApi.class);
     private final MutableLiveData<List<Restaurant>> restaurantListLiveDataMock = (MutableLiveData<List<Restaurant>>) Mockito.mock(MutableLiveData.class);
     private final MutableLiveData<Restaurant> restaurantLiveDataMock = (MutableLiveData<Restaurant>) Mockito.mock(MutableLiveData.class);
     private final MutableLiveData<List<Restaurant>> requestedRestaurantList = (MutableLiveData<List<Restaurant>>) Mockito.mock(MutableLiveData.class);
+    private final MutableLiveData<ErrorCode> errorCodeMutableLiveDataMock = (MutableLiveData<ErrorCode>) Mockito.mock(MutableLiveData.class);
 
 
     private final Executor executor = MoreExecutors.newDirectExecutorService();
@@ -41,12 +44,10 @@ public class PlaceRepositoryTests {
     private final String expectedRestaurantQuery = "restaurant";
     private final String language = Locale.getDefault().getLanguage();
 
-    private PlaceRepository placeRepository;
     private final Location expectedLocation = Mockito.mock(Location.class);
 
     private final String fakeApiKey = "fakeApiKey";
 
-    private final MutableLiveData<ErrorCode> errorCodeMutableLiveDataMock = (MutableLiveData<ErrorCode>) Mockito.mock(MutableLiveData.class);
 
     @Before
     public void setUp() {
