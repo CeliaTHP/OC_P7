@@ -32,29 +32,29 @@ public class Injection {
         return new PlaceRepository(Injection.provideApiClient(), apiKey, Executors.newSingleThreadExecutor(), new MutableLiveData<>(), new MutableLiveData<>(), new MutableLiveData<>(), radiusQuery, restaurantQuery, new MutableLiveData<>());
     }
 
-    public static WorkmateRepository provideWorkmateRepository(FirebaseFirestore firebaseFirestore, Context context) {
+    public static WorkmateRepository provideWorkmateRepository(FirebaseFirestore firebaseFirestore) {
         return new WorkmateRepository(firebaseFirestore, new WorkmateHelper(), Executors.newSingleThreadExecutor(), new MutableLiveData<>(), new MutableLiveData<>());
     }
 
     public static MapViewModelFactory provideMapViewModelFactory(FirebaseFirestore firebaseFirestore, Context context, LifecycleOwner lifecycleOwner) {
         PlaceRepository placeRepository = providePlaceRepository(context);
-        WorkmateRepository workmateRepository = provideWorkmateRepository(firebaseFirestore, context);
-        return new MapViewModelFactory(placeRepository, workmateRepository, Injection.provideFusedLocationProviderClient(firebaseFirestore, context), lifecycleOwner);
+        WorkmateRepository workmateRepository = provideWorkmateRepository(firebaseFirestore);
+        return new MapViewModelFactory(placeRepository, workmateRepository, Injection.provideFusedLocationProviderClient(context), lifecycleOwner);
     }
 
-    public static WorkmateViewModelFactory provideWorkmateViewModelFactory(FirebaseFirestore firebaseFirestore, Context context) {
-        WorkmateRepository workmateRepository = provideWorkmateRepository(firebaseFirestore, context);
+    public static WorkmateViewModelFactory provideWorkmateViewModelFactory(FirebaseFirestore firebaseFirestore) {
+        WorkmateRepository workmateRepository = provideWorkmateRepository(firebaseFirestore);
         return new WorkmateViewModelFactory(workmateRepository);
     }
 
     public static DetailViewModelFactory provideDetailViewModelFactory(FirebaseFirestore firebaseFirestore, Context context) {
-        WorkmateRepository workmateRepository = provideWorkmateRepository(firebaseFirestore, context);
+        WorkmateRepository workmateRepository = provideWorkmateRepository(firebaseFirestore);
         PlaceRepository placeRepository = providePlaceRepository(context);
         return new DetailViewModelFactory(workmateRepository, placeRepository);
     }
 
 
-    public static FusedLocationProviderClient provideFusedLocationProviderClient(FirebaseFirestore firebaseFirestore, Context context) {
+    public static FusedLocationProviderClient provideFusedLocationProviderClient(Context context) {
         return LocationServices.getFusedLocationProviderClient(context);
     }
 

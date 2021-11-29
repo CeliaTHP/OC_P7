@@ -49,6 +49,7 @@
 
     <!--MAP-->
     <string name="map_here">VOUS</string>
+    <string name="map_no_permission">L\'accès à votre position est nécessaire pour utiliser l\'application</string>
     <string name="map_response_error">Une erreur a été rencontrée lors de la recherche de restaurants ( vérifiez votre connexion internet ).</string>
     <string name="map_data_format_error">Une erreur a été rencontrée lors de la lecture des restaurants ! </string>
     <string name="map_not_found">Aucun résultat !</string>

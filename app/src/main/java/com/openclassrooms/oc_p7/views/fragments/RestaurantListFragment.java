@@ -127,7 +127,7 @@ public class RestaurantListFragment extends Fragment implements OnRestaurantClic
         MapViewModelFactory mapViewModelFactory = Injection.provideMapViewModelFactory(FirebaseFirestore.getInstance(), getContext(), this);
         mapViewModel = ViewModelProviders.of(this, mapViewModelFactory).get(MapViewModel.class);
 
-        WorkmateViewModelFactory workmateViewModelFactory = Injection.provideWorkmateViewModelFactory(FirebaseFirestore.getInstance(), getContext());
+        WorkmateViewModelFactory workmateViewModelFactory = Injection.provideWorkmateViewModelFactory(FirebaseFirestore.getInstance());
         workmateViewModel = ViewModelProviders.of(this, workmateViewModelFactory).get(WorkmateViewModel.class);
 
     }

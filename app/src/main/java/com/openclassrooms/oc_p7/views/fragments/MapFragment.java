@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +21,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.android.gms.common.util.ArrayUtils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -41,7 +41,6 @@ import com.openclassrooms.oc_p7.models.Restaurant;
 import com.openclassrooms.oc_p7.services.factories.MapViewModelFactory;
 import com.openclassrooms.oc_p7.services.factories.WorkmateViewModelFactory;
 import com.openclassrooms.oc_p7.services.utils.OnMapQueryEvent;
-import com.openclassrooms.oc_p7.services.utils.ReminderBroadcast;
 import com.openclassrooms.oc_p7.view_models.LoginViewModel;
 import com.openclassrooms.oc_p7.view_models.MapViewModel;
 import com.openclassrooms.oc_p7.view_models.WorkmateViewModel;
@@ -110,9 +109,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Subscribe
     public void onMapQueryEvent(OnMapQueryEvent onMapQueryEvent) {
         Log.d(TAG, "onMapQuery Event : " + onMapQueryEvent.getQueryForMap());
-        if (onMapQueryEvent.getQueryForMap() != null)
-            mapViewModel.getRequestedRestaurants(onMapQueryEvent.getQueryForMap(), currentLatLng);
-        else {
+        if (onMapQueryEvent.getQueryForMap() != null) {
+            if (currentLatLng != null) {
+                mapViewModel.getRequestedRestaurants(onMapQueryEvent.getQueryForMap(), currentLatLng);
+            } else {
+                Toast.makeText(fragmentMapBinding.getRoot().getContext(), R.string.map_no_permission, Toast.LENGTH_LONG).show();
+            }
+        } else {
             adapter.setData(new ArrayList<>());
         }
 
@@ -173,22 +176,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mapViewModel =
                 ViewModelProviders.of(this, mapViewModelFactory).get(MapViewModel.class);
 
-        WorkmateViewModelFactory workmateViewModelFactory = Injection.provideWorkmateViewModelFactory(FirebaseFirestore.getInstance(), getContext());
+        WorkmateViewModelFactory workmateViewModelFactory = Injection.provideWorkmateViewModelFactory(FirebaseFirestore.getInstance());
         workmateViewModel =
                 ViewModelProviders.of(this, workmateViewModelFactory).get(WorkmateViewModel.class);
-
-    }
-
-    private void testNotification() {
-
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                ReminderBroadcast.getUserInfosToCreateNotification(fragmentMapBinding.getRoot().getContext());
-            }
-        }, 3000);
-
 
     }
 
@@ -199,7 +189,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick locationButton");
-                testNotification();
                 if (mapViewModel.currentLocationLiveData.getValue() != null) {
                     LatLng currentLatLng = new LatLng(mapViewModel.currentLocationLiveData.getValue().getLatitude(), mapViewModel.currentLocationLiveData.getValue().getLongitude());
                     googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 14));
@@ -401,11 +390,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     }
 
-    private void startDetailsActivity(String restaurantId) {
-        Intent intent = new Intent(fragmentMapBinding.getRoot().getContext(), DetailsActivity.class);
-        intent.putExtra("restaurantId", restaurantId);
-        startActivity(intent);
-    }
 
     private void refreshMap() {
         Log.d(TAG, "Refresh Map");
@@ -439,8 +423,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         Log.d(TAG, "Code : " + requestCode + " Permissions : " + Arrays.toString(permissions) + " result :" + Arrays.toString(grantResults));
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            //refreshMap();
-            //TODO : force refresh on RequestResult
+            if (ArrayUtils.contains(grantResults, -1)) {
+                Toast.makeText(fragmentMapBinding.getRoot().getContext(), R.string.map_no_permission, Toast.LENGTH_LONG).show();
+            } else {
+                refreshMap();
+
+            }
         }
     }
 
