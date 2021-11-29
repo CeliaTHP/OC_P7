@@ -7,7 +7,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.openclassrooms.oc_p7.models.User;
 
 
-public class UserHelper {
+public class UserDatabase {
 
     private static final String COLLECTION_NAME = "users";
 
@@ -19,35 +19,34 @@ public class UserHelper {
     // CREATE
     public static Task<Void> createUser(String uid, String name, String email, String picUrl) {
         User userToCreate = new User(uid, name, email, picUrl);
-        return UserHelper.getUsersCollection().document(uid).set(userToCreate);
+        return UserDatabase.getUsersCollection().document(uid).set(userToCreate);
     }
 
     // GET
     public static Task<DocumentSnapshot> getUser(String uid) {
-        return UserHelper.getUsersCollection().document(uid).get();
+        return UserDatabase.getUsersCollection().document(uid).get();
     }
 
     // UPDATE
     public static Task<Void> updateUserName(String name, String uid) {
-        return UserHelper.getUsersCollection().document(uid).update("name", name);
+        return UserDatabase.getUsersCollection().document(uid).update("name", name);
     }
 
     public static Task<Void> updateUserRestaurantId(String restaurantId, String uid) {
-        return UserHelper.getUsersCollection().document(uid).update("restaurantId", restaurantId);
+        return UserDatabase.getUsersCollection().document(uid).update("restaurantId", restaurantId);
     }
 
     public static Task<Void> updateUserRestaurantName(String restaurantName, String uid) {
-        return UserHelper.getUsersCollection().document(uid).update("restaurantName", restaurantName);
+        return UserDatabase.getUsersCollection().document(uid).update("restaurantName", restaurantName);
     }
 
-    // UPDATE
     public static Task<Void> updateUserRestaurantAddress(String restaurantAddress, String uid) {
-        return UserHelper.getUsersCollection().document(uid).update("restaurantAddress", restaurantAddress);
+        return UserDatabase.getUsersCollection().document(uid).update("restaurantAddress", restaurantAddress);
     }
 
     // DELETE
     public static Task<Void> deleteUser(String uid) {
-        return UserHelper.getUsersCollection().document(uid).delete();
+        return UserDatabase.getUsersCollection().document(uid).delete();
     }
 
 

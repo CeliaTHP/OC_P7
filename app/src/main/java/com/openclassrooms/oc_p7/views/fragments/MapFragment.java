@@ -404,8 +404,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             Log.d(TAG, "shouldRequestPermissions");
             requestPermissions();
         } else {
-            Log.d(TAG, "shouldNotRequestPermissions");
-
             mapViewModel.getLocationInformations(getContext());
         }
     }

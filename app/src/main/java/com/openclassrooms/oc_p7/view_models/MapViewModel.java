@@ -19,7 +19,6 @@ import com.openclassrooms.oc_p7.models.Restaurant;
 import com.openclassrooms.oc_p7.repositories.PlaceRepository;
 import com.openclassrooms.oc_p7.repositories.WorkmateRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MapViewModel extends ViewModel {
@@ -29,16 +28,11 @@ public class MapViewModel extends ViewModel {
     private FusedLocationProviderClient fusedLocationProviderClient;
     private LifecycleOwner lifecycleOwner;
     private WorkmateRepository workmateRepository;
-    private List<Restaurant> originalList = new ArrayList<>();
-    private List<Restaurant> filteredRestaurantList = new ArrayList<>();
-    private String query;
 
+    public MutableLiveData<Location> currentLocationLiveData;
 
     public MutableLiveData<List<Restaurant>> restaurantListLiveData = new MutableLiveData<>();
     public MutableLiveData<List<Restaurant>> requestedRestaurantList = new MutableLiveData<>();
-
-
-    public MutableLiveData<Location> currentLocationLiveData;
     public MutableLiveData<ErrorCode> placeRepositoryErrorCodeMutableLiveData = new MutableLiveData<>();
     public MutableLiveData<ErrorCode> workmateRepositoryErrorCodeMutableLiveData = new MutableLiveData<>();
 
@@ -54,12 +48,8 @@ public class MapViewModel extends ViewModel {
 
 
     public void loadMap() {
-        Log.d(TAG, "loadMap");
-
         placeRepository.getErrorCode().observe(this.lifecycleOwner, errorCode -> {
-            Log.d(TAG, errorCode.toString());
             placeRepositoryErrorCodeMutableLiveData.postValue(errorCode);
-
         });
 
         workmateRepository.getErrorCode().observe(this.lifecycleOwner, errorCode -> {
@@ -67,17 +57,13 @@ public class MapViewModel extends ViewModel {
         });
 
         placeRepository.getRestaurantListMutableLiveData().observe(this.lifecycleOwner, restaurantList -> {
-            Log.d(TAG, " getRestaurantLiveData observer ");
             restaurantListLiveData.postValue(restaurantList);
-
         });
 
         placeRepository.getRequestedRestaurantListMutableLiveData().observe(this.lifecycleOwner, restaurantList -> {
-
             for (Restaurant restaurant : restaurantList) {
                 Log.d(TAG, restaurant.toString());
                 if (!restaurant.getHasDetails()) {
-                    Log.d(TAG, "update details for " + restaurant.toString());
                     updateRequestedRestaurantDetails(restaurant);
 
                 }
@@ -85,37 +71,10 @@ public class MapViewModel extends ViewModel {
             requestedRestaurantList.postValue(restaurantList);
         });
 
-
-    }
-
-    /*
-        private void filterList() {
-            originalList = placeRepository.getRestaurantListMutableLiveData().getValue();
-            filteredRestaurantList.clear();
-            if (originalList != null) {
-                if (query != null) {
-                    for (Restaurant restaurant : originalList) {
-                        if (restaurant.getName().toLowerCase().contains(query.toLowerCase())) {
-                            filteredRestaurantList.add(restaurant);
-                        }
-                    }
-                    restaurantListLiveData.postValue(filteredRestaurantList);
-                } else {
-                    restaurantListLiveData.postValue(originalList);
-                }
-            }
-        }
-
-
-     */
-    public void filterList(String query) {
-        this.query = query;
-        //filterList();
     }
 
 
     public void updateRestaurantDetails(Restaurant restaurant) {
-        Log.d(TAG, "updateRestaurantDetails");
         placeRepository.updateRestaurantDetails(restaurant.getId());
     }
 
@@ -129,14 +88,8 @@ public class MapViewModel extends ViewModel {
 
     public void getLocationInformations(Context context) {
         loadMap();
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
         Task<Location> task = fusedLocationProviderClient.getLastLocation();

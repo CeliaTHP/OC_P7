@@ -20,8 +20,8 @@ import com.openclassrooms.oc_p7.injections.Injection;
 import com.openclassrooms.oc_p7.models.Restaurant;
 import com.openclassrooms.oc_p7.models.Workmate;
 import com.openclassrooms.oc_p7.services.factories.DetailViewModelFactory;
-import com.openclassrooms.oc_p7.services.firestore_database.FavoriteHelper;
-import com.openclassrooms.oc_p7.services.firestore_database.UserHelper;
+import com.openclassrooms.oc_p7.services.firestore_database.FavoriteDatabase;
+import com.openclassrooms.oc_p7.services.firestore_database.UserDatabase;
 import com.openclassrooms.oc_p7.view_models.DetailsViewModel;
 import com.openclassrooms.oc_p7.views.adapters.SliderAdapter;
 import com.openclassrooms.oc_p7.views.adapters.WorkmateAdapter;
@@ -82,7 +82,7 @@ public class DetailsActivity extends BaseActivity {
         activityDetailsBinding.detailsRestaurantAddress.setText(restaurant.getAddress());
 
         //Setting the corresponding star
-        FavoriteHelper.getFavorite(restaurant).addOnSuccessListener(snapshot -> {
+        FavoriteDatabase.getFavorite(restaurant).addOnSuccessListener(snapshot -> {
             Log.d(TAG, snapshot.get("id") + " ");
             if (snapshot.get("id") != null && snapshot.get("id").toString().equals(restaurant.getId())) {
                 restaurant.setIsLiked(true);
@@ -95,7 +95,7 @@ public class DetailsActivity extends BaseActivity {
 
 
         //Setting the corresponding check
-        UserHelper.getUser(FirebaseAuth.getInstance().getUid()).addOnSuccessListener(snapshot -> {
+        UserDatabase.getUser(FirebaseAuth.getInstance().getUid()).addOnSuccessListener(snapshot -> {
             if (snapshot.get("restaurantId") != null) {
                 Log.d(TAG, "restaurantId not null : " + snapshot.get("restaurantId").toString());
                 if (snapshot.get("restaurantId").toString().equals(restaurant.getId())) {
@@ -173,16 +173,16 @@ public class DetailsActivity extends BaseActivity {
                 if (!restaurant.getIsChosen()) {
                     activityDetailsBinding.detailsRestaurantCheck.setColorFilter(getResources().getColor(R.color.green));
                     restaurant.setIsChosen(true);
-                    UserHelper.updateUserRestaurantId(restaurant.getId(), FirebaseAuth.getInstance().getUid());
-                    UserHelper.updateUserRestaurantName(restaurant.getName(), FirebaseAuth.getInstance().getUid());
-                    UserHelper.updateUserRestaurantAddress(restaurant.getAddress(), FirebaseAuth.getInstance().getUid());
+                    UserDatabase.updateUserRestaurantId(restaurant.getId(), FirebaseAuth.getInstance().getUid());
+                    UserDatabase.updateUserRestaurantName(restaurant.getName(), FirebaseAuth.getInstance().getUid());
+                    UserDatabase.updateUserRestaurantAddress(restaurant.getAddress(), FirebaseAuth.getInstance().getUid());
 
                 } else {
                     activityDetailsBinding.detailsRestaurantCheck.setColorFilter(getResources().getColor(R.color.pastel_green));
                     restaurant.setIsChosen(false);
-                    UserHelper.updateUserRestaurantId(null, FirebaseAuth.getInstance().getUid());
-                    UserHelper.updateUserRestaurantName(null, FirebaseAuth.getInstance().getUid());
-                    UserHelper.updateUserRestaurantAddress(null, FirebaseAuth.getInstance().getUid());
+                    UserDatabase.updateUserRestaurantId(null, FirebaseAuth.getInstance().getUid());
+                    UserDatabase.updateUserRestaurantName(null, FirebaseAuth.getInstance().getUid());
+                    UserDatabase.updateUserRestaurantAddress(null, FirebaseAuth.getInstance().getUid());
 
                 }
             }
@@ -206,11 +206,11 @@ public class DetailsActivity extends BaseActivity {
                 if (!restaurant.getIsLiked()) {
                     restaurant.setIsLiked(true);
                     activityDetailsBinding.detailsRestaurantLikePic.setImageResource(R.drawable.ic_star_details);
-                    FavoriteHelper.addFavorite(restaurant);
+                    FavoriteDatabase.addFavorite(restaurant);
                 } else {
                     restaurant.setIsLiked(false);
                     activityDetailsBinding.detailsRestaurantLikePic.setImageResource(R.drawable.ic_star_details_not_full);
-                    FavoriteHelper.deleteFavorite(restaurant);
+                    FavoriteDatabase.deleteFavorite(restaurant);
                 }
 
             }

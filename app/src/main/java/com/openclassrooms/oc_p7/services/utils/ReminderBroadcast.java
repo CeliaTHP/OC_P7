@@ -18,14 +18,16 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.models.Workmate;
-import com.openclassrooms.oc_p7.services.firestore_database.UserHelper;
-import com.openclassrooms.oc_p7.services.firestore_database.WorkmateHelper;
+import com.openclassrooms.oc_p7.services.firestore_database.UserDatabase;
+import com.openclassrooms.oc_p7.services.firestore_database.WorkmateDatabase;
 import com.openclassrooms.oc_p7.views.activities.MainActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ReminderBroadcast extends BroadcastReceiver {
+
+    //Creates a notification to remind the user the chosen restaurant and the corresponding workmates
 
     private final static String TAG = "ReminderBroadcast";
     private final static String CANAL = "myCanal";
@@ -34,7 +36,6 @@ public class ReminderBroadcast extends BroadcastReceiver {
     public static String RESTAURANT_ID;
 
     public static String RESTAURANT_ADDRESS;
-    public static String RESTAURANT_PIC;
     public static String RESTAURANT_WORKMATES;
 
     @Override
@@ -46,7 +47,7 @@ public class ReminderBroadcast extends BroadcastReceiver {
 
     public static void getUserInfosToCreateNotification(Context context) {
         Log.d(TAG, "getUserInfosToCreateNotification");
-        UserHelper.getUser(FirebaseAuth.getInstance().getUid())
+        UserDatabase.getUser(FirebaseAuth.getInstance().getUid())
                 .addOnFailureListener(e -> Log.d(TAG, "getUserInfos onFailure"))
                 .addOnSuccessListener(snapshot -> {
                     Log.d(TAG, "onSuccess");
@@ -113,11 +114,11 @@ public class ReminderBroadcast extends BroadcastReceiver {
     public static void getWorkmatesForRestaurant(String restaurantId, Context context) {
         Log.d(TAG, "getWorkmatesForRestaurant");
 
-        WorkmateHelper workmateHelper = new WorkmateHelper();
+        WorkmateDatabase workmateDatabase = new WorkmateDatabase();
 
         List<String> workmateList = new ArrayList<>();
 
-        Task<QuerySnapshot> task = workmateHelper.getWorkmatesForRestaurant(FirebaseFirestore.getInstance(), restaurantId);
+        Task<QuerySnapshot> task = workmateDatabase.getWorkmatesForRestaurant(FirebaseFirestore.getInstance(), restaurantId);
         task.addOnFailureListener(e -> Log.d(TAG, "getWorkmatesInfo onFailure"));
         task.addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override

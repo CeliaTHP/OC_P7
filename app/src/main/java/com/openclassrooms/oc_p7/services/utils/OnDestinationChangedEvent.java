@@ -2,8 +2,9 @@ package com.openclassrooms.oc_p7.services.utils;
 
 public class OnDestinationChangedEvent {
 
-    private String destinationDisplayName;
+    //Notifies when the focused fragment changes with event bus
 
+    private String destinationDisplayName;
 
     public int getDestinationInt() {
         switch (destinationDisplayName) {

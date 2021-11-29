@@ -11,13 +11,10 @@ import java.util.List;
 
 public class WorkmateViewModel extends ViewModel {
 
-    private MutableLiveData<String> mText;
-    private static final String TAG = "WorkmateListViewModel";
 
     private WorkmateRepository workmateRepository;
 
     public MutableLiveData<List<Workmate>> workmateListLiveData;
-
 
     public WorkmateViewModel(WorkmateRepository workmateRepository) {
         this.workmateRepository = workmateRepository;

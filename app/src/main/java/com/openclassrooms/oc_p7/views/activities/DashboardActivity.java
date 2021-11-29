@@ -33,7 +33,7 @@ import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.databinding.ActivityDashboardBinding;
 import com.openclassrooms.oc_p7.databinding.DrawerHeaderBinding;
 import com.openclassrooms.oc_p7.models.Restaurant;
-import com.openclassrooms.oc_p7.services.firestore_database.UserHelper;
+import com.openclassrooms.oc_p7.services.firestore_database.UserDatabase;
 import com.openclassrooms.oc_p7.services.utils.OnDestinationChangedEvent;
 import com.openclassrooms.oc_p7.services.utils.OnMapQueryEvent;
 import com.openclassrooms.oc_p7.services.utils.OnRestaurantQueryEvent;
@@ -400,7 +400,7 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
     }
 
     private void goToLunch() {
-        UserHelper.getUser(FirebaseAuth.getInstance().getUid())
+        UserDatabase.getUser(FirebaseAuth.getInstance().getUid())
                 .addOnSuccessListener(snapshot -> {
                     Log.d(TAG, "onSuccess");
                     if (snapshot.get("restaurantId") != null) {

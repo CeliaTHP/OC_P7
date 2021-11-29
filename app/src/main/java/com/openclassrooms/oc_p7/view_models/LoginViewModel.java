@@ -27,7 +27,7 @@ import com.google.firebase.auth.OAuthProvider;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.openclassrooms.oc_p7.models.Workmate;
 import com.openclassrooms.oc_p7.services.dummies.DummyWorkmateGenerator;
-import com.openclassrooms.oc_p7.services.firestore_database.WorkmateHelper;
+import com.openclassrooms.oc_p7.services.firestore_database.WorkmateDatabase;
 import com.openclassrooms.oc_p7.views.activities.LoginActivity;
 
 import org.jetbrains.annotations.NotNull;
@@ -37,7 +37,7 @@ public class LoginViewModel extends AndroidViewModel {
     public MutableLiveData<FirebaseUser> authenticatedUserLiveData = new MutableLiveData<>();
     public FirebaseAuth auth = FirebaseAuth.getInstance();
     private OAuthProvider.Builder provider;
-    private WorkmateHelper workmateHelper = new WorkmateHelper();
+    private WorkmateDatabase workmateDatabase = new WorkmateDatabase();
 
     private static String TAG = "LoginViewModel";
 
@@ -171,10 +171,6 @@ public class LoginViewModel extends AndroidViewModel {
                 });
     }
 
-    public void getUsernameAccount() {
-        //auth.signInWithEmailAndPassword();
-
-    }
 
     public void getTwitterAccount(LoginActivity loginActivity) {
         provider = OAuthProvider.newBuilder("twitter.com");
@@ -211,9 +207,9 @@ public class LoginViewModel extends AndroidViewModel {
         }
     }
 
+
     public void verifyAuth() {
-        //if not authenticated, go to LogInActivity
-        //else go to MainActivity
+        //Update userLiveData if a session is found
         auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
         if (user != null) {
@@ -222,11 +218,10 @@ public class LoginViewModel extends AndroidViewModel {
         }
     }
 
+    //Generating our workmates when the user is logged in
     public void initWorkmates() {
-        Log.d("WORKMATES_CREATION", "initWorkmates");
-
         for (Workmate workmate : DummyWorkmateGenerator.generateWorkmates()) {
-            workmateHelper.createWorkmate(FirebaseFirestore.getInstance(), workmate.getUid(), workmate.getName(), workmate.getEmail(), workmate.getPicUrl()).addOnCompleteListener(new OnCompleteListener<Void>() {
+            workmateDatabase.createWorkmate(FirebaseFirestore.getInstance(), workmate.getUid(), workmate.getName(), workmate.getEmail(), workmate.getPicUrl()).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull @NotNull Task<Void> task) {
                     if (task.isSuccessful()) {
@@ -238,17 +233,16 @@ public class LoginViewModel extends AndroidViewModel {
                 }
             });
             if (workmate.getRestaurantId() != null) {
-                workmateHelper.updateWorkmateRestaurantId(FirebaseFirestore.getInstance(), workmate.getRestaurantId(), workmate.getUid());
+                workmateDatabase.updateWorkmateRestaurantId(FirebaseFirestore.getInstance(), workmate.getRestaurantId(), workmate.getUid());
 
             }
             if (workmate.getRestaurantName() != null)
-                workmateHelper.updateWorkmateRestaurantName(FirebaseFirestore.getInstance(), workmate.getRestaurantName(), workmate.getUid());
+                workmateDatabase.updateWorkmateRestaurantName(FirebaseFirestore.getInstance(), workmate.getRestaurantName(), workmate.getUid());
         }
     }
 
     public void logOut() {
         FirebaseAuth.getInstance().signOut();
-
     }
 
 

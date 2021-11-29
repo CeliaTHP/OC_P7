@@ -6,11 +6,9 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.openclassrooms.oc_p7.models.Restaurant;
 
-public class FavoriteHelper {
+public class FavoriteDatabase {
 
-    private static final String TAG = "FavoriteHelper";
     private static final String COLLECTION_NAME = "favorites";
-
 
     // COLLECTION REFERENCE
     public static CollectionReference getFavoriteCollection() {

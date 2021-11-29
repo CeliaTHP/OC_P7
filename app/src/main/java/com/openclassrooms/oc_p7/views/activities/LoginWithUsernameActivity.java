@@ -3,7 +3,6 @@ package com.openclassrooms.oc_p7.views.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -18,7 +17,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.auth.FirebaseUser;
 import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.databinding.ActivityLoginWithUsernameBinding;
-import com.openclassrooms.oc_p7.services.firestore_database.UserHelper;
+import com.openclassrooms.oc_p7.services.firestore_database.UserDatabase;
 import com.openclassrooms.oc_p7.view_models.LoginViewModel;
 
 import org.jetbrains.annotations.NotNull;
@@ -116,9 +115,7 @@ public class LoginWithUsernameActivity extends BaseActivity {
         loginViewModel.authenticatedUserLiveData.observe(this, new Observer<FirebaseUser>() {
             @Override
             public void onChanged(FirebaseUser firebaseUser) {
-                Log.d("WORKMATES_CREATION", "onChanged withUsername");
-
-                UserHelper.createUser(firebaseUser.getUid(), firebaseUser.getDisplayName(), firebaseUser.getEmail(), "" + firebaseUser.getPhotoUrl());
+                UserDatabase.createUser(firebaseUser.getUid(), firebaseUser.getDisplayName(), firebaseUser.getEmail(), "" + firebaseUser.getPhotoUrl());
                 loginViewModel.initWorkmates();
                 goToDashboard();
 

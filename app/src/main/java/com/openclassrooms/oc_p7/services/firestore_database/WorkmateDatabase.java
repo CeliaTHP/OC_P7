@@ -10,9 +10,8 @@ import com.openclassrooms.oc_p7.models.Workmate;
 import org.jetbrains.annotations.NotNull;
 
 
-public class WorkmateHelper {
+public class WorkmateDatabase {
 
-    private static final String TAG = "WorkmateHelper";
     private static final String COLLECTION_NAME = "workmates";
 
     // COLLECTION REFERENCE
@@ -58,7 +57,7 @@ public class WorkmateHelper {
         return getWorkmatesCollection(firebaseFirestore).document(uid).update("restaurantType", restaurantType);
     }
 
-    // DELETE WORKMATE
+    // DELETE
     public Task<Void> deleteWorkmate(FirebaseFirestore firebaseFirestore, String uid) {
         return getWorkmatesCollection(firebaseFirestore).document(uid).delete();
     }

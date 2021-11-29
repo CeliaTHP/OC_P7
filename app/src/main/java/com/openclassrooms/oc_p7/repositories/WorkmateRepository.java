@@ -11,7 +11,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.openclassrooms.oc_p7.models.ErrorCode;
 import com.openclassrooms.oc_p7.models.Restaurant;
 import com.openclassrooms.oc_p7.models.Workmate;
-import com.openclassrooms.oc_p7.services.firestore_database.WorkmateHelper;
+import com.openclassrooms.oc_p7.services.firestore_database.WorkmateDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,11 +25,11 @@ public class WorkmateRepository {
     private MutableLiveData<ErrorCode> errorCode;
 
     private MutableLiveData<List<Workmate>> workmateListLiveData;
-    private WorkmateHelper workmateHelper;
+    private WorkmateDatabase workmateDatabase;
 
-    public WorkmateRepository(FirebaseFirestore firebaseFirestore, WorkmateHelper workmateHelper, Executor executor, MutableLiveData<List<Workmate>> workmateListLiveData, MutableLiveData<ErrorCode> errorCode) {
+    public WorkmateRepository(FirebaseFirestore firebaseFirestore, WorkmateDatabase workmateDatabase, Executor executor, MutableLiveData<List<Workmate>> workmateListLiveData, MutableLiveData<ErrorCode> errorCode) {
         this.firebaseFirestore = firebaseFirestore;
-        this.workmateHelper = workmateHelper;
+        this.workmateDatabase = workmateDatabase;
         this.executor = executor;
         this.workmateListLiveData = workmateListLiveData;
         this.errorCode = errorCode;
@@ -50,7 +50,7 @@ public class WorkmateRepository {
     public void getWorkmateList() {
         //Executor to execute the following code in the same thread (easier for tests)
         executor.execute(() -> {
-            Task<QuerySnapshot> task = workmateHelper.getAllWorkmates(firebaseFirestore);
+            Task<QuerySnapshot> task = workmateDatabase.getAllWorkmates(firebaseFirestore);
             try {
                 Tasks.await(task);
                 QuerySnapshot queryDocumentSnapshots = task.getResult();
@@ -93,7 +93,7 @@ public class WorkmateRepository {
             executor.execute(() -> {
                 List<Workmate> workmatesFiltered = new ArrayList<>();
 
-                Task<QuerySnapshot> task = workmateHelper.getWorkmatesForRestaurant(firebaseFirestore, restaurant.getId());
+                Task<QuerySnapshot> task = workmateDatabase.getWorkmatesForRestaurant(firebaseFirestore, restaurant.getId());
 
                 try {
                     Tasks.await(task);
@@ -129,7 +129,7 @@ public class WorkmateRepository {
                 for (Restaurant restaurant : restaurantList) {
                     if (!restaurant.getHasWorkmates()) {
                         List<Workmate> workmatesFiltered = new ArrayList<>();
-                        Task<QuerySnapshot> task = workmateHelper.getWorkmatesForRestaurant(firebaseFirestore, restaurant.getId());
+                        Task<QuerySnapshot> task = workmateDatabase.getWorkmatesForRestaurant(firebaseFirestore, restaurant.getId());
                         try {
                             Tasks.await(task);
                             QuerySnapshot queryDocumentSnapshots = task.getResult();
