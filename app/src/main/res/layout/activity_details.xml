@@ -48,17 +48,6 @@
             app:sliderScrollTimeInSec="1"
             app:sliderStartAutoCycle="true" />
 
-        <!--
-        <ImageView
-            android:id="@+id/details_restaurant_pic"
-            android:layout_width="wrap_content"
-            android:layout_height="300dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/restaurant"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
--->
-
         <TextView
             android:id="@+id/details_restaurant_name"
             android:layout_width="0dp"
@@ -92,8 +81,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/details_restaurant_pic_slider"
             app:tint="@color/pastel_green" />
-
-        <!-- VIEWGROUP FOR STARS !-->
 
         <RatingBar
             android:id="@+id/item_restaurant_rating"

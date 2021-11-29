@@ -15,7 +15,6 @@
         <item name="android:textColor">@color/white</item>
         <item name="editTextBackground">@color/white</item>
 
-
     </style>
 
     <style name="workmate_list_text_no_lunch">

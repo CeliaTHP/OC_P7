@@ -213,7 +213,7 @@ public class DetailsActivity extends AppCompatActivity {
                     Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
                     startActivity(launchBrowser);
                 } else {
-                    Toast.makeText(getParent(), getString(R.string.details_no_info), Toast.LENGTH_LONG).show();
+                    Toast.makeText(DetailsActivity.this, getString(R.string.details_no_info), Toast.LENGTH_LONG).show();
 
                 }
             }
