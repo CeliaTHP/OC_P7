@@ -76,6 +76,7 @@ public class PlaceRepository {
         return errorCode;
     }
 
+    //Get nearby restaurants with google places API
     public void getNearbyPlaces(Location location) {
 
         String locationStringQuery = location.getLatitude() + "," + location.getLongitude();
@@ -94,6 +95,7 @@ public class PlaceRepository {
                 } else {
                     errorCode.postValue(ErrorCode.UNSUCCESSFUL_RESPONSE);
                 }
+
             } catch (IOException e) {
                 errorCode.postValue(ErrorCode.CONNECTION_ERROR);
 
@@ -103,13 +105,13 @@ public class PlaceRepository {
 
     }
 
-
+    //Get restaurants matching with the input
     public void getRequestedRestaurants(String input, LatLng latLng) {
         String language = Locale.getDefault().getLanguage();
         String locationStringQuery = latLng.latitude + "," + latLng.longitude;
 
+        //Executor to execute the following code in the same thread (easier for tests)
         executor.execute(() -> {
-
             Call<AutocompleteResponse> call =
                     placesApi.getRequestedPlaces(apiKey, language, locationStringQuery, radiusQuery, input);
             try {
@@ -117,21 +119,21 @@ public class PlaceRepository {
                 if (response.isSuccessful()) {
                     List<Restaurant> requestedRestaurantList = getRequestedRestaurantList(response.body().predictions);
                     requestedRestaurantsListMutableLiveData.postValue(requestedRestaurantList);
-
                 } else {
                     errorCode.postValue(ErrorCode.UNSUCCESSFUL_RESPONSE);
                 }
+
             } catch (IOException e) {
                 errorCode.postValue(ErrorCode.CONNECTION_ERROR);
             }
 
-
         });
     }
 
+    //Complete restaurants informations on the list view
     public void updateRestaurantDetails(String restaurantId) {
-        //Executor to execute the following code in the same thread (easier for tests)
         List<Restaurant> restaurantList = restaurantListMutableLiveData.getValue();
+        //Executor to execute the following code in the same thread (easier for tests)
         executor.execute(() -> {
             Call<DetailsPlaceResponse> call =
                     placesApi.getDetailsById(apiKey, restaurantId);
@@ -154,7 +156,6 @@ public class PlaceRepository {
 
                 } else {
                     errorCode.postValue(ErrorCode.UNSUCCESSFUL_RESPONSE);
-
                 }
 
             } catch (IOException e) {
@@ -163,6 +164,7 @@ public class PlaceRepository {
         });
     }
 
+    //Complete requested restaurants informations
     public void updateRequestedRestaurantDetails(String restaurantId) {
         //Executor to execute the following code in the same thread (easier for tests)
         List<Restaurant> restaurantList = requestedRestaurantsListMutableLiveData.getValue();
@@ -184,10 +186,8 @@ public class PlaceRepository {
                     }
                     requestedRestaurantsListMutableLiveData.postValue(restaurantList);
 
-
                 } else {
                     errorCode.postValue(ErrorCode.UNSUCCESSFUL_RESPONSE);
-
                 }
 
             } catch (IOException e) {
@@ -196,6 +196,7 @@ public class PlaceRepository {
         });
     }
 
+    //Complete restaurants informations on the details view
     public void getRestaurantDetails(String restaurantId) {
         executor.execute(() -> {
             Call<DetailsPlaceResponse> call =
@@ -220,6 +221,7 @@ public class PlaceRepository {
     }
 
 
+    //Create and return a restaurant list with the API response
     public static List<Restaurant> getRestaurantList(List<RestaurantPojo> restaurantPojoList) {
         List<Restaurant> restaurantList = new ArrayList<>();
         for (RestaurantPojo restaurantPojo : restaurantPojoList) {
@@ -229,7 +231,8 @@ public class PlaceRepository {
         return restaurantList;
     }
 
-    static public List<Restaurant> getRequestedRestaurantList(List<PredictionPojo> predictionPojoList) {
+    //Create and return a restaurant list with the autocomplete API response
+    public static List<Restaurant> getRequestedRestaurantList(List<PredictionPojo> predictionPojoList) {
         List<Restaurant> restaurantList = new ArrayList<>();
         for (PredictionPojo predictionPojo : predictionPojoList) {
             if (predictionPojo.types.contains("restaurant")) {
@@ -242,16 +245,18 @@ public class PlaceRepository {
     }
 
 
-    static private Restaurant createRestaurant(RestaurantPojo restaurantPojo) {
+    //Build our restaurant object from nearby places API response
+    private static Restaurant createRestaurant(RestaurantPojo restaurantPojo) {
         return new Restaurant(restaurantPojo.placeId, restaurantPojo.name, restaurantPojo.vicinity, restaurantPojo.geometry.location.lat, restaurantPojo.geometry.location.lng);
     }
 
+    //Build our restaurant object from autocomplete API reponse
     static private Restaurant createRequestedRestaurant(PredictionPojo predictionPojo) {
         return new Restaurant(predictionPojo.placeId, null, null, 0.0, 0.0);
     }
 
+    //Updating our restaurant with details from details places API
     private void setRestaurantInfos(RestaurantPojo restaurantPojo, Restaurant restaurant) {
-
 
         List<String> photos = new ArrayList<>();
 
@@ -292,9 +297,7 @@ public class PlaceRepository {
                 restaurant.setPhotoReference(null);
 
         }
-
         restaurant.setHasDetails(true);
-
     }
 
 

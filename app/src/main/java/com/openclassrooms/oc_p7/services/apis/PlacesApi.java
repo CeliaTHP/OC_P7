@@ -10,6 +10,8 @@ import retrofit2.http.Query;
 
 public interface PlacesApi {
 
+    //Setting up API calls for nearby places, place details and autocomplete with retrofit
+
     @GET("place/nearbysearch/json")
     Call<NearbyPlaceResponse> getNearbyPlaces(
             @Query("key") String googleApiKey,

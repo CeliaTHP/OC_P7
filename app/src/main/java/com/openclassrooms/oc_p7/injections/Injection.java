@@ -25,14 +25,16 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Injection {
 
-    public static PlaceRepository providePlaceRepository(Context context) {
+    //Provide repositories and view model factories to views
+
+    private static PlaceRepository providePlaceRepository(Context context) {
         String radiusQuery = MyApplication.getInstance().getApplicationContext().getString(R.string.query_radius);
         String restaurantQuery = MyApplication.getInstance().getApplicationContext().getString(R.string.query_restaurant);
         String apiKey = context.getString(R.string.GOOGLE_MAP_API_KEY_DEV);
         return new PlaceRepository(Injection.provideApiClient(), apiKey, Executors.newSingleThreadExecutor(), new MutableLiveData<>(), new MutableLiveData<>(), new MutableLiveData<>(), radiusQuery, restaurantQuery, new MutableLiveData<>());
     }
 
-    public static WorkmateRepository provideWorkmateRepository(FirebaseFirestore firebaseFirestore) {
+    private static WorkmateRepository provideWorkmateRepository(FirebaseFirestore firebaseFirestore) {
         return new WorkmateRepository(firebaseFirestore, new WorkmateHelper(), Executors.newSingleThreadExecutor(), new MutableLiveData<>(), new MutableLiveData<>());
     }
 
@@ -54,11 +56,11 @@ public class Injection {
     }
 
 
-    public static FusedLocationProviderClient provideFusedLocationProviderClient(Context context) {
+    private static FusedLocationProviderClient provideFusedLocationProviderClient(Context context) {
         return LocationServices.getFusedLocationProviderClient(context);
     }
 
-    public static PlacesApi provideApiClient() {
+    private static PlacesApi provideApiClient() {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://maps.googleapis.com/maps/api/")

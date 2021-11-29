@@ -62,26 +62,6 @@ public class Restaurant implements Serializable, Cloneable {
         this.hasWorkmates = hasWorkmates;
     }
 
-    public void setPhotoReferences(List<String> photoReferences) {
-        this.photoReferences = photoReferences;
-    }
-
-    public Boolean getChosen() {
-        return isChosen;
-    }
-
-    public void setChosen(Boolean chosen) {
-        isChosen = chosen;
-    }
-
-    public Boolean getLiked() {
-        return isLiked;
-    }
-
-    public void setLiked(Boolean liked) {
-        isLiked = liked;
-    }
-
     public Boolean getHasDetails() {
         return hasDetails;
     }

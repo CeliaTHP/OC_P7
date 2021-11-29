@@ -43,11 +43,12 @@ public class WorkmateRepository {
         return errorCode;
     }
 
-    private String TAG = "WorkmateRepository";
     private ArrayList<Workmate> workmateList = new ArrayList<>();
 
 
+    //Get the user's workmates list from firestore
     public void getWorkmateList() {
+        //Executor to execute the following code in the same thread (easier for tests)
         executor.execute(() -> {
             Task<QuerySnapshot> task = workmateHelper.getAllWorkmates(firebaseFirestore);
             try {
@@ -62,7 +63,6 @@ public class WorkmateRepository {
                                 snapshot.get("name").toString(),
                                 snapshot.get("email").toString(),
                                 snapshot.get("picUrl").toString()
-                                //toObject instead ?
                         );
 
                         if (snapshot.get("restaurantName") != null && snapshot.get("restaurantId") != null) {
@@ -85,13 +85,11 @@ public class WorkmateRepository {
 
     }
 
+    //Get the corresponding user's workmates list according to a specific restaurant
     public void getWorkmatesForRestaurant(MutableLiveData<Restaurant> restaurantMutableLiveData) {
-
-        //FILTER VIA FIREBASE
         Restaurant restaurant = restaurantMutableLiveData.getValue();
-
-
         if (restaurant != null && !restaurant.getHasWorkmates()) {
+            //Executor to execute the following code in the same thread (easier for tests)
             executor.execute(() -> {
                 List<Workmate> workmatesFiltered = new ArrayList<>();
 
@@ -106,12 +104,9 @@ public class WorkmateRepository {
                         Workmate workmateToAdd = documentSnapshot.toObject(Workmate.class);
                         workmatesFiltered.add(workmateToAdd);
                     }
-                    //UPDATE RESTAURANTLIVEDATA
-
                     restaurant.setAttendees(workmatesFiltered);
                     restaurant.setHasWorkmates(true);
                     restaurantMutableLiveData.postValue(restaurant);
-
 
                 } catch (ExecutionException e) {
                     errorCode.postValue(ErrorCode.EXECUTION_EXCEPTION);
@@ -125,16 +120,12 @@ public class WorkmateRepository {
 
     }
 
-
+    //Get the corresponding user's workmates list according to a specific restaurant list
     public void getWorkmatesForRestaurantList(MutableLiveData<List<Restaurant>> restaurantListMutableLiveData) {
-        //FILTER VIA FIREBASE
-
-
         List<Restaurant> restaurantList = restaurantListMutableLiveData.getValue();
-
         if (restaurantList != null) {
+            //Executor to execute the following code in the same thread (easier for tests)
             executor.execute(() -> {
-
                 for (Restaurant restaurant : restaurantList) {
                     if (!restaurant.getHasWorkmates()) {
                         List<Workmate> workmatesFiltered = new ArrayList<>();
@@ -148,12 +139,9 @@ public class WorkmateRepository {
                                 Workmate workmateToAdd = documentSnapshot.toObject(Workmate.class);
                                 workmatesFiltered.add(workmateToAdd);
                             }
-
                             restaurant.setAttendees(workmatesFiltered);
                             restaurant.setHasWorkmates(true);
-                            //why the fuck in the loop ?
                             restaurantListMutableLiveData.postValue(restaurantList);
-
                         } catch (ExecutionException e) {
                             errorCode.postValue(ErrorCode.EXECUTION_EXCEPTION);
                         } catch (InterruptedException e) {
@@ -166,23 +154,6 @@ public class WorkmateRepository {
 
         }
 
-
     }
 
-
-
-
-/*
-        for (Workmate workmate : workmateList) {
-            if (workmate.getRestaurantId() != null) {
-                if (workmate.getRestaurantId().equals(restaurant.getId())) {
-                    workmateForRestaurantList.add(workmate);
-                    Log.d(TAG, workmate.getName() + "matches with restaurant :  " + restaurant.getName());
-                }
-            }
-        }
-        workmateForRestaurantListLiveData.postValue(workmateForRestaurantList);
-    }
-
- */
 }
