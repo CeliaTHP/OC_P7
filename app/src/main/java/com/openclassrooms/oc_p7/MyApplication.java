@@ -10,5 +10,4 @@ public class MyApplication extends MultiDexApplication {
         super.onCreate();
     }
 
-
 }

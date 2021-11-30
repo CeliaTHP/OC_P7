@@ -50,7 +50,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
 
@@ -68,7 +67,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
 
     private Marker requestedMarker = null;
-    private List<String> requestedRestaurantNameList = new ArrayList<>();
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -92,6 +90,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     @Subscribe
     public void onMapQueryEvent(OnMapQueryEvent onMapQueryEvent) {
+
+        Log.d(TAG, " " + onMapQueryEvent.getQueryForMap());
         if (onMapQueryEvent.getQueryForMap() != null) {
             if (currentLatLng != null) {
                 mapViewModel.getRequestedRestaurants(onMapQueryEvent.getQueryForMap(), currentLatLng);
@@ -345,6 +345,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void onResume() {
         super.onResume();
         if (mapView != null) mapView.onResume();
+        if (googleMap != null & currentLatLng != null) {
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(currentLatLng));
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 14));
+        }
+
     }
 
 

@@ -330,6 +330,19 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
         setToolbar();
         setDrawerLayout();
 
+        if (searchView != null)
+            searchView.setQuery(null, false);
+
+        if (onMapQueryEvent != null)
+            onMapQueryEvent.setQueryForMap(null);
+
+        if (onRestaurantQueryEvent != null)
+            onRestaurantQueryEvent.setQueryForRestaurant(null);
+
+        EventBus.getDefault().post(onMapQueryEvent);
+        EventBus.getDefault().post(onRestaurantQueryEvent);
+
+
     }
 
     @Override
