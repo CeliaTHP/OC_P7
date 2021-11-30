@@ -7,9 +7,8 @@ L’application devra également notifier l’utilisateur pour l’inviter à re
 <img src= "https://github.com/CeliaTHP/OC_P7/blob/master/doc_github/doc_github.png" alt="app" style="max-width:100%;"
 <br>
 <br>
-<h1>Fonctionnalités : </h1>
+<h2>Fonctionnalités : </h2>
 <br>
-
 <ul>
 <li>Possibilité de s'identifier avec des identifiants ou via Google, Facebook ou Twitter</li>
 <li>Afficher les restaurants à proximité sur une carte ou dans une listes, en ayant connaissance des collègues l'ayant selectionné</li>
