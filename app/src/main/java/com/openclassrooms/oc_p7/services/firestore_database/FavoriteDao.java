@@ -6,7 +6,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.openclassrooms.oc_p7.models.Restaurant;
 
-public class FavoriteDatabase {
+public class FavoriteDao {
 
     private static final String COLLECTION_NAME = "favorites";
 

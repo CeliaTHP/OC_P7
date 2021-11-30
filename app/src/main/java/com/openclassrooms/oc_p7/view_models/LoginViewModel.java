@@ -36,10 +36,9 @@ public class LoginViewModel extends AndroidViewModel {
 
     public MutableLiveData<FirebaseUser> authenticatedUserLiveData = new MutableLiveData<>();
     public FirebaseAuth auth = FirebaseAuth.getInstance();
-    private OAuthProvider.Builder provider;
-    private WorkmateDatabase workmateDatabase = new WorkmateDatabase();
+    private final WorkmateDatabase workmateDatabase = new WorkmateDatabase();
 
-    private static String TAG = "LoginViewModel";
+    private static final String TAG = "LoginViewModel";
 
     public LoginViewModel(@NonNull Application application) {
         super(application);
@@ -173,7 +172,7 @@ public class LoginViewModel extends AndroidViewModel {
 
 
     public void getTwitterAccount(LoginActivity loginActivity) {
-        provider = OAuthProvider.newBuilder("twitter.com");
+        OAuthProvider.Builder provider = OAuthProvider.newBuilder("twitter.com");
         Task<AuthResult> pendingResultTask = auth.getPendingAuthResult();
         if (pendingResultTask != null) {
             // There's something already here! Finish the sign-in for your user.

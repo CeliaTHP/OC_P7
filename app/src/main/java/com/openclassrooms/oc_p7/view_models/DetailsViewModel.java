@@ -9,11 +9,10 @@ import com.openclassrooms.oc_p7.repositories.WorkmateRepository;
 
 public class DetailsViewModel extends ViewModel {
 
-    private MutableLiveData<String> mText;
-    private static String TAG = "DetailsViewModel";
+    private static final String TAG = "DetailsViewModel";
 
-    private WorkmateRepository workmateRepository;
-    private PlaceRepository placeRepository;
+    private final WorkmateRepository workmateRepository;
+    private final PlaceRepository placeRepository;
     public MutableLiveData<Restaurant> restaurantMutableLiveData;
 
 

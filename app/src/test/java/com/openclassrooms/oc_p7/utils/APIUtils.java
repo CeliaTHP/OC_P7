@@ -72,7 +72,6 @@ public class APIUtils {
         List<String> typeList = new ArrayList<>();
         typeList.add("restaurant");
         predictionPojo.types = typeList;
-        Location location = new Location();
         predictionPojoList.add(predictionPojo);
         return predictionPojoList;
     }

@@ -7,7 +7,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.openclassrooms.oc_p7.models.User;
 
 
-public class UserDatabase {
+public class UserDao {
 
     private static final String COLLECTION_NAME = "users";
 
@@ -19,34 +19,34 @@ public class UserDatabase {
     // CREATE
     public static Task<Void> createUser(String uid, String name, String email, String picUrl) {
         User userToCreate = new User(uid, name, email, picUrl);
-        return UserDatabase.getUsersCollection().document(uid).set(userToCreate);
+        return UserDao.getUsersCollection().document(uid).set(userToCreate);
     }
 
     // GET
     public static Task<DocumentSnapshot> getUser(String uid) {
-        return UserDatabase.getUsersCollection().document(uid).get();
+        return UserDao.getUsersCollection().document(uid).get();
     }
 
     // UPDATE
     public static Task<Void> updateUserName(String name, String uid) {
-        return UserDatabase.getUsersCollection().document(uid).update("name", name);
+        return UserDao.getUsersCollection().document(uid).update("name", name);
     }
 
     public static Task<Void> updateUserRestaurantId(String restaurantId, String uid) {
-        return UserDatabase.getUsersCollection().document(uid).update("restaurantId", restaurantId);
+        return UserDao.getUsersCollection().document(uid).update("restaurantId", restaurantId);
     }
 
     public static Task<Void> updateUserRestaurantName(String restaurantName, String uid) {
-        return UserDatabase.getUsersCollection().document(uid).update("restaurantName", restaurantName);
+        return UserDao.getUsersCollection().document(uid).update("restaurantName", restaurantName);
     }
 
     public static Task<Void> updateUserRestaurantAddress(String restaurantAddress, String uid) {
-        return UserDatabase.getUsersCollection().document(uid).update("restaurantAddress", restaurantAddress);
+        return UserDao.getUsersCollection().document(uid).update("restaurantAddress", restaurantAddress);
     }
 
     // DELETE
     public static Task<Void> deleteUser(String uid) {
-        return UserDatabase.getUsersCollection().document(uid).delete();
+        return UserDao.getUsersCollection().document(uid).delete();
     }
 
 

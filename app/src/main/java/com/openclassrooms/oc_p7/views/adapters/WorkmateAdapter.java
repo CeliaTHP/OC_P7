@@ -18,7 +18,7 @@ import java.util.List;
 public class WorkmateAdapter extends RecyclerView.Adapter<WorkmateViewHolder.ViewHolder> {
 
     private List<Workmate> workmateList;
-    private Boolean inDetails;
+    private final Boolean inDetails;
     private final OnWorkmateClickListener onWorkmateClickListener;
 
 

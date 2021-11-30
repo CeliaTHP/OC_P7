@@ -18,7 +18,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.auth.FirebaseUser;
 import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.databinding.ActivityLoginWithUsernameBinding;
-import com.openclassrooms.oc_p7.services.firestore_database.UserDatabase;
+import com.openclassrooms.oc_p7.services.firestore_database.UserDao;
 import com.openclassrooms.oc_p7.view_models.LoginViewModel;
 
 import org.jetbrains.annotations.NotNull;
@@ -114,7 +114,7 @@ public class LoginWithUsernameActivity extends AppCompatActivity {
         loginViewModel.authenticatedUserLiveData.observe(this, new Observer<FirebaseUser>() {
             @Override
             public void onChanged(FirebaseUser firebaseUser) {
-                UserDatabase.createUser(firebaseUser.getUid(), firebaseUser.getDisplayName(), firebaseUser.getEmail(), "" + firebaseUser.getPhotoUrl());
+                UserDao.createUser(firebaseUser.getUid(), firebaseUser.getDisplayName(), firebaseUser.getEmail(), "" + firebaseUser.getPhotoUrl());
                 loginViewModel.initWorkmates();
                 goToDashboard();
 

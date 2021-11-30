@@ -12,7 +12,7 @@ import java.util.List;
 public class WorkmateViewModel extends ViewModel {
 
 
-    private WorkmateRepository workmateRepository;
+    private final WorkmateRepository workmateRepository;
 
     public MutableLiveData<List<Workmate>> workmateListLiveData;
 

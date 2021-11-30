@@ -30,7 +30,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.databinding.ActivityDashboardBinding;
 import com.openclassrooms.oc_p7.databinding.DrawerHeaderBinding;
-import com.openclassrooms.oc_p7.services.firestore_database.UserDatabase;
+import com.openclassrooms.oc_p7.services.firestore_database.UserDao;
 import com.openclassrooms.oc_p7.services.utils.OnDestinationChangedEvent;
 import com.openclassrooms.oc_p7.services.utils.OnMapQueryEvent;
 import com.openclassrooms.oc_p7.services.utils.OnRestaurantQueryEvent;
@@ -50,9 +50,9 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
 
     private int currentFragment;
 
-    private OnRestaurantQueryEvent onRestaurantQueryEvent = new OnRestaurantQueryEvent();
-    private OnWorkmateQueryEvent onWorkmateQueryEvent = new OnWorkmateQueryEvent();
-    private OnMapQueryEvent onMapQueryEvent = new OnMapQueryEvent();
+    private final OnRestaurantQueryEvent onRestaurantQueryEvent = new OnRestaurantQueryEvent();
+    private final OnWorkmateQueryEvent onWorkmateQueryEvent = new OnWorkmateQueryEvent();
+    private final OnMapQueryEvent onMapQueryEvent = new OnMapQueryEvent();
 
     private ActivityDashboardBinding activityDashboardBinding;
     private DrawerHeaderBinding drawerHeaderBinding;
@@ -310,7 +310,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
     }
 
     private void goToLunch() {
-        UserDatabase.getUser(FirebaseAuth.getInstance().getUid())
+        UserDao.getUser(FirebaseAuth.getInstance().getUid())
                 .addOnSuccessListener(snapshot -> {
                     if (snapshot.get("restaurantId") != null) {
                         Intent intent = new Intent(this, DetailsActivity.class);

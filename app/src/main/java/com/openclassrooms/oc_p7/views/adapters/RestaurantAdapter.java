@@ -30,10 +30,10 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
 
     private final OnRestaurantClickListener onRestaurantClickListener;
 
-    private List<Restaurant> restaurantList;
+    private final List<Restaurant> restaurantList;
     private Location currentLocation;
     private Context context;
-    private MapViewModel mapViewModel;
+    private final MapViewModel mapViewModel;
 
     public RestaurantAdapter(List<Restaurant> restaurantList, OnRestaurantClickListener onRestaurantClickListener, MapViewModel mapViewModel) {
         this.restaurantList = new ArrayList<>(restaurantList.size());

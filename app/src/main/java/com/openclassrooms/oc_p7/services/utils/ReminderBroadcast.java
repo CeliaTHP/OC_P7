@@ -18,7 +18,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.models.Workmate;
-import com.openclassrooms.oc_p7.services.firestore_database.UserDatabase;
+import com.openclassrooms.oc_p7.services.firestore_database.UserDao;
 import com.openclassrooms.oc_p7.services.firestore_database.WorkmateDatabase;
 import com.openclassrooms.oc_p7.views.activities.MainActivity;
 
@@ -47,7 +47,7 @@ public class ReminderBroadcast extends BroadcastReceiver {
 
     public static void getUserInfosToCreateNotification(Context context) {
         Log.d(TAG, "getUserInfosToCreateNotification");
-        UserDatabase.getUser(FirebaseAuth.getInstance().getUid())
+        UserDao.getUser(FirebaseAuth.getInstance().getUid())
                 .addOnFailureListener(e -> Log.d(TAG, "getUserInfos onFailure"))
                 .addOnSuccessListener(snapshot -> {
                     Log.d(TAG, "onSuccess");
@@ -104,7 +104,6 @@ public class ReminderBroadcast extends BroadcastReceiver {
                 .setContentIntent(pendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
-        Log.d(TAG, "content : " + notificationContent);
 
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
         notificationManagerCompat.notify(0, notificationBuilder.build());
@@ -112,7 +111,6 @@ public class ReminderBroadcast extends BroadcastReceiver {
 
 
     public static void getWorkmatesForRestaurant(String restaurantId, Context context) {
-        Log.d(TAG, "getWorkmatesForRestaurant");
 
         WorkmateDatabase workmateDatabase = new WorkmateDatabase();
 

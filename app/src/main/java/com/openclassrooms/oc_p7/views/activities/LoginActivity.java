@@ -23,7 +23,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
 import com.openclassrooms.oc_p7.R;
 import com.openclassrooms.oc_p7.databinding.ActivityLoginBinding;
-import com.openclassrooms.oc_p7.services.firestore_database.UserDatabase;
+import com.openclassrooms.oc_p7.services.firestore_database.UserDao;
 import com.openclassrooms.oc_p7.services.utils.NetworkChecker;
 import com.openclassrooms.oc_p7.view_models.LoginViewModel;
 
@@ -172,7 +172,7 @@ public class LoginActivity extends AppCompatActivity {
         loginViewModel.authenticatedUserLiveData.observe(this, new Observer<FirebaseUser>() {
             @Override
             public void onChanged(FirebaseUser firebaseUser) {
-                UserDatabase.createUser(firebaseUser.getUid(), firebaseUser.getDisplayName(), firebaseUser.getEmail(), "" + firebaseUser.getPhotoUrl());
+                UserDao.createUser(firebaseUser.getUid(), firebaseUser.getDisplayName(), firebaseUser.getEmail(), "" + firebaseUser.getPhotoUrl());
                 loginViewModel.initWorkmates();
                 goToDashboard();
 

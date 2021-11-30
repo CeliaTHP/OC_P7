@@ -34,7 +34,7 @@ public class PlaceRepository {
     private final Executor executor;
     private final String radiusQuery;
     private final String restaurantQuery;
-    private MutableLiveData<ErrorCode> errorCode;
+    private final MutableLiveData<ErrorCode> errorCode;
     private final String apiKey;
 
 

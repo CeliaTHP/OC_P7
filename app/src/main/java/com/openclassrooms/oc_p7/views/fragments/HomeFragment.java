@@ -24,9 +24,9 @@ import org.jetbrains.annotations.NotNull;
 public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding fragmentHomeBinding;
-    private OnDestinationChangedEvent onDestinationChangedEvent = new OnDestinationChangedEvent();
+    private final OnDestinationChangedEvent onDestinationChangedEvent = new OnDestinationChangedEvent();
 
-    private String TAG = "HomeFragment";
+    private final String TAG = "HomeFragment";
 
     @Nullable
     @Override

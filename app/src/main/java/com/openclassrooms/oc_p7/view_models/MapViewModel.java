@@ -24,10 +24,10 @@ import java.util.List;
 public class MapViewModel extends ViewModel {
 
     private static final String TAG = "MapViewModel";
-    private PlaceRepository placeRepository;
-    private FusedLocationProviderClient fusedLocationProviderClient;
-    private LifecycleOwner lifecycleOwner;
-    private WorkmateRepository workmateRepository;
+    private final PlaceRepository placeRepository;
+    private final FusedLocationProviderClient fusedLocationProviderClient;
+    private final LifecycleOwner lifecycleOwner;
+    private final WorkmateRepository workmateRepository;
 
     public MutableLiveData<Location> currentLocationLiveData;
 

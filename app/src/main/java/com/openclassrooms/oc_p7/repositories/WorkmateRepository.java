@@ -20,12 +20,12 @@ import java.util.concurrent.Executor;
 
 public class WorkmateRepository {
 
-    private Executor executor;
-    private FirebaseFirestore firebaseFirestore;
-    private MutableLiveData<ErrorCode> errorCode;
+    private final Executor executor;
+    private final FirebaseFirestore firebaseFirestore;
+    private final MutableLiveData<ErrorCode> errorCode;
 
-    private MutableLiveData<List<Workmate>> workmateListLiveData;
-    private WorkmateDatabase workmateDatabase;
+    private final MutableLiveData<List<Workmate>> workmateListLiveData;
+    private final WorkmateDatabase workmateDatabase;
 
     public WorkmateRepository(FirebaseFirestore firebaseFirestore, WorkmateDatabase workmateDatabase, Executor executor, MutableLiveData<List<Workmate>> workmateListLiveData, MutableLiveData<ErrorCode> errorCode) {
         this.firebaseFirestore = firebaseFirestore;
@@ -43,7 +43,7 @@ public class WorkmateRepository {
         return errorCode;
     }
 
-    private ArrayList<Workmate> workmateList = new ArrayList<>();
+    private final ArrayList<Workmate> workmateList = new ArrayList<>();
 
 
     //Get the user's workmates list from firestore
